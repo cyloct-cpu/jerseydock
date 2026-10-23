@@ -1,0 +1,270 @@
+{
+ "product.sold": {
+  "src": "sold",
+  "out": "vendido"
+ },
+ "product.sizes": {
+  "src": "Size",
+  "out": "Tamaño"
+ },
+ "product.similar": {
+  "src": "You may also like",
+  "out": "También te puede gustar"
+ },
+ "checkout.payment": {
+  "src": "Payment",
+  "out": "Pago"
+ },
+ "cart.remove": {
+  "src": "Remove",
+  "out": "Eliminar"
+ },
+ "hero.eyebrow": {
+  "src": "26 / 27 SEASON — NOW LIVE",
+  "out": "TEMPORADA 26/27 — AHORA EN VIVO"
+ },
+ "checkout.pay_cod": {
+  "src": "Cash on delivery",
+  "out": "Contra reembolso"
+ },
+ "checkout.pay_cod_desc": {
+  "src": "Pay the courier in cash when your parcel arrives — no online payment needed.",
+  "out": "Pague al mensajero en efectivo cuando llegue su paquete; no es necesario realizar pagos en línea."
+ },
+ "checkout.paynote": {
+  "src": "Your order will be created as \"awaiting payment\". Our team confirms payment manually before shipping.",
+  "out": "Su pedido se creará como \"pendiente de pago\". Nuestro equipo confirma el pago manualmente antes del envío."
+ },
+ "checkout.cod_note": {
+  "src": "Your order is placed with cash on delivery. Our team confirms the order and arranges shipping — you pay the courier when the parcel arrives.",
+  "out": "Su pedido se realiza contra reembolso. Nuestro equipo confirma el pedido y organiza el envío: usted paga al mensajero cuando llega el paquete."
+ },
+ "checkout.city_ph": {
+  "src": "Search or type a city",
+  "out": "Buscar o escribir una ciudad"
+ },
+ "checkout.country_ph": {
+  "src": "Search or type a country",
+  "out": "Buscar o escribir un país"
+ },
+ "checkout.contact": {
+  "src": "Contact details",
+  "out": "Detalles de contacto"
+ },
+ "checkout.address": {
+  "src": "Shipping address",
+  "out": "Dirección de envío"
+ },
+ "checkout.email": {
+  "src": "Email",
+  "out": "Correo electrónico"
+ },
+ "checkout.city_suggest": {
+  "src": "{n} cities matched — free text accepted",
+  "out": "{n} ciudades coincidentes: se acepta texto libre"
+ },
+ "checkout.address2": {
+  "src": "Address",
+  "out": "DIRECCIÓN"
+ },
+ "checkout.city": {
+  "src": "City",
+  "out": "Ciudad"
+ },
+ "checkout.country_hint": {
+  "src": "Type to search — any country accepted",
+  "out": "Escriba para buscar: se acepta cualquier país"
+ },
+ "checkout.country": {
+  "src": "Country",
+  "out": "País"
+ },
+ "track.order": {
+  "src": "Order number",
+  "out": "Número de orden"
+ },
+ "checkout.zip": {
+  "src": "Postcode",
+  "out": "Código postal"
+ },
+ "track.go": {
+  "src": "Track",
+  "out": "Pista"
+ },
+ "checkout.name": {
+  "src": "Full name",
+  "out": "nombre completo"
+ },
+ "footer.shop": {
+  "src": "Shop",
+  "out": "Comercio"
+ },
+ "account.orders": {
+  "src": "Order history",
+  "out": "Historial de pedidos"
+ },
+ "footer.help": {
+  "src": "Help",
+  "out": "Ayuda"
+ },
+ "footer.about": {
+  "src": "About",
+  "out": "Acerca de"
+ },
+ "footer.shipping": {
+  "src": "Shipping",
+  "out": "Envío"
+ },
+ "footer.faq": {
+  "src": "FAQ",
+  "out": "Preguntas frecuentes"
+ },
+ "footer.contact": {
+  "src": "Contact",
+  "out": "Contacto"
+ },
+ "filter.sort": {
+  "src": "Sort",
+  "out": "Clasificar"
+ },
+ "filter.price": {
+  "src": "Price",
+  "out": "Precio"
+ },
+ "filter.all": {
+  "src": "All",
+  "out": "Todo"
+ },
+ "qty": {
+  "src": "Qty",
+  "out": "Cantidad"
+ },
+ "product.qty": {
+  "src": "Quantity",
+  "out": "Cantidad"
+ },
+ "product.buy_now": {
+  "src": "Buy it now",
+  "out": "Compre ya"
+ },
+ "footer.returns": {
+  "src": "Returns",
+  "out": "Devoluciones"
+ },
+ "footer.size": {
+  "src": "Size guide",
+  "out": "Guía de tallas"
+ },
+ "product.custom_fee": {
+  "src": "Customization",
+  "out": "Personalización"
+ },
+ "product.each": {
+  "src": "each",
+  "out": "cada"
+ },
+ "product.custom_name": {
+  "src": "Custom name + number",
+  "out": "Nombre personalizado + número"
+ },
+ "product.armband_pick": {
+  "src": "Choose an armband patch",
+  "out": "Elige un parche para el brazalete"
+ },
+ "product.note_sustain": {
+  "src": "Sustainably made",
+  "out": "Hecho de forma sostenible"
+ },
+ "nav.signin": {
+  "src": "Sign in",
+  "out": "Iniciar sesión"
+ },
+ "product.note_returns": {
+  "src": "30-day returns & exchanges",
+  "out": "Devoluciones y cambios de 30 días"
+ },
+ "cart.custom": {
+  "src": "Customization",
+  "out": "Personalización"
+ },
+ "nav.account": {
+  "src": "Account",
+  "out": "Cuenta"
+ },
+ "product.note_cod": {
+  "src": "Cash on delivery available",
+  "out": "Contra reembolso disponible"
+ },
+ "product.name_max": {
+  "src": "Name + number: up to {n} characters",
+  "out": "Nombre + número: hasta {n} caracteres"
+ },
+ "checkout.custom": {
+  "src": "Customization",
+  "out": "Personalización"
+ },
+ "cart.custom_name": {
+  "src": "Name + number",
+  "out": "Nombre + número"
+ },
+ "cart.custom_armband": {
+  "src": "Armband patch",
+  "out": "Parche de brazalete"
+ },
+ "checkout.pay_redirect_desc": {
+  "src": "Secure checkout — you will be redirected to complete payment, then returned here automatically.",
+  "out": "Pago seguro: será redirigido para completar el pago y luego regresará aquí automáticamente."
+ },
+ "search.image_title": {
+  "src": "Search by image",
+  "out": "Buscar por imagen"
+ },
+ "search.image_drop": {
+  "src": "Click to upload, or drag & paste an image here",
+  "out": "Haga clic para cargar o arrastre y pegue una imagen aquí"
+ },
+ "checkout.pay_redirect_title": {
+  "src": "Pay online",
+  "out": "pagar en línea"
+ },
+ "search.image_searching": {
+  "src": "Searching…",
+  "out": "Búsqueda…"
+ },
+ "search.image_formats": {
+  "src": "jpg / png / webp / avif · up to 5MB",
+  "out": "jpg / png / webp / avif · hasta 5MB"
+ },
+ "search.image_empty": {
+  "src": "No matching jersey found",
+  "out": "No se encontró ninguna camiseta que coincida"
+ },
+ "search.image_results": {
+  "src": "{n} similar items found",
+  "out": "{n} artículos similares encontrados"
+ },
+ "search.image_desc": {
+  "src": "Upload a screenshot or photo to find the same jersey",
+  "out": "Sube una captura de pantalla o una foto para encontrar la misma camiseta."
+ },
+ "search.image_empty_hint": {
+  "src": "Try a clearer screenshot, or browse popular categories",
+  "out": "Pruebe una captura de pantalla más clara o explore categorías populares"
+ },
+ "search.image_match": {
+  "src": "{n}% match",
+  "out": "{n}% de coincidencia"
+ },
+ "search.image_exact": {
+  "src": "Exact match",
+  "out": "Coincidencia exacta"
+ },
+ "search.image_vision_note": {
+  "src": "Suggested by AI image recognition",
+  "out": "Sugerido por reconocimiento de imágenes AI"
+ },
+ "search.image_error": {
+  "src": "Search failed. Please try again.",
+  "out": "La búsqueda falló. Por favor inténtalo de nuevo."
+ }
+}

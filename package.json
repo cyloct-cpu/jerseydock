@@ -1,0 +1,25 @@
+{
+  "name": "kitvault",
+  "version": "0.1.0",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace=@kitvault/web",
+    "dev:admin": "npm run dev --workspace=@kitvault/admin",
+    "build": "npm run build --workspace=@kitvault/web && npm run build --workspace=@kitvault/admin",
+    "start": "npm run start --workspace=@kitvault/web",
+    "start:admin": "npm run start --workspace=@kitvault/admin",
+    "dataset": "node scripts/build-dataset.mjs",
+    "scrape": "node scripts/scrape-chenyikan.mjs",
+    "db:push": "npm run db:push --workspace=@kitvault/db",
+    "db:seed": "npm run db:seed --workspace=@kitvault/db"
+  },
+  "overrides": {
+    "@huggingface/transformers": {
+      "sharp": "0.35.5"
+    }
+  }
+}

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>KITROOM — 品牌标识设计稿 v2</title>
+<style>
+  :root{
+    --ink:#0A0A0B; --paper:#F5F3EF; --muted:#A8A29A; --line:rgba(245,243,239,.14);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{background:var(--ink);color:var(--paper);
+    font-family:"Inter","Helvetica Neue","PingFang SC",Arial,sans-serif;
+    line-height:1.6;-webkit-font-smoothing:antialiased;}
+  .wrap{max-width:1080px;margin:0 auto;padding:72px 40px 120px}
+  header h1{font-size:32px;font-weight:600;letter-spacing:.02em;margin:0 0 10px}
+  header .lead{color:var(--muted);max-width:700px;margin:0;font-size:15px}
+  .tag{display:inline-block;margin-top:18px;font-size:12px;letter-spacing:.18em;
+    text-transform:uppercase;color:var(--muted);border:1px solid var(--line);padding:6px 12px;border-radius:2px}
+  section{margin-top:72px}
+  h2{font-size:13px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);
+    font-weight:600;margin:0 0 20px;padding-bottom:14px;border-bottom:1px solid var(--line)}
+  p.note{color:var(--muted);font-size:14px;margin:6px 0 0;max-width:740px}
+  .grid{display:grid;gap:20px}
+  .g2{grid-template-columns:repeat(2,1fr)}
+  .g3{grid-template-columns:repeat(3,1fr)}
+  .g4{grid-template-columns:repeat(4,1fr)}
+  @media(max-width:760px){.g2,.g3,.g4{grid-template-columns:1fr}}
+  .card{background:rgba(245,243,239,.04);border:1px solid var(--line);border-radius:3px;
+    padding:28px;display:flex;flex-direction:column;align-items:center;justify-content:center}
+  .card .cap{margin-top:14px;font-size:12px;letter-spacing:.08em;color:var(--muted);text-align:center}
+  .card.rec{border-color:rgba(245,243,239,.4)}
+  .card.light{background:var(--paper);color:var(--ink)}
+  .card.light .cap{color:#6b665e}
+  .card.mono{background:#fff;color:#000}
+  .card.mono .cap{color:#666}
+  table{width:100%;border-collapse:collapse;font-size:14px}
+  th,td{text-align:left;padding:12px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{color:var(--muted);font-weight:600;font-size:12px;letter-spacing:.06em;text-transform:uppercase}
+  td small{color:var(--muted)}
+  .rec{color:var(--paper);font-weight:600}
+  code{font-family:"SFMono-Regular",Consolas,monospace;font-size:12px;color:var(--muted)}
+  ul.tight{margin:8px 0 0;padding-left:18px;color:var(--muted);font-size:14px}
+  ul.tight li{margin:4px 0}
+  .svgbox{display:flex;align-items:center;justify-content:center}
+  .svgbox svg{width:140px;height:140px;color:var(--paper)}
+  .wm svg{width:280px;height:auto;color:var(--paper)}
+  footer{margin-top:96px;padding-top:24px;border-top:1px solid var(--line);color:var(--muted);font-size:13px}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <path id="symB" d="M60 60 L100 60 L120 80 L140 60 L180 60 L180 180 L60 180 Z" fill="currentColor"/>
+  <path id="symA" d="M100 46 L120 66 L140 46 L180 58 L188 102 L164 110 L164 194 L76 194 L76 110 L52 102 L60 58 Z" fill="currentColor"/>
+  <g id="symC" fill="currentColor">
+    <rect x="66" y="54" width="22" height="132"/>
+    <rect x="109" y="54" width="22" height="132"/>
+    <rect x="152" y="54" width="22" height="132"/>
+  </g>
+  <text id="wmText" x="0" y="0" text-anchor="middle" font-family="'Helvetica Neue',Helvetica,Arial,sans-serif" font-size="68" font-weight="600" letter-spacing="3" fill="currentColor">KITROOM</text>
+</defs></svg>
+
+<div class="wrap">
+  <header>
+    <h1>KITROOM — 品牌标识设计稿 v2</h1>
+    <p class="lead">重做要点：① 名字带品类词，一眼知道是卖球衣的；② 符号换成球衣本身的极简造型，不再是抽象的破损五边形。本稿为草案，未接入项目代码。</p>
+    <span class="tag">Draft v2 · not yet in project</span>
+  </header>
+
+  <!-- 命名 -->
+  <section>
+    <h2>01 · 命名方案（带品类词，直观）</h2>
+    <table>
+      <thead><tr><th>名称</th><th>含义 / 直观度</th><th>气质</th><th>域名提示</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="rec">KITROOM <small>· 主推</small></td>
+          <td>Kit＝球衣套件 + Room＝陈列室。<b>“球衣室”</b>一眼知道卖球衣，又有高级陈列感。</td>
+          <td>编辑感、高级、藏家</td>
+          <td><code>kitroom.com</code> 待查</td>
+        </tr>
+        <tr>
+          <td>JERSEY&amp;CO</td>
+          <td>Jersey＝球衣（最通用）。&amp;CO 给商贸/品牌感。</td>
+          <td>经典、稳重</td>
+          <td><code>jerseyandco.com</code> 待查</td>
+        </tr>
+        <tr>
+          <td>KITVAULT</td>
+          <td>Kit + Vault（收藏库）。强调复古/稀有球衣收藏。</td>
+          <td>高端、稀缺</td>
+          <td><code>kitvault.com</code> 待查</td>
+        </tr>
+        <tr>
+          <td>SOCCERKIT</td>
+          <td>Soccer + Kit。最直白，搜索友好。</td>
+          <td>直给、功能型</td>
+          <td><code>soccerkit.com</code> 待查</td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="note">四个都含 kit / jersey / soccer，海外买家无需思考即知品类。正式使用前需做商标与域名检索。</p>
+  </section>
+
+  <!-- 符号方向对比 -->
+  <section>
+    <h2>02 · 符号方向对比（主角都是“球衣”）</h2>
+    <div class="grid g3">
+      <div class="card"><div class="svgbox"><svg viewBox="0 0 240 240"><use href="#symA"/></svg></div><div class="cap">A · 完整球衣剪影（带袖）</div></div>
+      <div class="card rec"><div class="svgbox"><svg viewBox="0 0 240 240"><use href="#symB"/></svg></div><div class="cap">B · V 领衣身（主推）</div></div>
+      <div class="card"><div class="svgbox"><svg viewBox="0 0 240 240"><use href="#symC"/></svg></div><div class="cap">C · 竖条纹（球衣 DNA）</div></div>
+    </div>
+    <p class="note"><b style="color:var(--paper)">主推 B 的理由：</b>V 领 + 衣身一眼是“上衣/球衣”，同时造型最简洁、最耐看，缩到 favicon 也成立。A 更写实但略笨重；C 最图形化、偏年轻潮牌。三个都纯矢量、可单色。</p>
+  </section>
+
+  <!-- 核心符号 B 详解 -->
+  <section>
+    <h2>03 · 核心符号 B — V 领衣身</h2>
+    <div class="grid g2">
+      <div class="card"><div class="svgbox"><svg viewBox="0 0 240 240"><use href="#symB"/></svg></div><div class="cap">深底 · 米白</div></div>
+      <div class="card"><div class="svgbox" style="color:var(--muted)"><svg viewBox="0 0 240 240"><use href="#symB"/></svg></div><div class="cap">单色 / 负形可用</div></div>
+    </div>
+    <p class="note param"><b>几何（可复现）：</b>顶角 (100,60)(140,60)，V 领底 (120,80)，肩外 (60,60)(180,60)，衣身直落到 (60,180)(180,180)。整体在 240×240 内居中，V 领深 20px、领宽 80px。</p>
+  </section>
+
+  <!-- 字标 -->
+  <section>
+    <h2>04 · 字标 — KITROOM</h2>
+    <div class="grid g2">
+      <div class="card wm"><div class="svgbox"><svg viewBox="0 0 420 110"><use href="#wmText" x="210" y="76"/></svg></div><div class="cap">几何无衬线骨架（深底）</div></div>
+      <div class="card light"><div class="svgbox" style="color:var(--ink)"><svg viewBox="0 0 420 110"><use href="#wmText" x="210" y="76"/></svg></div><div class="cap">浅底反白</div></div>
+    </div>
+    <p class="note"><b style="color:var(--paper)">说明：</b>当前字标为几何无衬线骨架（宽字距、中字重），保证名字清晰可读——你上一版的核心痛点是“看不出干嘛”，所以先保可读性。确认为最终名后，我会把它手绘成原创定制字标（非系统字体），作为可交付资产。</p>
+  </section>
+
+  <!-- 组合 -->
+  <section>
+    <h2>05 · 组合形态</h2>
+    <div class="grid g2">
+      <div class="card"><div class="svgbox"><svg viewBox="0 0 520 200" style="width:340px;height:auto"><use href="#symB" transform="translate(40,40) scale(0.5)"/><use href="#wmText" transform="translate(330,100) scale(0.85)"/></svg></div><div class="cap">横版组合（符号＋字标）</div></div>
+      <div class="card"><div class="svgbox"><svg viewBox="0 0 300 380" style="width:200px;height:auto"><use href="#symB" transform="translate(78,30) scale(0.6)"/><use href="#wmText" transform="translate(150,250) scale(0.75)"/></svg></div><div class="cap">竖版组合（含副标占位）</div></div>
+    </div>
+    <p class="note">横版用于页眉；竖版用于社交媒体头像、名片。副标 <code>FOOTBALL KIT STORE</code> 为占位，待你定 slogan。</p>
+  </section>
+
+  <!-- 三态 -->
+  <section>
+    <h2>06 · 三态测试（深 / 浅 / 单色）</h2>
+    <div class="grid g3">
+      <div class="card"><div class="svgbox"><svg viewBox="0 0 420 110" style="width:220px;height:auto"><use href="#wmText" x="210" y="76"/></svg></div><div class="cap">深底 · 米白</div></div>
+      <div class="card light"><div class="svgbox" style="color:var(--ink)"><svg viewBox="0 0 420 110" style="width:220px;height:auto"><use href="#wmText" x="210" y="76"/></svg></div><div class="cap">浅底 · 深墨</div></div>
+      <div class="card mono"><div class="svgbox"><svg viewBox="0 0 420 110" style="width:220px;height:auto"><use href="#wmText" x="210" y="76"/></svg></div><div class="cap">单色 · 纯黑</div></div>
+    </div>
+  </section>
+
+  <!-- 缩小 -->
+  <section>
+    <h2>07 · 缩小测试（favicon / 印花）</h2>
+    <div class="grid g4">
+      <div class="card"><div class="svgbox"><svg viewBox="0 0 240 240" style="width:128px;height:128px"><use href="#symB"/></svg></div><div class="cap">128 px</div></div>
+      <div class="card"><div class="svgbox"><svg viewBox="0 0 240 240" style="width:64px;height:64px"><use href="#symB"/></svg></div><div class="cap">64 px</div></div>
+      <div class="card"><div class="svgbox"><svg viewBox="0 0 240 240" style="width:32px;height:32px"><use href="#symB"/></svg></div><div class="cap">32 px</div></div>
+      <div class="card"><div class="svgbox"><svg viewBox="0 0 240 240" style="width:16px;height:16px"><use href="#symB"/></svg></div><div class="cap">16 px</div></div>
+    </div>
+  </section>
+
+  <footer>
+    草稿未接入项目。下一步：① 你定名字（默认 KITROOM）与符号方向（默认 B）；② 我把字标手绘成原创定制字标；③ 按需接入 apps/（favicon、页眉 Logo）。也可让我再画 A / C 的完整组合稿对比。
+  </footer>
+</div>
+</body>
+</html>

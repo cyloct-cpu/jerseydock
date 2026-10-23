@@ -1,0 +1,402 @@
+{
+ "nav.new": {
+  "src": "New in",
+  "out": "Novinka v"
+ },
+ "nav.kids": {
+  "src": "Kids",
+  "out": "Děti"
+ },
+ "nav.retro": {
+  "src": "Retro",
+  "out": "Retro"
+ },
+ "nav.clubs": {
+  "src": "Clubs",
+  "out": "Kluby"
+ },
+ "nav.nations": {
+  "src": "Nations",
+  "out": "národy"
+ },
+ "nav.outerwear": {
+  "src": "Outerwear",
+  "out": "Svrchní oděvy"
+ },
+ "hero.title": {
+  "src": "Wear the game.",
+  "out": "Noste hru."
+ },
+ "hero.eyebrow": {
+  "src": "26 / 27 SEASON — NOW LIVE",
+  "out": "SEZÓNA 26/27 — NYNÍ ŽIVĚ"
+ },
+ "hero.sub": {
+  "src": "Club and national team jerseys from every major league. Fan, player and kids versions, shipped worldwide.",
+  "out": "Klubové a reprezentační dresy z každé hlavní ligy. Verze ventilátoru, přehrávače a děti, dodávané po celém světě."
+ },
+ "bar.shipping": {
+  "src": "Free shipping on 3+ items",
+  "out": "Doprava zdarma na 3+ zboží"
+ },
+ "bar.delivery": {
+  "src": "Worldwide delivery 7–15 days",
+  "out": "Celosvětové dodání 7–15 dní"
+ },
+ "hero.cta2": {
+  "src": "Browse retro",
+  "out": "Prohlédněte si retro"
+ },
+ "hero.cta": {
+  "src": "Shop the new season",
+  "out": "Nakupujte na novou sezónu"
+ },
+ "sec.seasons": {
+  "src": "Shop by season",
+  "out": "Nakupujte podle sezóny"
+ },
+ "sec.clubs": {
+  "src": "Shop by club",
+  "out": "Nakupujte podle klubu"
+ },
+ "bar.returns": {
+  "src": "30-day returns",
+  "out": "30denní vrácení"
+ },
+ "sec.nations": {
+  "src": "Shop by nation",
+  "out": "Nakupujte podle národa"
+ },
+ "product.added": {
+  "src": "Added",
+  "out": "Přidáno"
+ },
+ "product.sizes": {
+  "src": "Size",
+  "out": "Velikost"
+ },
+ "product.sold": {
+  "src": "sold",
+  "out": "prodáno"
+ },
+ "sec.featured": {
+  "src": "Featured this week",
+  "out": "Doporučeno tento týden"
+ },
+ "product.add": {
+  "src": "Add to cart",
+  "out": "Přidat do košíku"
+ },
+ "sec.viewall": {
+  "src": "View all",
+  "out": "Zobrazit vše"
+ },
+ "product.similar": {
+  "src": "You may also like",
+  "out": "Může se vám také líbit"
+ },
+ "cart.title": {
+  "src": "Your cart",
+  "out": "Váš košík"
+ },
+ "cart.subtotal": {
+  "src": "Subtotal",
+  "out": "Mezisoučet"
+ },
+ "cart.empty": {
+  "src": "Your cart is empty.",
+  "out": "Váš košík je prázdný."
+ },
+ "cart.checkout": {
+  "src": "Checkout",
+  "out": "Pokladna"
+ },
+ "cart.remove": {
+  "src": "Remove",
+  "out": "Odstranit"
+ },
+ "checkout.title": {
+  "src": "Checkout",
+  "out": "Pokladna"
+ },
+ "checkout.payment": {
+  "src": "Payment",
+  "out": "Platba"
+ },
+ "checkout.paysoon": {
+  "src": "Online payment — coming soon",
+  "out": "Online platba – již brzy"
+ },
+ "cart.continue": {
+  "src": "Continue shopping",
+  "out": "Pokračujte v nákupu"
+ },
+ "checkout.paynote": {
+  "src": "Your order will be created as \"awaiting payment\". Our team confirms payment manually before shipping.",
+  "out": "Vaše objednávka bude vytvořena jako „čeká na platbu“. Náš tým před odesláním ručně potvrdí platbu."
+ },
+ "checkout.pay_redirect_title": {
+  "src": "Pay online",
+  "out": "Plaťte online"
+ },
+ "checkout.pay_redirect_desc": {
+  "src": "Secure checkout — you will be redirected to complete payment, then returned here automatically.",
+  "out": "Bezpečná pokladna – budete přesměrováni k dokončení platby a poté se sem automaticky vrátíte."
+ },
+ "search.image_drop": {
+  "src": "Click to upload, or drag & paste an image here",
+  "out": "Kliknutím nahrajte obrázek nebo sem přetáhněte a vložte obrázek"
+ },
+ "search.image_desc": {
+  "src": "Upload a screenshot or photo to find the same jersey",
+  "out": "Nahrajte snímek obrazovky nebo fotografii, abyste našli stejný dres"
+ },
+ "search.image_title": {
+  "src": "Search by image",
+  "out": "Vyhledávání podle obrázku"
+ },
+ "search.image_searching": {
+  "src": "Searching…",
+  "out": "Vyhledávání…"
+ },
+ "search.image_results": {
+  "src": "{n} similar items found",
+  "out": "Bylo nalezeno {n} podobných položek"
+ },
+ "search.image_formats": {
+  "src": "jpg / png / webp / avif · up to 5MB",
+  "out": "jpg / png / webp / avif · až 5 MB"
+ },
+ "search.image_empty": {
+  "src": "No matching jersey found",
+  "out": "Nebyl nalezen žádný odpovídající dres"
+ },
+ "search.image_empty_hint": {
+  "src": "Try a clearer screenshot, or browse popular categories",
+  "out": "Zkuste přehlednější snímek obrazovky nebo procházejte oblíbené kategorie"
+ },
+ "search.image_vision_note": {
+  "src": "Suggested by AI image recognition",
+  "out": "Navrhováno rozpoznáváním obrazu AI"
+ },
+ "search.image_match": {
+  "src": "{n}% match",
+  "out": "Shoda {n} %."
+ },
+ "search.image_exact": {
+  "src": "Exact match",
+  "out": "Přesná shoda"
+ },
+ "search.image_error": {
+  "src": "Search failed. Please try again.",
+  "out": "Hledání se nezdařilo. Zkuste to prosím znovu."
+ },
+ "checkout.pay_cod": {
+  "src": "Cash on delivery",
+  "out": "Dobírka"
+ },
+ "checkout.country_hint": {
+  "src": "Type to search — any country accepted",
+  "out": "Zadejte pro vyhledávání – přijímá se jakákoli země"
+ },
+ "checkout.cod_note": {
+  "src": "Your order is placed with cash on delivery. Our team confirms the order and arranges shipping — you pay the courier when the parcel arrives.",
+  "out": "Vaše objednávka je provedena na dobírku. Náš tým potvrdí objednávku a zařídí přepravu – zaplatíte kurýrovi, když zásilka dorazí."
+ },
+ "checkout.pay_cod_desc": {
+  "src": "Pay the courier in cash when your parcel arrives — no online payment needed.",
+  "out": "Zaplaťte kurýrovi v hotovosti, když váš balíček dorazí – není nutná žádná online platba."
+ },
+ "checkout.country_ph": {
+  "src": "Search or type a country",
+  "out": "Vyhledejte nebo zadejte zemi"
+ },
+ "checkout.place": {
+  "src": "Place order",
+  "out": "Zadat objednávku"
+ },
+ "checkout.city_ph": {
+  "src": "Search or type a city",
+  "out": "Vyhledejte nebo zadejte město"
+ },
+ "checkout.address": {
+  "src": "Shipping address",
+  "out": "Dodací adresa"
+ },
+ "checkout.email": {
+  "src": "Email",
+  "out": "E-mail"
+ },
+ "checkout.city_suggest": {
+  "src": "{n} cities matched — free text accepted",
+  "out": "Počet odpovídajících měst: {n} – přijímáme bezplatný text"
+ },
+ "checkout.contact": {
+  "src": "Contact details",
+  "out": "Kontaktní údaje"
+ },
+ "checkout.name": {
+  "src": "Full name",
+  "out": "Celé jméno"
+ },
+ "checkout.country": {
+  "src": "Country",
+  "out": "Země"
+ },
+ "checkout.city": {
+  "src": "City",
+  "out": "Město"
+ },
+ "checkout.address2": {
+  "src": "Address",
+  "out": "Adresa"
+ },
+ "track.order": {
+  "src": "Order number",
+  "out": "Číslo objednávky"
+ },
+ "track.go": {
+  "src": "Track",
+  "out": "Dráha"
+ },
+ "track.title": {
+  "src": "Track your order",
+  "out": "Sledujte svou objednávku"
+ },
+ "track.sub": {
+  "src": "Enter your order number and the email you used at checkout.",
+  "out": "Zadejte číslo objednávky a e-mail, který jste použili při placení."
+ },
+ "account.orders": {
+  "src": "Order history",
+  "out": "Historie objednávek"
+ },
+ "checkout.zip": {
+  "src": "Postcode",
+  "out": "PSČ"
+ },
+ "footer.shop": {
+  "src": "Shop",
+  "out": "Nakupovat"
+ },
+ "account.title": {
+  "src": "My account",
+  "out": "Můj účet"
+ },
+ "footer.rights": {
+  "src": "All rights reserved.",
+  "out": "Všechna práva vyhrazena."
+ },
+ "footer.help": {
+  "src": "Help",
+  "out": "Pomoc"
+ },
+ "footer.about": {
+  "src": "About",
+  "out": "O"
+ },
+ "footer.returns": {
+  "src": "Returns",
+  "out": "Návraty"
+ },
+ "footer.shipping": {
+  "src": "Shipping",
+  "out": "Doprava"
+ },
+ "footer.faq": {
+  "src": "FAQ",
+  "out": "FAQ"
+ },
+ "footer.contact": {
+  "src": "Contact",
+  "out": "Kontakt"
+ },
+ "filter.sort": {
+  "src": "Sort",
+  "out": "Seřadit"
+ },
+ "filter.price": {
+  "src": "Price",
+  "out": "Cena"
+ },
+ "filter.all": {
+  "src": "All",
+  "out": "Vše"
+ },
+ "qty": {
+  "src": "Qty",
+  "out": "množství"
+ },
+ "product.qty": {
+  "src": "Quantity",
+  "out": "Množství"
+ },
+ "footer.size": {
+  "src": "Size guide",
+  "out": "Průvodce velikostí"
+ },
+ "product.each": {
+  "src": "each",
+  "out": "každý"
+ },
+ "product.custom_fee": {
+  "src": "Customization",
+  "out": "Přizpůsobení"
+ },
+ "product.armband_pick": {
+  "src": "Choose an armband patch",
+  "out": "Vyberte nášivku na náramek"
+ },
+ "product.buy_now": {
+  "src": "Buy it now",
+  "out": "Kupte si to hned"
+ },
+ "product.custom_name": {
+  "src": "Custom name + number",
+  "out": "Vlastní jméno + číslo"
+ },
+ "product.name_max": {
+  "src": "Name + number: up to {n} characters",
+  "out": "Jméno + číslo: až {n} znaků"
+ },
+ "product.note_returns": {
+  "src": "30-day returns & exchanges",
+  "out": "30denní vrácení a výměna"
+ },
+ "product.note_cod": {
+  "src": "Cash on delivery available",
+  "out": "Možnost dobírky"
+ },
+ "nav.signin": {
+  "src": "Sign in",
+  "out": "Přihlaste se"
+ },
+ "product.note_sustain": {
+  "src": "Sustainably made",
+  "out": "Udržitelně vyrobené"
+ },
+ "cart.custom": {
+  "src": "Customization",
+  "out": "Přizpůsobení"
+ },
+ "nav.account": {
+  "src": "Account",
+  "out": "Účet"
+ },
+ "crumb.home": {
+  "src": "Home",
+  "out": "Domov"
+ },
+ "checkout.custom": {
+  "src": "Customization",
+  "out": "Přizpůsobení"
+ },
+ "cart.custom_armband": {
+  "src": "Armband patch",
+  "out": "Nášivka na pásku"
+ },
+ "cart.custom_name": {
+  "src": "Name + number",
+  "out": "Jméno + číslo"
+ }
+}

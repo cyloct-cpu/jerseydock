@@ -1,0 +1,402 @@
+{
+ "nav.nations": {
+  "src": "Nations",
+  "out": "민족 국가"
+ },
+ "nav.retro": {
+  "src": "Retro",
+  "out": "레트로"
+ },
+ "nav.new": {
+  "src": "New in",
+  "out": "새로운 내용"
+ },
+ "nav.clubs": {
+  "src": "Clubs",
+  "out": "클럽"
+ },
+ "nav.outerwear": {
+  "src": "Outerwear",
+  "out": "겉옷"
+ },
+ "nav.kids": {
+  "src": "Kids",
+  "out": "어린이"
+ },
+ "hero.eyebrow": {
+  "src": "26 / 27 SEASON — NOW LIVE",
+  "out": "26/27 시즌 — 지금 진행 중"
+ },
+ "hero.sub": {
+  "src": "Club and national team jerseys from every major league. Fan, player and kids versions, shipped worldwide.",
+  "out": "모든 메이저 리그의 클럽 및 국가대표팀 유니폼. 팬, 플레이어, 어린이 버전이 전 세계로 배송됩니다."
+ },
+ "hero.title": {
+  "src": "Wear the game.",
+  "out": "게임을 착용하세요."
+ },
+ "hero.cta": {
+  "src": "Shop the new season",
+  "out": "새 시즌 쇼핑하기"
+ },
+ "hero.cta2": {
+  "src": "Browse retro",
+  "out": "레트로 찾아보기"
+ },
+ "bar.shipping": {
+  "src": "Free shipping on 3+ items",
+  "out": "3개 이상의 품목에 대해 무료 배송"
+ },
+ "bar.returns": {
+  "src": "30-day returns",
+  "out": "30일 반품"
+ },
+ "bar.delivery": {
+  "src": "Worldwide delivery 7–15 days",
+  "out": "전세계 배송 7~15일"
+ },
+ "sec.seasons": {
+  "src": "Shop by season",
+  "out": "계절별 쇼핑"
+ },
+ "sec.clubs": {
+  "src": "Shop by club",
+  "out": "클럽별 쇼핑"
+ },
+ "sec.viewall": {
+  "src": "View all",
+  "out": "모두 보기"
+ },
+ "sec.featured": {
+  "src": "Featured this week",
+  "out": "이번주 특집"
+ },
+ "sec.nations": {
+  "src": "Shop by nation",
+  "out": "국가별 쇼핑"
+ },
+ "product.added": {
+  "src": "Added",
+  "out": "추가됨"
+ },
+ "product.similar": {
+  "src": "You may also like",
+  "out": "당신은 또한 좋아할 수도 있습니다"
+ },
+ "product.sizes": {
+  "src": "Size",
+  "out": "크기"
+ },
+ "cart.title": {
+  "src": "Your cart",
+  "out": "장바구니"
+ },
+ "product.sold": {
+  "src": "sold",
+  "out": "판매된"
+ },
+ "product.add": {
+  "src": "Add to cart",
+  "out": "장바구니에 추가"
+ },
+ "cart.empty": {
+  "src": "Your cart is empty.",
+  "out": "장바구니가 비어 있습니다."
+ },
+ "cart.remove": {
+  "src": "Remove",
+  "out": "제거하다"
+ },
+ "cart.continue": {
+  "src": "Continue shopping",
+  "out": "계속 쇼핑하기"
+ },
+ "cart.subtotal": {
+  "src": "Subtotal",
+  "out": "소계"
+ },
+ "cart.checkout": {
+  "src": "Checkout",
+  "out": "점검"
+ },
+ "checkout.title": {
+  "src": "Checkout",
+  "out": "점검"
+ },
+ "checkout.payment": {
+  "src": "Payment",
+  "out": "지불"
+ },
+ "checkout.pay_redirect_title": {
+  "src": "Pay online",
+  "out": "온라인으로 결제"
+ },
+ "checkout.paysoon": {
+  "src": "Online payment — coming soon",
+  "out": "온라인 결제 — 곧 제공될 예정"
+ },
+ "checkout.pay_redirect_desc": {
+  "src": "Secure checkout — you will be redirected to complete payment, then returned here automatically.",
+  "out": "보안 결제 — 결제 완료 페이지로 리디렉션된 후 자동으로 여기로 돌아옵니다."
+ },
+ "checkout.paynote": {
+  "src": "Your order will be created as \"awaiting payment\". Our team confirms payment manually before shipping.",
+  "out": "귀하의 주문은 \"결제 대기 중\"으로 생성됩니다. 우리 팀은 배송 전에 수동으로 결제를 확인합니다."
+ },
+ "search.image_title": {
+  "src": "Search by image",
+  "out": "이미지로 검색"
+ },
+ "search.image_drop": {
+  "src": "Click to upload, or drag & paste an image here",
+  "out": "업로드하려면 클릭하거나 여기에 이미지를 끌어서 붙여넣으세요."
+ },
+ "search.image_desc": {
+  "src": "Upload a screenshot or photo to find the same jersey",
+  "out": "동일한 저지를 찾으려면 스크린샷이나 사진을 업로드하세요."
+ },
+ "search.image_searching": {
+  "src": "Searching…",
+  "out": "수색…"
+ },
+ "search.image_formats": {
+  "src": "jpg / png / webp / avif · up to 5MB",
+  "out": "jpg / png / webp / avif · 최대 5MB"
+ },
+ "search.image_results": {
+  "src": "{n} similar items found",
+  "out": "{n}개의 유사한 항목이 발견되었습니다"
+ },
+ "search.image_empty": {
+  "src": "No matching jersey found",
+  "out": "일치하는 저지가 없습니다."
+ },
+ "search.image_empty_hint": {
+  "src": "Try a clearer screenshot, or browse popular categories",
+  "out": "더 선명한 스크린샷을 시도하거나 인기 카테고리를 찾아보세요."
+ },
+ "search.image_match": {
+  "src": "{n}% match",
+  "out": "{n}% 일치"
+ },
+ "search.image_exact": {
+  "src": "Exact match",
+  "out": "정확히 일치"
+ },
+ "checkout.pay_cod": {
+  "src": "Cash on delivery",
+  "out": "대금 상환"
+ },
+ "search.image_error": {
+  "src": "Search failed. Please try again.",
+  "out": "검색에 실패했습니다. 다시 시도해 주세요."
+ },
+ "search.image_vision_note": {
+  "src": "Suggested by AI image recognition",
+  "out": "AI 영상인식으로 제안"
+ },
+ "checkout.pay_cod_desc": {
+  "src": "Pay the courier in cash when your parcel arrives — no online payment needed.",
+  "out": "택배가 도착하면 택배기사에게 현금으로 지불하세요. 온라인 결제는 필요하지 않습니다."
+ },
+ "checkout.cod_note": {
+  "src": "Your order is placed with cash on delivery. Our team confirms the order and arranges shipping — you pay the courier when the parcel arrives.",
+  "out": "귀하의 주문은 착불로 이루어졌습니다. 우리 팀이 주문을 확인하고 배송을 준비합니다. 소포가 도착하면 택배사에게 비용을 지불합니다."
+ },
+ "checkout.country_hint": {
+  "src": "Type to search — any country accepted",
+  "out": "검색하려면 입력하세요. 모든 국가에서 허용됩니다."
+ },
+ "checkout.place": {
+  "src": "Place order",
+  "out": "주문하기"
+ },
+ "checkout.contact": {
+  "src": "Contact details",
+  "out": "연락처"
+ },
+ "checkout.city_ph": {
+  "src": "Search or type a city",
+  "out": "도시를 검색하거나 입력하세요."
+ },
+ "checkout.country_ph": {
+  "src": "Search or type a country",
+  "out": "국가를 검색하거나 입력하세요."
+ },
+ "checkout.address": {
+  "src": "Shipping address",
+  "out": "배송 주소"
+ },
+ "checkout.city_suggest": {
+  "src": "{n} cities matched — free text accepted",
+  "out": "{n}개 도시가 일치함 — 자유 텍스트 허용"
+ },
+ "checkout.address2": {
+  "src": "Address",
+  "out": "주소"
+ },
+ "checkout.country": {
+  "src": "Country",
+  "out": "국가"
+ },
+ "checkout.name": {
+  "src": "Full name",
+  "out": "이름"
+ },
+ "checkout.zip": {
+  "src": "Postcode",
+  "out": "우편번호"
+ },
+ "checkout.email": {
+  "src": "Email",
+  "out": "이메일"
+ },
+ "checkout.city": {
+  "src": "City",
+  "out": "도시"
+ },
+ "track.title": {
+  "src": "Track your order",
+  "out": "주문 추적"
+ },
+ "track.order": {
+  "src": "Order number",
+  "out": "주문 번호"
+ },
+ "track.go": {
+  "src": "Track",
+  "out": "길"
+ },
+ "account.title": {
+  "src": "My account",
+  "out": "내 계정"
+ },
+ "account.orders": {
+  "src": "Order history",
+  "out": "주문 내역"
+ },
+ "footer.shop": {
+  "src": "Shop",
+  "out": "가게"
+ },
+ "footer.help": {
+  "src": "Help",
+  "out": "돕다"
+ },
+ "footer.about": {
+  "src": "About",
+  "out": "에 대한"
+ },
+ "footer.rights": {
+  "src": "All rights reserved.",
+  "out": "모든 권리 보유."
+ },
+ "footer.returns": {
+  "src": "Returns",
+  "out": "보고"
+ },
+ "footer.shipping": {
+  "src": "Shipping",
+  "out": "해운"
+ },
+ "footer.contact": {
+  "src": "Contact",
+  "out": "연락하다"
+ },
+ "track.sub": {
+  "src": "Enter your order number and the email you used at checkout.",
+  "out": "주문 번호와 결제 시 사용한 이메일을 입력하세요."
+ },
+ "footer.faq": {
+  "src": "FAQ",
+  "out": "FAQ"
+ },
+ "footer.size": {
+  "src": "Size guide",
+  "out": "사이즈 가이드"
+ },
+ "filter.sort": {
+  "src": "Sort",
+  "out": "종류"
+ },
+ "filter.price": {
+  "src": "Price",
+  "out": "가격"
+ },
+ "qty": {
+  "src": "Qty",
+  "out": "수량"
+ },
+ "filter.all": {
+  "src": "All",
+  "out": "모두"
+ },
+ "product.qty": {
+  "src": "Quantity",
+  "out": "수량"
+ },
+ "product.buy_now": {
+  "src": "Buy it now",
+  "out": "지금 구매하세요"
+ },
+ "product.each": {
+  "src": "each",
+  "out": "각"
+ },
+ "product.custom_fee": {
+  "src": "Customization",
+  "out": "맞춤화"
+ },
+ "product.note_returns": {
+  "src": "30-day returns & exchanges",
+  "out": "30일 반품 및 교환"
+ },
+ "product.note_sustain": {
+  "src": "Sustainably made",
+  "out": "지속 가능하게 제작됨"
+ },
+ "product.armband_pick": {
+  "src": "Choose an armband patch",
+  "out": "완장 패치를 선택하세요"
+ },
+ "nav.signin": {
+  "src": "Sign in",
+  "out": "로그인"
+ },
+ "nav.account": {
+  "src": "Account",
+  "out": "계정"
+ },
+ "product.custom_name": {
+  "src": "Custom name + number",
+  "out": "맞춤 이름 + 번호"
+ },
+ "product.note_cod": {
+  "src": "Cash on delivery available",
+  "out": "대금 상환 가능"
+ },
+ "cart.custom": {
+  "src": "Customization",
+  "out": "맞춤화"
+ },
+ "product.name_max": {
+  "src": "Name + number: up to {n} characters",
+  "out": "이름+번호: 최대 {n}자"
+ },
+ "checkout.custom": {
+  "src": "Customization",
+  "out": "맞춤화"
+ },
+ "crumb.home": {
+  "src": "Home",
+  "out": "집"
+ },
+ "cart.custom_name": {
+  "src": "Name + number",
+  "out": "이름 + 전화번호"
+ },
+ "cart.custom_armband": {
+  "src": "Armband patch",
+  "out": "완장 패치"
+ }
+}

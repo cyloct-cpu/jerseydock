@@ -1,0 +1,36 @@
+[
+  {
+    "id": "imp_mvidjttu",
+    "folderName": "batch-2026-10-21-b98w",
+    "fileCount": 1,
+    "productCount": 3,
+    "status": "imported",
+    "failed": [],
+    "createdAt": "2026-10-21T17:16:53.873Z"
+  },
+  {
+    "id": "imp_mvidi94s",
+    "folderName": "batch-2026-10-21-b98w",
+    "fileCount": 1,
+    "productCount": 3,
+    "status": "imported",
+    "failed": [],
+    "createdAt": "2026-10-21T17:15:40.395Z"
+  },
+  {
+    "id": "imp_mvidg43j",
+    "folderName": "batch-2026-10-21-b98w",
+    "fileCount": 1,
+    "productCount": 2,
+    "status": "imported",
+    "failed": [
+      {
+        "sku": "3",
+        "errors": [
+          "版本非法：球员版(player)（可填 球迷版/球员版/儿童版 或 fan/player/kids）"
+        ]
+      }
+    ],
+    "createdAt": "2026-10-21T17:14:00.574Z"
+  }
+]

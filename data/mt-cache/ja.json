@@ -1,0 +1,282 @@
+{
+ "product.added": {
+  "src": "Added",
+  "out": "追加した"
+ },
+ "product.sizes": {
+  "src": "Size",
+  "out": "サイズ"
+ },
+ "product.sold": {
+  "src": "sold",
+  "out": "売られた"
+ },
+ "product.similar": {
+  "src": "You may also like",
+  "out": "あなたも好きかもしれません"
+ },
+ "cart.continue": {
+  "src": "Continue shopping",
+  "out": "買い物を続ける"
+ },
+ "cart.remove": {
+  "src": "Remove",
+  "out": "取り除く"
+ },
+ "checkout.payment": {
+  "src": "Payment",
+  "out": "支払い"
+ },
+ "checkout.pay_cod": {
+  "src": "Cash on delivery",
+  "out": "代金引換"
+ },
+ "hero.eyebrow": {
+  "src": "26 / 27 SEASON — NOW LIVE",
+  "out": "26 / 27 シーズン — 現在ライブ中"
+ },
+ "checkout.paynote": {
+  "src": "Your order will be created as \"awaiting payment\". Our team confirms payment manually before shipping.",
+  "out": "ご注文は「支払い待ち」として作成されます。私たちのチームは出荷前に支払いを手動で確認します。"
+ },
+ "checkout.country_hint": {
+  "src": "Type to search — any country accepted",
+  "out": "検索に入力します - どの国でも受け入れられます"
+ },
+ "checkout.cod_note": {
+  "src": "Your order is placed with cash on delivery. Our team confirms the order and arranges shipping — you pay the courier when the parcel arrives.",
+  "out": "ご注文は代金引換でのご注文となります。私たちのチームが注文を確認し、配送を手配します。荷物の到着時に配送業者に支払います。"
+ },
+ "checkout.pay_cod_desc": {
+  "src": "Pay the courier in cash when your parcel arrives — no online payment needed.",
+  "out": "荷物の到着時に宅配業者に現金でお支払いください。オンラインでのお支払いは必要ありません。"
+ },
+ "checkout.city_ph": {
+  "src": "Search or type a city",
+  "out": "都市を検索または入力します"
+ },
+ "checkout.address": {
+  "src": "Shipping address",
+  "out": "お届け先の住所"
+ },
+ "checkout.email": {
+  "src": "Email",
+  "out": "電子メール"
+ },
+ "checkout.name": {
+  "src": "Full name",
+  "out": "フルネーム"
+ },
+ "checkout.contact": {
+  "src": "Contact details",
+  "out": "連絡先詳細"
+ },
+ "checkout.address2": {
+  "src": "Address",
+  "out": "住所"
+ },
+ "checkout.city_suggest": {
+  "src": "{n} cities matched — free text accepted",
+  "out": "{n} 都市が一致しました — 自由テキストを受け入れます"
+ },
+ "checkout.country_ph": {
+  "src": "Search or type a country",
+  "out": "国を検索または入力します"
+ },
+ "checkout.city": {
+  "src": "City",
+  "out": "市"
+ },
+ "checkout.country": {
+  "src": "Country",
+  "out": "国"
+ },
+ "track.order": {
+  "src": "Order number",
+  "out": "注文番号"
+ },
+ "track.go": {
+  "src": "Track",
+  "out": "追跡"
+ },
+ "footer.shop": {
+  "src": "Shop",
+  "out": "店"
+ },
+ "checkout.zip": {
+  "src": "Postcode",
+  "out": "郵便番号"
+ },
+ "footer.about": {
+  "src": "About",
+  "out": "について"
+ },
+ "footer.help": {
+  "src": "Help",
+  "out": "ヘルプ"
+ },
+ "footer.returns": {
+  "src": "Returns",
+  "out": "返品"
+ },
+ "footer.shipping": {
+  "src": "Shipping",
+  "out": "配送"
+ },
+ "footer.size": {
+  "src": "Size guide",
+  "out": "サイズガイド"
+ },
+ "track.sub": {
+  "src": "Enter your order number and the email you used at checkout.",
+  "out": "注文番号とチェックアウト時に使用したメールアドレスを入力してください。"
+ },
+ "footer.faq": {
+  "src": "FAQ",
+  "out": "よくある質問"
+ },
+ "filter.sort": {
+  "src": "Sort",
+  "out": "選別"
+ },
+ "footer.contact": {
+  "src": "Contact",
+  "out": "接触"
+ },
+ "filter.price": {
+  "src": "Price",
+  "out": "価格"
+ },
+ "qty": {
+  "src": "Qty",
+  "out": "数量"
+ },
+ "filter.all": {
+  "src": "All",
+  "out": "全て"
+ },
+ "product.qty": {
+  "src": "Quantity",
+  "out": "量"
+ },
+ "product.buy_now": {
+  "src": "Buy it now",
+  "out": "即購入"
+ },
+ "product.each": {
+  "src": "each",
+  "out": "それぞれ"
+ },
+ "account.orders": {
+  "src": "Order history",
+  "out": "注文履歴"
+ },
+ "product.custom_fee": {
+  "src": "Customization",
+  "out": "カスタマイズ"
+ },
+ "product.custom_name": {
+  "src": "Custom name + number",
+  "out": "カスタム名 + 番号"
+ },
+ "product.armband_pick": {
+  "src": "Choose an armband patch",
+  "out": "アームバンドパッチを選択してください"
+ },
+ "product.note_sustain": {
+  "src": "Sustainably made",
+  "out": "持続可能な方法で作られた"
+ },
+ "product.note_cod": {
+  "src": "Cash on delivery available",
+  "out": "代金引換可能"
+ },
+ "product.note_returns": {
+  "src": "30-day returns & exchanges",
+  "out": "30日間の返品と交換"
+ },
+ "nav.signin": {
+  "src": "Sign in",
+  "out": "サインイン"
+ },
+ "cart.custom": {
+  "src": "Customization",
+  "out": "カスタマイズ"
+ },
+ "nav.account": {
+  "src": "Account",
+  "out": "アカウント"
+ },
+ "checkout.custom": {
+  "src": "Customization",
+  "out": "カスタマイズ"
+ },
+ "product.name_max": {
+  "src": "Name + number: up to {n} characters",
+  "out": "名前 + 番号: 最大 {n} 文字"
+ },
+ "cart.custom_armband": {
+  "src": "Armband patch",
+  "out": "腕章パッチ"
+ },
+ "cart.custom_name": {
+  "src": "Name + number",
+  "out": "名前+番号"
+ },
+ "search.image_title": {
+  "src": "Search by image",
+  "out": "画像から検索"
+ },
+ "checkout.pay_redirect_desc": {
+  "src": "Secure checkout — you will be redirected to complete payment, then returned here automatically.",
+  "out": "安全なチェックアウト — 支払いを完了するためにリダイレクトされ、自動的にここに戻ります。"
+ },
+ "checkout.pay_redirect_title": {
+  "src": "Pay online",
+  "out": "オンラインで支払う"
+ },
+ "search.image_drop": {
+  "src": "Click to upload, or drag & paste an image here",
+  "out": "クリックしてアップロードするか、ここに画像をドラッグ＆ペーストしてください"
+ },
+ "search.image_searching": {
+  "src": "Searching…",
+  "out": "検索中…"
+ },
+ "search.image_results": {
+  "src": "{n} similar items found",
+  "out": "{n} 個の類似アイテムが見つかりました"
+ },
+ "search.image_formats": {
+  "src": "jpg / png / webp / avif · up to 5MB",
+  "out": "jpg / png / webp / avif ・最大5MB"
+ },
+ "search.image_empty": {
+  "src": "No matching jersey found",
+  "out": "一致するジャージが見つかりません"
+ },
+ "search.image_exact": {
+  "src": "Exact match",
+  "out": "完全一致"
+ },
+ "search.image_empty_hint": {
+  "src": "Try a clearer screenshot, or browse popular categories",
+  "out": "より鮮明なスクリーンショットを試すか、人気のあるカテゴリを参照してください"
+ },
+ "search.image_error": {
+  "src": "Search failed. Please try again.",
+  "out": "検索に失敗しました。もう一度試してください。"
+ },
+ "search.image_match": {
+  "src": "{n}% match",
+  "out": "{n}% 一致"
+ },
+ "search.image_vision_note": {
+  "src": "Suggested by AI image recognition",
+  "out": "AI画像認識による提案"
+ },
+ "search.image_desc": {
+  "src": "Upload a screenshot or photo to find the same jersey",
+  "out": "スクリーンショットまたは写真をアップロードして、同じジャージを見つけます"
+ }
+}

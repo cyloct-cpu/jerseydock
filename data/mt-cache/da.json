@@ -1,0 +1,402 @@
+{
+ "nav.clubs": {
+  "src": "Clubs",
+  "out": "Klubber"
+ },
+ "nav.nations": {
+  "src": "Nations",
+  "out": "Nationer"
+ },
+ "nav.new": {
+  "src": "New in",
+  "out": "Ny i"
+ },
+ "nav.kids": {
+  "src": "Kids",
+  "out": "Børn"
+ },
+ "nav.retro": {
+  "src": "Retro",
+  "out": "Retro"
+ },
+ "nav.outerwear": {
+  "src": "Outerwear",
+  "out": "Overtøj"
+ },
+ "hero.eyebrow": {
+  "src": "26 / 27 SEASON — NOW LIVE",
+  "out": "26/27 SÆSON — LIVE NU"
+ },
+ "hero.cta": {
+  "src": "Shop the new season",
+  "out": "Shop den nye sæson"
+ },
+ "hero.title": {
+  "src": "Wear the game.",
+  "out": "Bær spillet."
+ },
+ "hero.sub": {
+  "src": "Club and national team jerseys from every major league. Fan, player and kids versions, shipped worldwide.",
+  "out": "Klub- og landsholdstrøjer fra alle større ligaer. Fan-, afspiller- og børneversioner, sendt til hele verden."
+ },
+ "bar.returns": {
+  "src": "30-day returns",
+  "out": "30 dages returret"
+ },
+ "bar.delivery": {
+  "src": "Worldwide delivery 7–15 days",
+  "out": "Verdensomspændende levering 7-15 dage"
+ },
+ "bar.shipping": {
+  "src": "Free shipping on 3+ items",
+  "out": "Gratis fragt på 3+ varer"
+ },
+ "hero.cta2": {
+  "src": "Browse retro",
+  "out": "Gennemse retro"
+ },
+ "sec.featured": {
+  "src": "Featured this week",
+  "out": "Udvalgt i denne uge"
+ },
+ "sec.clubs": {
+  "src": "Shop by club",
+  "out": "Shop efter klub"
+ },
+ "sec.seasons": {
+  "src": "Shop by season",
+  "out": "Shop efter sæson"
+ },
+ "sec.nations": {
+  "src": "Shop by nation",
+  "out": "Shop efter nation"
+ },
+ "product.added": {
+  "src": "Added",
+  "out": "Tilføjet"
+ },
+ "sec.viewall": {
+  "src": "View all",
+  "out": "Se alle"
+ },
+ "product.sizes": {
+  "src": "Size",
+  "out": "Størrelse"
+ },
+ "product.add": {
+  "src": "Add to cart",
+  "out": "Tilføj til kurv"
+ },
+ "cart.title": {
+  "src": "Your cart",
+  "out": "Din vogn"
+ },
+ "product.similar": {
+  "src": "You may also like",
+  "out": "Du kan også lide"
+ },
+ "cart.empty": {
+  "src": "Your cart is empty.",
+  "out": "Din indkøbskurv er tom."
+ },
+ "product.sold": {
+  "src": "sold",
+  "out": "solgt"
+ },
+ "cart.subtotal": {
+  "src": "Subtotal",
+  "out": "Subtotal"
+ },
+ "cart.checkout": {
+  "src": "Checkout",
+  "out": "Checkout"
+ },
+ "cart.remove": {
+  "src": "Remove",
+  "out": "Fjerne"
+ },
+ "checkout.title": {
+  "src": "Checkout",
+  "out": "Checkout"
+ },
+ "checkout.payment": {
+  "src": "Payment",
+  "out": "Betaling"
+ },
+ "cart.continue": {
+  "src": "Continue shopping",
+  "out": "Fortsæt med at shoppe"
+ },
+ "checkout.pay_redirect_title": {
+  "src": "Pay online",
+  "out": "Betal online"
+ },
+ "checkout.paysoon": {
+  "src": "Online payment — coming soon",
+  "out": "Online betaling - kommer snart"
+ },
+ "checkout.pay_redirect_desc": {
+  "src": "Secure checkout — you will be redirected to complete payment, then returned here automatically.",
+  "out": "Sikker checkout - du vil blive omdirigeret til at gennemføre betalingen og derefter returneres hertil automatisk."
+ },
+ "checkout.paynote": {
+  "src": "Your order will be created as \"awaiting payment\". Our team confirms payment manually before shipping.",
+  "out": "Din ordre vil blive oprettet som \"afventer betaling\". Vores team bekræfter betalingen manuelt før forsendelse."
+ },
+ "search.image_drop": {
+  "src": "Click to upload, or drag & paste an image here",
+  "out": "Klik for at uploade, eller træk og indsæt et billede her"
+ },
+ "search.image_formats": {
+  "src": "jpg / png / webp / avif · up to 5MB",
+  "out": "jpg / png / webp / avif · op til 5MB"
+ },
+ "search.image_title": {
+  "src": "Search by image",
+  "out": "Søg efter billede"
+ },
+ "search.image_desc": {
+  "src": "Upload a screenshot or photo to find the same jersey",
+  "out": "Upload et skærmbillede eller billede for at finde den samme trøje"
+ },
+ "search.image_results": {
+  "src": "{n} similar items found",
+  "out": "{n} lignende varer fundet"
+ },
+ "search.image_searching": {
+  "src": "Searching…",
+  "out": "Søger..."
+ },
+ "search.image_empty": {
+  "src": "No matching jersey found",
+  "out": "Ingen matchende trøje fundet"
+ },
+ "search.image_exact": {
+  "src": "Exact match",
+  "out": "Præcis match"
+ },
+ "search.image_empty_hint": {
+  "src": "Try a clearer screenshot, or browse popular categories",
+  "out": "Prøv et klarere skærmbillede, eller gennemse populære kategorier"
+ },
+ "search.image_match": {
+  "src": "{n}% match",
+  "out": "{n} % match"
+ },
+ "checkout.pay_cod": {
+  "src": "Cash on delivery",
+  "out": "Efterkrav"
+ },
+ "search.image_vision_note": {
+  "src": "Suggested by AI image recognition",
+  "out": "Foreslået af AI billedgenkendelse"
+ },
+ "search.image_error": {
+  "src": "Search failed. Please try again.",
+  "out": "Søgning mislykkedes. Prøv venligst igen."
+ },
+ "checkout.country_hint": {
+  "src": "Type to search — any country accepted",
+  "out": "Indtast for at søge — ethvert land accepteret"
+ },
+ "checkout.country_ph": {
+  "src": "Search or type a country",
+  "out": "Søg eller skriv et land"
+ },
+ "checkout.cod_note": {
+  "src": "Your order is placed with cash on delivery. Our team confirms the order and arranges shipping — you pay the courier when the parcel arrives.",
+  "out": "Din ordre afgives med efterkrav. Vores team bekræfter ordren og arrangerer forsendelse - du betaler kureren, når pakken ankommer."
+ },
+ "checkout.pay_cod_desc": {
+  "src": "Pay the courier in cash when your parcel arrives — no online payment needed.",
+  "out": "Betal kureren kontant, når din pakke ankommer - ingen online betaling nødvendig."
+ },
+ "checkout.contact": {
+  "src": "Contact details",
+  "out": "Kontaktoplysninger"
+ },
+ "checkout.place": {
+  "src": "Place order",
+  "out": "Afgiv ordre"
+ },
+ "checkout.address": {
+  "src": "Shipping address",
+  "out": "Leveringsadresse"
+ },
+ "checkout.email": {
+  "src": "Email",
+  "out": "E-mail"
+ },
+ "checkout.address2": {
+  "src": "Address",
+  "out": "Adresse"
+ },
+ "checkout.city_suggest": {
+  "src": "{n} cities matched — free text accepted",
+  "out": "{n} matchede byer — fritekst accepteret"
+ },
+ "checkout.name": {
+  "src": "Full name",
+  "out": "Fulde navn"
+ },
+ "checkout.city_ph": {
+  "src": "Search or type a city",
+  "out": "Søg eller skriv en by"
+ },
+ "checkout.city": {
+  "src": "City",
+  "out": "By"
+ },
+ "checkout.country": {
+  "src": "Country",
+  "out": "Land"
+ },
+ "track.order": {
+  "src": "Order number",
+  "out": "Ordrenummer"
+ },
+ "track.title": {
+  "src": "Track your order",
+  "out": "Spor din ordre"
+ },
+ "checkout.zip": {
+  "src": "Postcode",
+  "out": "postnummer"
+ },
+ "track.go": {
+  "src": "Track",
+  "out": "Spore"
+ },
+ "footer.shop": {
+  "src": "Shop",
+  "out": "Butik"
+ },
+ "track.sub": {
+  "src": "Enter your order number and the email you used at checkout.",
+  "out": "Indtast dit ordrenummer og den e-mail, du brugte ved kassen."
+ },
+ "footer.help": {
+  "src": "Help",
+  "out": "Hjælp"
+ },
+ "footer.about": {
+  "src": "About",
+  "out": "Om"
+ },
+ "footer.rights": {
+  "src": "All rights reserved.",
+  "out": "Alle rettigheder forbeholdes."
+ },
+ "footer.shipping": {
+  "src": "Shipping",
+  "out": "Forsendelse"
+ },
+ "footer.returns": {
+  "src": "Returns",
+  "out": "Returnerer"
+ },
+ "footer.faq": {
+  "src": "FAQ",
+  "out": "FAQ"
+ },
+ "account.title": {
+  "src": "My account",
+  "out": "Min konto"
+ },
+ "account.orders": {
+  "src": "Order history",
+  "out": "Ordrehistorik"
+ },
+ "footer.contact": {
+  "src": "Contact",
+  "out": "Kontakte"
+ },
+ "filter.sort": {
+  "src": "Sort",
+  "out": "Sortere"
+ },
+ "filter.price": {
+  "src": "Price",
+  "out": "Pris"
+ },
+ "filter.all": {
+  "src": "All",
+  "out": "Alle"
+ },
+ "qty": {
+  "src": "Qty",
+  "out": "Antal"
+ },
+ "product.qty": {
+  "src": "Quantity",
+  "out": "Mængde"
+ },
+ "footer.size": {
+  "src": "Size guide",
+  "out": "Størrelsesguide"
+ },
+ "product.buy_now": {
+  "src": "Buy it now",
+  "out": "Køb det nu"
+ },
+ "product.custom_name": {
+  "src": "Custom name + number",
+  "out": "Brugerdefineret navn + nummer"
+ },
+ "product.custom_fee": {
+  "src": "Customization",
+  "out": "Tilpasning"
+ },
+ "product.armband_pick": {
+  "src": "Choose an armband patch",
+  "out": "Vælg et armbåndsplaster"
+ },
+ "product.each": {
+  "src": "each",
+  "out": "hver"
+ },
+ "product.note_sustain": {
+  "src": "Sustainably made",
+  "out": "Bæredygtigt lavet"
+ },
+ "product.note_returns": {
+  "src": "30-day returns & exchanges",
+  "out": "30 dages returnering og ombytning"
+ },
+ "nav.signin": {
+  "src": "Sign in",
+  "out": "Log ind"
+ },
+ "nav.account": {
+  "src": "Account",
+  "out": "Konto"
+ },
+ "cart.custom": {
+  "src": "Customization",
+  "out": "Tilpasning"
+ },
+ "product.name_max": {
+  "src": "Name + number: up to {n} characters",
+  "out": "Navn + nummer: op til {n} tegn"
+ },
+ "product.note_cod": {
+  "src": "Cash on delivery available",
+  "out": "Efterkrav tilgængelig"
+ },
+ "checkout.custom": {
+  "src": "Customization",
+  "out": "Tilpasning"
+ },
+ "crumb.home": {
+  "src": "Home",
+  "out": "Hjem"
+ },
+ "cart.custom_name": {
+  "src": "Name + number",
+  "out": "Navn + nummer"
+ },
+ "cart.custom_armband": {
+  "src": "Armband patch",
+  "out": "Armbåndsplaster"
+ }
+}

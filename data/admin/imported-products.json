@@ -1,0 +1,170 @@
+[
+  {
+    "h": "1",
+    "t": "王者无敌",
+    "p": 1,
+    "c": 99,
+    "o": 99,
+    "s": [
+      "XXL"
+    ],
+    "i": [
+      "/imports/imp_mvidjttu/1/1.jpg",
+      "/imports/imp_mvidjttu/1/2.jpg",
+      "/imports/imp_mvidjttu/1/3.jpg",
+      "/imports/imp_mvidjttu/1/4.jpg",
+      "/imports/imp_mvidjttu/1/5.jpg",
+      "/imports/imp_mvidjttu/1/6.jpg"
+    ],
+    "v": "/imports/imp_mvidjttu/1/1.jpg",
+    "sa": 0,
+    "cl": [
+      "arsenal"
+    ],
+    "d": "1",
+    "si": {},
+    "sku": "1",
+    "batchNo": "1",
+    "mainImages": [
+      "/imports/imp_mvidjttu/1/1.jpg",
+      "/imports/imp_mvidjttu/1/2.jpg",
+      "/imports/imp_mvidjttu/1/3.jpg",
+      "/imports/imp_mvidjttu/1/4.jpg",
+      "/imports/imp_mvidjttu/1/5.jpg",
+      "/imports/imp_mvidjttu/1/6.jpg"
+    ],
+    "skuShotImages": [],
+    "imageFiles": [
+      "1.jpg",
+      "2.jpg",
+      "3.jpg",
+      "4.jpg",
+      "5.jpg",
+      "6.jpg"
+    ],
+    "version": "fan",
+    "type": "home",
+    "stock": 50,
+    "batchId": "imp_mvidjttu",
+    "importedAt": "2026-10-21T17:16:53.870Z"
+  },
+  {
+    "h": "2",
+    "t": "王者天下",
+    "p": 1,
+    "c": 0,
+    "o": 0,
+    "s": [
+      "16",
+      "18",
+      "20",
+      "22",
+      "24",
+      "26",
+      "28"
+    ],
+    "i": [
+      "/imports/imp_mvidjttu/2/1.jpg",
+      "/imports/imp_mvidjttu/2/2.jpg",
+      "/imports/imp_mvidjttu/2/3.jpg",
+      "/imports/imp_mvidjttu/2/4.jpg",
+      "/imports/imp_mvidjttu/2/5.jpg",
+      "/imports/imp_mvidjttu/2/6.jpg",
+      "/imports/imp_mvidjttu/2/7.jpg"
+    ],
+    "v": "/imports/imp_mvidjttu/2/1.jpg",
+    "sa": 0,
+    "cl": [
+      "barcelona"
+    ],
+    "d": "1",
+    "si": {},
+    "sku": "2",
+    "batchNo": "2",
+    "mainImages": [
+      "/imports/imp_mvidjttu/2/1.jpg",
+      "/imports/imp_mvidjttu/2/2.jpg",
+      "/imports/imp_mvidjttu/2/3.jpg",
+      "/imports/imp_mvidjttu/2/4.jpg",
+      "/imports/imp_mvidjttu/2/5.jpg",
+      "/imports/imp_mvidjttu/2/6.jpg",
+      "/imports/imp_mvidjttu/2/7.jpg"
+    ],
+    "skuShotImages": [],
+    "imageFiles": [
+      "1.jpg",
+      "2.jpg",
+      "3.jpg",
+      "4.jpg",
+      "5.jpg",
+      "6.jpg",
+      "7.jpg"
+    ],
+    "version": "kids",
+    "type": "away",
+    "stock": 30,
+    "batchId": "imp_mvidjttu",
+    "importedAt": "2026-10-21T17:16:53.870Z"
+  },
+  {
+    "h": "3",
+    "t": "小王八",
+    "p": 1,
+    "c": 75,
+    "o": 99,
+    "s": [
+      "M",
+      "L",
+      "XL"
+    ],
+    "i": [
+      "/imports/imp_mvidjttu/3/1.jpeg",
+      "/imports/imp_mvidjttu/3/2.jpeg",
+      "/imports/imp_mvidjttu/3/3.jpeg",
+      "/imports/imp_mvidjttu/3/4.jpeg",
+      "/imports/imp_mvidjttu/3/5.jpeg",
+      "/imports/imp_mvidjttu/3/6.jpeg",
+      "/imports/imp_mvidjttu/3/7.jpeg",
+      "/imports/imp_mvidjttu/3/8.jpeg",
+      "/imports/imp_mvidjttu/3/9.jpeg"
+    ],
+    "v": "/imports/imp_mvidjttu/3/1.jpeg",
+    "sa": 0,
+    "cl": [
+      "retro",
+      "Various"
+    ],
+    "d": "1",
+    "si": {},
+    "sku": "3",
+    "batchNo": "3",
+    "mainImages": [
+      "/imports/imp_mvidjttu/3/1.jpeg",
+      "/imports/imp_mvidjttu/3/2.jpeg",
+      "/imports/imp_mvidjttu/3/3.jpeg",
+      "/imports/imp_mvidjttu/3/4.jpeg",
+      "/imports/imp_mvidjttu/3/5.jpeg",
+      "/imports/imp_mvidjttu/3/6.jpeg",
+      "/imports/imp_mvidjttu/3/7.jpeg",
+      "/imports/imp_mvidjttu/3/8.jpeg",
+      "/imports/imp_mvidjttu/3/9.jpeg"
+    ],
+    "skuShotImages": [],
+    "imageFiles": [
+      "1.jpeg",
+      "2.jpeg",
+      "3.jpeg",
+      "4.jpeg",
+      "5.jpeg",
+      "6.jpeg",
+      "7.jpeg",
+      "8.jpeg",
+      "9.jpeg"
+    ],
+    "version": "player",
+    "type": "retro",
+    "stock": 20,
+    "batchId": "imp_mvidjttu",
+    "importedAt": "2026-10-21T17:16:53.870Z"
+  }
+]

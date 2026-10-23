@@ -1,0 +1,342 @@
+{
+ "nav.retro": {
+  "src": "Retro",
+  "out": "Ретро"
+ },
+ "nav.kids": {
+  "src": "Kids",
+  "out": "Дети"
+ },
+ "nav.outerwear": {
+  "src": "Outerwear",
+  "out": "Верхняя одежда"
+ },
+ "nav.clubs": {
+  "src": "Clubs",
+  "out": "Клубы"
+ },
+ "nav.nations": {
+  "src": "Nations",
+  "out": "нации"
+ },
+ "hero.eyebrow": {
+  "src": "26 / 27 SEASON — NOW LIVE",
+  "out": "СЕЗОН 26/27 — СЕЙЧАС ЖИВУТ"
+ },
+ "nav.new": {
+  "src": "New in",
+  "out": "Новое в"
+ },
+ "hero.title": {
+  "src": "Wear the game.",
+  "out": "Носите игру."
+ },
+ "hero.sub": {
+  "src": "Club and national team jerseys from every major league. Fan, player and kids versions, shipped worldwide.",
+  "out": "Футболки клубов и национальных сборных всех высших лиг. Версии для фанатов, игроков и детей, поставляемые по всему миру."
+ },
+ "hero.cta": {
+  "src": "Shop the new season",
+  "out": "Делайте покупки в новом сезоне"
+ },
+ "hero.cta2": {
+  "src": "Browse retro",
+  "out": "Просмотр ретро"
+ },
+ "sec.nations": {
+  "src": "Shop by nation",
+  "out": "Делайте покупки по странам"
+ },
+ "bar.shipping": {
+  "src": "Free shipping on 3+ items",
+  "out": "Бесплатная доставка от 3-х товаров"
+ },
+ "bar.delivery": {
+  "src": "Worldwide delivery 7–15 days",
+  "out": "Доставка по всему миру 7–15 дней."
+ },
+ "bar.returns": {
+  "src": "30-day returns",
+  "out": "30-дневный возврат"
+ },
+ "sec.viewall": {
+  "src": "View all",
+  "out": "Посмотреть все"
+ },
+ "product.add": {
+  "src": "Add to cart",
+  "out": "Добавить в корзину"
+ },
+ "product.added": {
+  "src": "Added",
+  "out": "Добавлен"
+ },
+ "product.sizes": {
+  "src": "Size",
+  "out": "Размер"
+ },
+ "product.sold": {
+  "src": "sold",
+  "out": "продал"
+ },
+ "sec.seasons": {
+  "src": "Shop by season",
+  "out": "Выбирайте по сезону"
+ },
+ "product.similar": {
+  "src": "You may also like",
+  "out": "Вам также может понравиться"
+ },
+ "sec.featured": {
+  "src": "Featured this week",
+  "out": "Популярное на этой неделе"
+ },
+ "sec.clubs": {
+  "src": "Shop by club",
+  "out": "Выбрать по клубу"
+ },
+ "cart.empty": {
+  "src": "Your cart is empty.",
+  "out": "Ваша корзина пуста."
+ },
+ "cart.checkout": {
+  "src": "Checkout",
+  "out": "Проверить"
+ },
+ "cart.subtotal": {
+  "src": "Subtotal",
+  "out": "Итого"
+ },
+ "checkout.title": {
+  "src": "Checkout",
+  "out": "Проверить"
+ },
+ "cart.remove": {
+  "src": "Remove",
+  "out": "Удалять"
+ },
+ "checkout.payment": {
+  "src": "Payment",
+  "out": "Оплата"
+ },
+ "checkout.paynote": {
+  "src": "Your order will be created as \"awaiting payment\". Our team confirms payment manually before shipping.",
+  "out": "Ваш заказ будет отмечен как «ожидающий оплаты». Наша команда вручную подтверждает оплату перед отправкой."
+ },
+ "cart.title": {
+  "src": "Your cart",
+  "out": "Ваша корзина"
+ },
+ "cart.continue": {
+  "src": "Continue shopping",
+  "out": "Продолжить покупки"
+ },
+ "checkout.paysoon": {
+  "src": "Online payment — coming soon",
+  "out": "Онлайн оплата — скоро"
+ },
+ "checkout.pay_cod": {
+  "src": "Cash on delivery",
+  "out": "Наложенным платежом"
+ },
+ "checkout.cod_note": {
+  "src": "Your order is placed with cash on delivery. Our team confirms the order and arranges shipping — you pay the courier when the parcel arrives.",
+  "out": "Ваш заказ оформляется наложенным платежом. Наша команда подтверждает заказ и организует доставку — вы платите курьеру при получении посылки."
+ },
+ "checkout.pay_cod_desc": {
+  "src": "Pay the courier in cash when your parcel arrives — no online payment needed.",
+  "out": "Оплатите курьеру наличными при получении посылки — онлайн-платежей не требуется."
+ },
+ "checkout.country_hint": {
+  "src": "Type to search — any country accepted",
+  "out": "Введите текст для поиска — допускается любая страна"
+ },
+ "checkout.country_ph": {
+  "src": "Search or type a country",
+  "out": "Найдите или введите страну"
+ },
+ "checkout.contact": {
+  "src": "Contact details",
+  "out": "Контактные данные"
+ },
+ "checkout.city_ph": {
+  "src": "Search or type a city",
+  "out": "Найдите или введите город"
+ },
+ "checkout.address": {
+  "src": "Shipping address",
+  "out": "Адрес доставки"
+ },
+ "checkout.email": {
+  "src": "Email",
+  "out": "Электронная почта"
+ },
+ "checkout.name": {
+  "src": "Full name",
+  "out": "Полное имя"
+ },
+ "checkout.address2": {
+  "src": "Address",
+  "out": "Адрес"
+ },
+ "checkout.city": {
+  "src": "City",
+  "out": "Город"
+ },
+ "checkout.country": {
+  "src": "Country",
+  "out": "Страна"
+ },
+ "checkout.city_suggest": {
+  "src": "{n} cities matched — free text accepted",
+  "out": "Соответствует {n} городов — принимается произвольный текст"
+ },
+ "track.title": {
+  "src": "Track your order",
+  "out": "Отслеживайте свой заказ"
+ },
+ "checkout.zip": {
+  "src": "Postcode",
+  "out": "Почтовый индекс"
+ },
+ "track.go": {
+  "src": "Track",
+  "out": "Отслеживать"
+ },
+ "track.order": {
+  "src": "Order number",
+  "out": "Номер заказа"
+ },
+ "checkout.place": {
+  "src": "Place order",
+  "out": "Разместить заказ"
+ },
+ "footer.shop": {
+  "src": "Shop",
+  "out": "Магазин"
+ },
+ "account.title": {
+  "src": "My account",
+  "out": "Мой счет"
+ },
+ "footer.about": {
+  "src": "About",
+  "out": "О"
+ },
+ "footer.help": {
+  "src": "Help",
+  "out": "Помощь"
+ },
+ "footer.shipping": {
+  "src": "Shipping",
+  "out": "Перевозки"
+ },
+ "footer.rights": {
+  "src": "All rights reserved.",
+  "out": "Все права защищены."
+ },
+ "footer.faq": {
+  "src": "FAQ",
+  "out": "Часто задаваемые вопросы"
+ },
+ "account.orders": {
+  "src": "Order history",
+  "out": "История заказов"
+ },
+ "footer.returns": {
+  "src": "Returns",
+  "out": "Возврат"
+ },
+ "filter.sort": {
+  "src": "Sort",
+  "out": "Сортировать"
+ },
+ "track.sub": {
+  "src": "Enter your order number and the email you used at checkout.",
+  "out": "Введите номер заказа и адрес электронной почты, который вы использовали при оформлении заказа."
+ },
+ "footer.contact": {
+  "src": "Contact",
+  "out": "Контакт"
+ },
+ "filter.price": {
+  "src": "Price",
+  "out": "Цена"
+ },
+ "filter.all": {
+  "src": "All",
+  "out": "Все"
+ },
+ "qty": {
+  "src": "Qty",
+  "out": "Кол-во"
+ },
+ "product.buy_now": {
+  "src": "Buy it now",
+  "out": "Купить сейчас"
+ },
+ "product.qty": {
+  "src": "Quantity",
+  "out": "Количество"
+ },
+ "product.each": {
+  "src": "each",
+  "out": "каждый"
+ },
+ "product.custom_fee": {
+  "src": "Customization",
+  "out": "Кастомизация"
+ },
+ "product.custom_name": {
+  "src": "Custom name + number",
+  "out": "Пользовательское имя + номер"
+ },
+ "product.armband_pick": {
+  "src": "Choose an armband patch",
+  "out": "Выберите нашивку на руку"
+ },
+ "footer.size": {
+  "src": "Size guide",
+  "out": "Руководство по размерам"
+ },
+ "product.note_returns": {
+  "src": "30-day returns & exchanges",
+  "out": "30-дневный возврат и обмен"
+ },
+ "nav.signin": {
+  "src": "Sign in",
+  "out": "Войти"
+ },
+ "nav.account": {
+  "src": "Account",
+  "out": "Счет"
+ },
+ "cart.custom": {
+  "src": "Customization",
+  "out": "Кастомизация"
+ },
+ "product.note_cod": {
+  "src": "Cash on delivery available",
+  "out": "Возможен наложенный платеж"
+ },
+ "product.note_sustain": {
+  "src": "Sustainably made",
+  "out": "Экологически безопасное производство"
+ },
+ "cart.custom_name": {
+  "src": "Name + number",
+  "out": "Имя + номер"
+ },
+ "checkout.custom": {
+  "src": "Customization",
+  "out": "Кастомизация"
+ },
+ "product.name_max": {
+  "src": "Name + number: up to {n} characters",
+  "out": "Имя + номер: до {n} символов"
+ },
+ "cart.custom_armband": {
+  "src": "Armband patch",
+  "out": "Нарукавная нашивка"
+ }
+}

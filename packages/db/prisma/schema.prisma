@@ -1,0 +1,324 @@
+// Prisma schema —— 球衣跨境电商（开发执行文档 §5 数据模型）
+// 数据库：PostgreSQL。本地开发可用 Docker / Neon / Supabase 免费层（见 .env.example）。
+// 价格一律以 USD 基准存储，展示层换算；避免多币种对账混乱。
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ---------------- 商品 ----------------
+
+enum ProductStatus {
+  draft     // 导入后默认未上架
+  active    // 已上架
+  archived  // 软删除，可恢复
+}
+
+enum ProductType {
+  home
+  away
+  third
+  gk
+  training
+  retro
+}
+
+enum ProductVersion {
+  fan
+  player
+  kids
+}
+
+model Product {
+  id               String        @id @default(cuid())
+  sku              String        @unique
+  slug             String        @unique
+  titleKey         String?       // i18n key（动态标题预留）
+  titleEn          String
+  season           String?
+  teamId           String?
+  league           String?
+  type             ProductType   @default(home)
+  version          ProductVersion @default(fan)
+  basePriceUsd     Decimal       @db.Decimal(10, 2)
+  comparePriceUsd  Decimal?      @db.Decimal(10, 2)
+  descriptionKey   String?
+  images           String[]      // 图片 URL 数组
+  status           ProductStatus @default(draft)
+  importBatchId    String?
+  importBatch      ImportBatch?  @relation(fields: [importBatchId], references: [id])
+  collections      CollectionProduct[]
+  variants         Variant[]
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+
+  @@index([status])
+  @@index([season])
+  @@index([teamId])
+}
+
+model Variant {
+  id             String  @id @default(cuid())
+  productId      String
+  product        Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  size           String  // S / M / L / XL / 2XL / 3XL / 4XL
+  sku            String  @unique
+  stock          Int     @default(0)
+  priceAdjustUsd Decimal @default(0) @db.Decimal(10, 2)
+
+  @@unique([productId, size])
+}
+
+// ---------------- 分类 ----------------
+
+enum CategoryType {
+  national
+  club
+  season
+  retro
+  kids
+  outerwear
+  shorts
+  other
+}
+
+model Category {
+  id        String              @id @default(cuid())
+  slug      String              @unique
+  nameKey   String?
+  nameEn    String
+  type      CategoryType        @default(other)
+  parentId  String?
+  parent    Category?           @relation("CategoryTree", fields: [parentId], references: [id])
+  children  Category[]          @relation("CategoryTree")
+  sort      Int                 @default(0)
+  products  CollectionProduct[]
+}
+
+// 多对多：商品 ↔ 分类（跨集合商品合并归属）
+model CollectionProduct {
+  categoryId  String
+  productId   String
+  category    Category  @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  product     Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@id([categoryId, productId])
+  @@index([productId])
+}
+
+// ---------------- 客户 CRM（N9） ----------------
+
+model Customer {
+  id                  String         @id @default(cuid())
+  email               String?        @unique
+  name                String?
+  isRegistered        Boolean        @default(false)
+  country             String?
+  currency            String         @default("USD")
+  source              String?        // 来源渠道
+  firstSeenAt         DateTime       @default(now())
+  lastSeenAt          DateTime       @default(now())
+  orderCount          Int            @default(0)
+  repeatPurchaseCount Int            @default(0) // 回购次数
+  ltvUsd              Decimal        @default(0) @db.Decimal(10, 2)
+  hasContact          Boolean        @default(false) // 是否留联系方式
+  contactType         String?        // email / whatsapp / phone
+  tags                String[]
+  events              CustomerEvent[]
+  followUps           FollowUp[]
+  orders              Order[]
+  createdAt           DateTime       @default(now())
+
+  @@index([lastSeenAt])
+  @@index([orderCount])
+}
+
+enum CustomerEventType {
+  view_product
+  add_to_cart
+  remove_from_cart
+  checkout_start
+  order
+  contact
+  return_visit
+}
+
+model CustomerEvent {
+  id         String            @id @default(cuid())
+  customerId String?
+  customer   Customer?         @relation(fields: [customerId], references: [id], onDelete: SetNull)
+  sessionId  String            // 访客 ID（前端 localStorage）
+  type       CustomerEventType
+  productId  String?
+  durationMs Int?              // 停留时长
+  meta       Json?
+  createdAt  DateTime          @default(now())
+
+  @@index([sessionId])
+  @@index([type])
+  @@index([createdAt])
+}
+
+enum FollowUpStatus {
+  pending    // 待回访
+  contacted  // 联系中
+  converted  // 已转化
+  lost       // 已流失
+  not_interested
+}
+
+model FollowUp {
+  id         String          @id @default(cuid())
+  customerId String
+  customer   Customer        @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  status     FollowUpStatus  @default(pending)
+  nextAt     DateTime?
+  owner      String?
+  note       String?
+  history    Json?           // 时间线：[{time, action, note}]
+  createdAt  DateTime        @default(now())
+  updatedAt  DateTime        @updatedAt
+
+  @@index([status])
+  @@index([nextAt])
+}
+
+// ---------------- 订单与物流（N2 / N8） ----------------
+
+enum PaymentStatus {
+  pending   // 待支付（占位方案默认）
+  paid
+  failed
+  refunded
+}
+
+enum FulfillmentStatus {
+  unfulfilled
+  packing
+  shipped
+  in_transit
+  delivered
+  exception
+}
+
+model Order {
+  id                String            @id @default(cuid())
+  orderNo           String            @unique
+  customerId        String?
+  customer          Customer?         @relation(fields: [customerId], references: [id], onDelete: SetNull)
+  email             String
+  items             Json              // [{handle,title,priceUsd,size,qty,image}]
+  subtotalUsd       Decimal           @db.Decimal(10, 2)
+  discountUsd       Decimal           @default(0) @db.Decimal(10, 2)
+  shippingUsd       Decimal           @default(0) @db.Decimal(10, 2)
+  totalUsd          Decimal           @db.Decimal(10, 2)
+  currency          String            @default("USD") // 下单时展示币种快照
+  paymentStatus     PaymentStatus     @default(pending)
+  fulfillmentStatus FulfillmentStatus @default(unfulfilled)
+  address           Json?             // {name,address,city,country,zip}
+  shipments         Shipment[]
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+
+  @@index([paymentStatus])
+  @@index([fulfillmentStatus])
+  @@index([email])
+  @@index([createdAt])
+}
+
+enum ShipmentStatus {
+  pending
+  in_transit
+  delivered
+  exception
+}
+
+model Shipment {
+  id          String          @id @default(cuid())
+  orderId     String
+  order       Order           @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  carrier     String?         // dhl / fedex / ups / yunexpress / 4px ...
+  trackingNo  String?
+  status      ShipmentStatus  @default(pending)
+  events      Json?           // 轨迹：[{time,location,description}]
+  shippedAt   DateTime?
+  deliveredAt DateTime?
+  createdAt   DateTime        @default(now())
+
+  @@index([trackingNo])
+}
+
+// ---------------- 批量导入（N3） ----------------
+
+enum ImportBatchStatus {
+  parsed
+  preview
+  imported
+  failed
+}
+
+model ImportBatch {
+  id           String           @id @default(cuid())
+  folderName   String
+  fileCount    Int              @default(0)
+  productCount Int              @default(0)
+  status       ImportBatchStatus @default(parsed)
+  log          String?
+  createdBy    String?
+  products     Product[]
+  createdAt    DateTime         @default(now())
+}
+
+// ---------------- 后台权限（N6） ----------------
+
+enum AdminRole {
+  owner
+  operator
+  viewer
+}
+
+model AdminUser {
+  id           String     @id @default(cuid())
+  email        String     @unique
+  passwordHash String
+  name         String?
+  role         AdminRole  @default(operator)
+  /// 自定义角色名（仅标识用，不影响权限）
+  roleName     String?
+  /// 权限 key 数组（lib/perm-client.ts 集中定义）；owner 恒为全部
+  permissions  String[]   @default([])
+  lastLoginAt  DateTime?
+  /// 最后修改密码时间
+  lastPasswordAt DateTime?
+  createdAt    DateTime   @default(now())
+  auditLogs    AuditLog[]
+}
+
+model AuditLog {
+  id          String    @id @default(cuid())
+  adminUserId String?
+  adminUser   AdminUser? @relation(fields: [adminUserId], references: [id], onDelete: SetNull)
+  action      String
+  target      String?
+  meta        Json?
+  createdAt   DateTime  @default(now())
+
+  @@index([createdAt])
+}
+
+// ---------------- 汇率（N1） ----------------
+
+model ExchangeRate {
+  id        String   @id @default(cuid())
+  base      String   @default("USD")
+  quote     String
+  rate      Float
+  updatedAt DateTime @default(now())
+
+  @@unique([base, quote])
+}

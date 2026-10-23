@@ -1,0 +1,342 @@
+{
+ "nav.clubs": {
+  "src": "Clubs",
+  "out": "الأندية"
+ },
+ "nav.new": {
+  "src": "New in",
+  "out": "جديد في"
+ },
+ "nav.nations": {
+  "src": "Nations",
+  "out": "الأمم"
+ },
+ "nav.retro": {
+  "src": "Retro",
+  "out": "الرجعية"
+ },
+ "nav.kids": {
+  "src": "Kids",
+  "out": "أطفال"
+ },
+ "hero.title": {
+  "src": "Wear the game.",
+  "out": "ارتداء اللعبة."
+ },
+ "nav.outerwear": {
+  "src": "Outerwear",
+  "out": "ملابس خارجية"
+ },
+ "hero.eyebrow": {
+  "src": "26 / 27 SEASON — NOW LIVE",
+  "out": "موسم 26 / 27 – مباشر الآن"
+ },
+ "hero.sub": {
+  "src": "Club and national team jerseys from every major league. Fan, player and kids versions, shipped worldwide.",
+  "out": "قمصان الأندية والمنتخبات الوطنية من كل الدوريات الكبرى. إصدارات المعجبين واللاعبين والأطفال، يتم شحنها في جميع أنحاء العالم."
+ },
+ "hero.cta2": {
+  "src": "Browse retro",
+  "out": "تصفح الرجعية"
+ },
+ "hero.cta": {
+  "src": "Shop the new season",
+  "out": "تسوق الموسم الجديد"
+ },
+ "bar.shipping": {
+  "src": "Free shipping on 3+ items",
+  "out": "شحن مجاني لأكثر من 3 عناصر"
+ },
+ "bar.delivery": {
+  "src": "Worldwide delivery 7–15 days",
+  "out": "التسليم في جميع أنحاء العالم 7-15 يوما"
+ },
+ "bar.returns": {
+  "src": "30-day returns",
+  "out": "عوائد لمدة 30 يوما"
+ },
+ "sec.nations": {
+  "src": "Shop by nation",
+  "out": "تسوق حسب الأمة"
+ },
+ "sec.clubs": {
+  "src": "Shop by club",
+  "out": "تسوق حسب النادي"
+ },
+ "product.add": {
+  "src": "Add to cart",
+  "out": "أضف إلى السلة"
+ },
+ "sec.viewall": {
+  "src": "View all",
+  "out": "عرض الكل"
+ },
+ "product.sizes": {
+  "src": "Size",
+  "out": "مقاس"
+ },
+ "product.added": {
+  "src": "Added",
+  "out": "تمت الإضافة"
+ },
+ "product.sold": {
+  "src": "sold",
+  "out": "مُباع"
+ },
+ "product.similar": {
+  "src": "You may also like",
+  "out": "قد ترغب أيضا"
+ },
+ "cart.empty": {
+  "src": "Your cart is empty.",
+  "out": "سلة التسوق الخاصة بك فارغة."
+ },
+ "sec.featured": {
+  "src": "Featured this week",
+  "out": "مميزة هذا الأسبوع"
+ },
+ "sec.seasons": {
+  "src": "Shop by season",
+  "out": "تسوق حسب الموسم"
+ },
+ "cart.checkout": {
+  "src": "Checkout",
+  "out": "الدفع"
+ },
+ "cart.remove": {
+  "src": "Remove",
+  "out": "يزيل"
+ },
+ "checkout.title": {
+  "src": "Checkout",
+  "out": "الدفع"
+ },
+ "checkout.payment": {
+  "src": "Payment",
+  "out": "قسط"
+ },
+ "cart.title": {
+  "src": "Your cart",
+  "out": "عربة التسوق الخاصة بك"
+ },
+ "cart.continue": {
+  "src": "Continue shopping",
+  "out": "مواصلة التسوق"
+ },
+ "cart.subtotal": {
+  "src": "Subtotal",
+  "out": "المجموع الفرعي"
+ },
+ "checkout.paysoon": {
+  "src": "Online payment — coming soon",
+  "out": "الدفع عبر الإنترنت - قريبا"
+ },
+ "checkout.paynote": {
+  "src": "Your order will be created as \"awaiting payment\". Our team confirms payment manually before shipping.",
+  "out": "سيتم إنشاء طلبك على أنه \"في انتظار الدفع\". يؤكد فريقنا الدفع يدويًا قبل الشحن."
+ },
+ "checkout.pay_cod": {
+  "src": "Cash on delivery",
+  "out": "نقدا عند التسليم"
+ },
+ "checkout.pay_cod_desc": {
+  "src": "Pay the courier in cash when your parcel arrives — no online payment needed.",
+  "out": "ادفع لشركة التوصيل نقدًا عند وصول الطرد الخاص بك - لا حاجة للدفع عبر الإنترنت."
+ },
+ "checkout.cod_note": {
+  "src": "Your order is placed with cash on delivery. Our team confirms the order and arranges shipping — you pay the courier when the parcel arrives.",
+  "out": "يتم تقديم طلبك نقدا عند التسليم. يقوم فريقنا بتأكيد الطلب وترتيب عملية الشحن — حيث تقوم بالدفع لشركة التوصيل عند وصول الطرد."
+ },
+ "checkout.city_ph": {
+  "src": "Search or type a city",
+  "out": "ابحث أو اكتب مدينة"
+ },
+ "checkout.country_ph": {
+  "src": "Search or type a country",
+  "out": "ابحث أو اكتب دولة"
+ },
+ "checkout.contact": {
+  "src": "Contact details",
+  "out": "تفاصيل الاتصال"
+ },
+ "checkout.country_hint": {
+  "src": "Type to search — any country accepted",
+  "out": "اكتب للبحث - يتم قبول أي بلد"
+ },
+ "checkout.city_suggest": {
+  "src": "{n} cities matched — free text accepted",
+  "out": "{n} مدينة متطابقة - تم قبول النص الحر"
+ },
+ "checkout.name": {
+  "src": "Full name",
+  "out": "الاسم الكامل"
+ },
+ "checkout.email": {
+  "src": "Email",
+  "out": "بريد إلكتروني"
+ },
+ "checkout.address": {
+  "src": "Shipping address",
+  "out": "عنوان الشحن"
+ },
+ "checkout.country": {
+  "src": "Country",
+  "out": "دولة"
+ },
+ "checkout.city": {
+  "src": "City",
+  "out": "مدينة"
+ },
+ "checkout.address2": {
+  "src": "Address",
+  "out": "عنوان"
+ },
+ "checkout.zip": {
+  "src": "Postcode",
+  "out": "شفرة البريد"
+ },
+ "checkout.place": {
+  "src": "Place order",
+  "out": "وضع النظام"
+ },
+ "track.order": {
+  "src": "Order number",
+  "out": "رقم الطلب"
+ },
+ "track.title": {
+  "src": "Track your order",
+  "out": "تتبع طلبك"
+ },
+ "track.go": {
+  "src": "Track",
+  "out": "مسار"
+ },
+ "track.sub": {
+  "src": "Enter your order number and the email you used at checkout.",
+  "out": "أدخل رقم طلبك والبريد الإلكتروني الذي استخدمته عند الخروج."
+ },
+ "footer.shop": {
+  "src": "Shop",
+  "out": "محل"
+ },
+ "footer.help": {
+  "src": "Help",
+  "out": "يساعد"
+ },
+ "footer.about": {
+  "src": "About",
+  "out": "عن"
+ },
+ "footer.shipping": {
+  "src": "Shipping",
+  "out": "شحن"
+ },
+ "footer.rights": {
+  "src": "All rights reserved.",
+  "out": "جميع الحقوق محفوظة."
+ },
+ "footer.returns": {
+  "src": "Returns",
+  "out": "المرتجعات"
+ },
+ "footer.faq": {
+  "src": "FAQ",
+  "out": "التعليمات"
+ },
+ "account.title": {
+  "src": "My account",
+  "out": "حسابي"
+ },
+ "account.orders": {
+  "src": "Order history",
+  "out": "تاريخ الطلب"
+ },
+ "footer.contact": {
+  "src": "Contact",
+  "out": "اتصال"
+ },
+ "filter.sort": {
+  "src": "Sort",
+  "out": "نوع"
+ },
+ "filter.price": {
+  "src": "Price",
+  "out": "سعر"
+ },
+ "filter.all": {
+  "src": "All",
+  "out": "الجميع"
+ },
+ "product.qty": {
+  "src": "Quantity",
+  "out": "كمية"
+ },
+ "product.buy_now": {
+  "src": "Buy it now",
+  "out": "اشتر الآن"
+ },
+ "product.custom_name": {
+  "src": "Custom name + number",
+  "out": "الاسم المخصص + الرقم"
+ },
+ "product.armband_pick": {
+  "src": "Choose an armband patch",
+  "out": "اختر رقعة شارة القيادة"
+ },
+ "qty": {
+  "src": "Qty",
+  "out": "الكمية"
+ },
+ "footer.size": {
+  "src": "Size guide",
+  "out": "دليل الحجم"
+ },
+ "product.each": {
+  "src": "each",
+  "out": "كل"
+ },
+ "product.custom_fee": {
+  "src": "Customization",
+  "out": "التخصيص"
+ },
+ "product.note_returns": {
+  "src": "30-day returns & exchanges",
+  "out": "إرجاع واستبدال خلال 30 يومًا"
+ },
+ "nav.signin": {
+  "src": "Sign in",
+  "out": "تسجيل الدخول"
+ },
+ "nav.account": {
+  "src": "Account",
+  "out": "حساب"
+ },
+ "cart.custom": {
+  "src": "Customization",
+  "out": "التخصيص"
+ },
+ "product.note_sustain": {
+  "src": "Sustainably made",
+  "out": "مصنوعة بشكل مستدام"
+ },
+ "product.name_max": {
+  "src": "Name + number: up to {n} characters",
+  "out": "الاسم + الرقم: ما يصل إلى {n} حرفًا"
+ },
+ "product.note_cod": {
+  "src": "Cash on delivery available",
+  "out": "الدفع عند التسليم متاح"
+ },
+ "cart.custom_armband": {
+  "src": "Armband patch",
+  "out": "رقعة شارة"
+ },
+ "cart.custom_name": {
+  "src": "Name + number",
+  "out": "الاسم + الرقم"
+ },
+ "checkout.custom": {
+  "src": "Customization",
+  "out": "التخصيص"
+ }
+}

@@ -1,0 +1,131 @@
+{
+  "brand": {
+    "name": "JERSEYDOCK",
+    "domain": "",
+    "adminDomain": "",
+    "supportEmail": "1376817078@qq.com",
+    "whatsapp": "+86 15602208149",
+    "supportQr": ""
+  },
+  "announcement": "",
+  "announcementBar": {
+    "enabled": false,
+    "items": [],
+    "color": "",
+    "bg": "",
+    "fontSize": 12
+  },
+  "reviews": {
+    "enabled": false,
+    "title": "What our customers say",
+    "subtitle": "",
+    "reviews": []
+  },
+  "visitors": {
+    "enabled": false,
+    "baseCount": 12,
+    "windowMinutes": 5,
+    "padToBase": false
+  },
+  "customize": {
+    "enabled": true,
+    "nameNumber": {
+      "enabled": true,
+      "price": 3,
+      "maxLength": 24,
+      "placeholder": "Ronaldo#7"
+    },
+    "armband": {
+      "enabled": true,
+      "options": [
+        {
+          "label": "World Cup badge",
+          "price": 3,
+          "image": "/assets/customize/badge-worldcup.png"
+        },
+        {
+          "label": "Continental badge",
+          "price": 3,
+          "image": "/assets/customize/badge-champions.png"
+        },
+        {
+          "label": "Other league patch",
+          "price": 3,
+          "image": "/assets/customize/badge-league.png"
+        }
+      ]
+    }
+  },
+  "hero": {
+    "enabled": true,
+    "intervalMs": 7000,
+    "slides": [
+      {
+        "id": "hero_default_1",
+        "image": "/assets/hero/uploads/hero_mvh2ypqh.jpg",
+        "eyebrow": "26 / 27 season — now live",
+        "title": "Wear the game.",
+        "subtitle": "Club and national team jerseys from every major league — fan, player and kids versions, shipped worldwide.",
+        "ctaText": "Shop the new season",
+        "ctaHref": "/collections/2026-27-season",
+        "cta2Text": "Browse retro",
+        "cta2Href": "/collections/retro"
+      },
+      {
+        "id": "hero_default_2",
+        "image": "/assets/hero/uploads/hero_mvh2y9qm.jpg",
+        "eyebrow": "From the archive",
+        "title": "Kits that made history.",
+        "subtitle": "Hand-picked retro shirts from the seasons you remember — sourced, checked and shipped with care.",
+        "ctaText": "Browse retro",
+        "ctaHref": "/collections/retro",
+        "cta2Text": "New season",
+        "cta2Href": "/collections/2026-27-season"
+      },
+      {
+        "id": "hero_mvh39nt5",
+        "image": "/assets/hero/uploads/hero_mvh2ywuf.jpg",
+        "eyebrow": "26 / 27 season — now live",
+        "title": "Wear the game.",
+        "subtitle": "",
+        "ctaText": "gem one night",
+        "ctaHref": "/collections/2024-25-season",
+        "cta2Text": "hold on",
+        "cta2Href": "/clubs"
+      }
+    ]
+  },
+  "payment": {
+    "provider": "worldfirst",
+    "stripe": {
+      "secretKey": "",
+      "publishableKey": "",
+      "webhookSecret": ""
+    },
+    "paypal": {
+      "clientId": "",
+      "clientSecret": "",
+      "env": "sandbox",
+      "webhookId": ""
+    },
+    "worldfirst": {
+      "accountName": "ZHI WEI",
+      "accountNumber": "1234567890",
+      "bankName": "WorldFirst (Ant Bank)",
+      "swiftCode": "ALPGHKHH",
+      "note": "下单后 48 小时内完成转账，到账后 24 小时内发货"
+    },
+    "xtransfer": {
+      "accountName": "ZHI WEI",
+      "accountNumber": "1234567890",
+      "bankName": "WorldFirst (Ant Bank)",
+      "swiftCode": "ALPGHKHH",
+      "note": "下单后 48 小时内完成转账，到账后 24 小时内发货"
+    }
+  },
+  "visionApi": {
+    "keys": ""
+  },
+  "paymentPlaceholder": "Online payment — coming soon",
+  "updatedAt": "2026-10-20T22:51:34.369Z"
+}

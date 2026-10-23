@@ -1,0 +1,131 @@
+{
+  "users": [
+    {
+      "id": "adm_owner",
+      "email": "owner@kitvault.local",
+      "name": "Owner",
+      "role": "owner",
+      "passwordHash": "scrypt$4e5e95d67a8b0c8f9938b62338fabe29$10f07cf70c467aa4b5a4275d288b2ccefd04cae6ce8e26618ae501af9b008875ca14568a8629451d443b85f71d129d934fe01485ce04858c3e74d6780467c851",
+      "createdAt": "2026-10-19T00:16:04.743Z",
+      "lastLoginAt": "2026-10-20T23:00:24.337Z",
+      "roleName": "Owner",
+      "permissions": [
+        "dashboard.view",
+        "products.view",
+        "products.edit",
+        "products.delete",
+        "import.run",
+        "import.rollback",
+        "orders.view",
+        "orders.edit",
+        "shipping.view",
+        "shipping.edit",
+        "customers.view",
+        "customers.edit",
+        "followup.view",
+        "followup.edit",
+        "settings.edit",
+        "data.export",
+        "admins.manage"
+      ]
+    },
+    {
+      "id": "adm_mvhabjdsgcbk",
+      "email": "cyloct@gmail.com",
+      "name": "小王",
+      "role": "operator",
+      "roleName": "上品员",
+      "permissions": [
+        "products.view",
+        "products.edit",
+        "products.delete",
+        "import.run",
+        "import.rollback"
+      ],
+      "passwordHash": "scrypt$07b8a10426a067cb83530c7e71e755ae$da24f690963caaef13858779a7dad01debfd8533625eecd8be61834bde788f30a0f6cf08eabca4c31d6d0f1a0135657552138c4f7ddb64277373183be17fa6f7",
+      "createdAt": "2026-10-20T22:58:42.016Z",
+      "lastLoginAt": "2026-10-20T22:59:43.097Z",
+      "lastPasswordAt": "2026-10-20T22:58:42.016Z"
+    },
+    {
+      "id": "adm_mvhacd2fn0er",
+      "email": "1376817078@qq.com",
+      "name": "自己",
+      "role": "owner",
+      "roleName": "Owner",
+      "permissions": [
+        "dashboard.view",
+        "products.view",
+        "products.edit",
+        "products.delete",
+        "import.run",
+        "import.rollback",
+        "orders.view",
+        "orders.edit",
+        "shipping.view",
+        "shipping.edit",
+        "customers.view",
+        "customers.edit",
+        "followup.view",
+        "followup.edit",
+        "settings.edit",
+        "data.export",
+        "admins.manage"
+      ],
+      "passwordHash": "scrypt$ac6aa67d9d83322e1f908eb4f130f79c$c8c241382244106ad49ad1995bca5305c0fdbb7e1355e2a6a93cd3ff93be38b168fce75373752969b7c7613f52749b99669aacf7dcf7f1213eb4d868797fcbe7",
+      "createdAt": "2026-10-20T22:59:20.487Z",
+      "lastLoginAt": null,
+      "lastPasswordAt": "2026-10-20T22:59:20.487Z"
+    },
+    {
+      "id": "adm_mvi25o4em2u8",
+      "email": "ccy@qq.com",
+      "name": "小王八",
+      "role": "operator",
+      "roleName": "运营主管",
+      "permissions": [
+        "dashboard.view",
+        "products.view",
+        "products.edit",
+        "products.delete",
+        "import.run",
+        "import.rollback",
+        "orders.view",
+        "orders.edit",
+        "shipping.view",
+        "shipping.edit"
+      ],
+      "passwordHash": "scrypt$6516c7c5f4190f4c435dc4d9a4eaa69d$7b0389fa3afb0b2eb49d5c042b937d1aeffbdd46365bc694b1a777f1b1ce117525bfc1980ae684f60e4bd16c9712ef319656e9f7331f236f5f91b4fbf8435438",
+      "createdAt": "2026-10-21T11:57:57.470Z",
+      "lastLoginAt": null,
+      "lastPasswordAt": "2026-10-21T11:57:57.470Z"
+    },
+    {
+      "id": "adm_mvi28a8dw264",
+      "email": "cjy123@jj.com",
+      "name": "wang",
+      "role": "operator",
+      "roleName": "经历",
+      "permissions": [
+        "dashboard.view",
+        "products.view",
+        "products.edit",
+        "products.delete",
+        "import.run",
+        "import.rollback",
+        "orders.view",
+        "orders.edit",
+        "shipping.view",
+        "shipping.edit",
+        "customers.view",
+        "customers.edit",
+        "followup.view",
+        "followup.edit"
+      ],
+      "passwordHash": "scrypt$b035bedd353c4008c3cf050df05345e0$9ef87998e31cf4393db54cdee62a604ba2aa5597cddff8a127c9aabea1d01c4ec7cbff4af9ec8b643dd306e83b57e38348061a22e40c15172fd4f2876791f1b7",
+      "createdAt": "2026-10-21T11:59:59.437Z",
+      "lastLoginAt": null,
+      "lastPasswordAt": "2026-10-21T11:59:59.437Z"
+    }
+  ]
+}

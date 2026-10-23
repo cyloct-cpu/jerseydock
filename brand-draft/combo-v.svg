@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 380" fill="#F5F3EF" role="img" aria-label="KITROOM logo vertical">
+  <g transform="translate(78,30) scale(0.6)">
+    <path d="M60 60 L100 60 L120 80 L140 60 L180 60 L180 180 L60 180 Z" fill="#F5F3EF"/>
+  </g>
+  <text x="150" y="252" text-anchor="middle" font-family="'Helvetica Neue',Helvetica,Arial,sans-serif" font-size="54" font-weight="600" letter-spacing="3" fill="#F5F3EF">KITROOM</text>
+  <text x="150" y="300" text-anchor="middle" fill="#A8A29A" font-family="'Helvetica Neue',Helvetica,Arial,sans-serif" font-size="14" letter-spacing="6">FOOTBALL KIT STORE</text>
+  <line x1="110" y1="322" x2="190" y2="322" stroke="#A8A29A" stroke-width="1"/>
+</svg>

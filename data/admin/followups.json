@@ -1,0 +1,683 @@
+[
+  {
+    "id": "fu_mvgyh81w",
+    "customerKey": "1376817078@qq.com",
+    "email": "1376817078@qq.com",
+    "status": "pending",
+    "nextAt": "2026-10-21T06:12",
+    "owner": "Owner",
+    "note": "",
+    "history": [
+      {
+        "time": "2026-10-20T17:27:11.876Z",
+        "action": "created",
+        "note": ""
+      },
+      {
+        "time": "2026-10-20T20:12:40.174Z",
+        "action": "updated",
+        "note": ""
+      },
+      {
+        "time": "2026-10-20T20:12:53.581Z",
+        "action": "updated",
+        "note": ""
+      },
+      {
+        "time": "2026-10-20T20:12:58.798Z",
+        "action": "updated",
+        "note": ""
+      },
+      {
+        "time": "2026-10-21T04:17:03.036Z",
+        "operator": "Owner",
+        "action": "updated",
+        "result": "",
+        "note": ""
+      },
+      {
+        "time": "2026-10-21T04:17:24.299Z",
+        "operator": "Owner",
+        "action": "updated",
+        "result": "",
+        "note": "已经多次下单"
+      },
+      {
+        "time": "2026-10-21T04:23:01.773Z",
+        "operator": "Owner",
+        "action": "updated",
+        "result": "",
+        "note": "已经多次下单"
+      },
+      {
+        "time": "2026-10-21T04:23:04.482Z",
+        "operator": "Owner",
+        "action": "updated",
+        "result": "",
+        "note": "已经多次下单"
+      },
+      {
+        "time": "2026-10-21T04:23:06.308Z",
+        "operator": "Owner",
+        "action": "updated",
+        "result": "",
+        "note": "已经多次下单"
+      },
+      {
+        "time": "2026-10-21T04:23:07.243Z",
+        "operator": "Owner",
+        "action": "updated",
+        "result": "",
+        "note": "已经多次下单"
+      },
+      {
+        "time": "2026-10-21T04:23:25.201Z",
+        "operator": "Owner",
+        "action": "updated",
+        "result": "",
+        "note": ""
+      },
+      {
+        "time": "2026-10-21T04:23:32.361Z",
+        "operator": "Owner",
+        "action": "updated",
+        "result": "",
+        "note": ""
+      },
+      {
+        "time": "2026-10-21T12:00:10.117Z",
+        "operator": "Owner",
+        "action": "updated",
+        "result": "",
+        "note": ""
+      },
+      {
+        "time": "2026-10-21T12:00:12.333Z",
+        "operator": "Owner",
+        "action": "updated",
+        "result": "",
+        "note": ""
+      },
+      {
+        "time": "2026-10-21T12:00:12.957Z",
+        "operator": "Owner",
+        "action": "updated",
+        "result": "",
+        "note": ""
+      },
+      {
+        "time": "2026-10-21T12:00:13.775Z",
+        "operator": "Owner",
+        "action": "updated",
+        "result": "",
+        "note": ""
+      },
+      {
+        "time": "2026-10-21T12:00:14.677Z",
+        "operator": "Owner",
+        "action": "updated",
+        "result": "",
+        "note": ""
+      },
+      {
+        "time": "2026-10-21T12:00:15.175Z",
+        "operator": "Owner",
+        "action": "updated",
+        "result": "",
+        "note": ""
+      },
+      {
+        "time": "2026-10-21T12:00:15.333Z",
+        "operator": "Owner",
+        "action": "updated",
+        "result": "",
+        "note": ""
+      },
+      {
+        "time": "2026-10-21T12:00:15.469Z",
+        "operator": "Owner",
+        "action": "updated",
+        "result": "",
+        "note": ""
+      },
+      {
+        "time": "2026-10-21T12:00:15.993Z",
+        "operator": "Owner",
+        "action": "updated",
+        "result": "",
+        "note": ""
+      },
+      {
+        "time": "2026-10-21T12:00:16.185Z",
+        "operator": "Owner",
+        "action": "updated",
+        "result": "",
+        "note": ""
+      },
+      {
+        "time": "2026-10-21T12:00:16.357Z",
+        "operator": "Owner",
+        "action": "updated",
+        "result": "",
+        "note": ""
+      },
+      {
+        "time": "2026-10-21T12:00:16.620Z",
+        "operator": "Owner",
+        "action": "updated",
+        "result": "",
+        "note": ""
+      },
+      {
+        "time": "2026-10-21T12:00:16.745Z",
+        "operator": "Owner",
+        "action": "updated",
+        "result": "",
+        "note": ""
+      },
+      {
+        "time": "2026-10-21T12:00:16.953Z",
+        "operator": "Owner",
+        "action": "updated",
+        "result": "",
+        "note": ""
+      },
+      {
+        "time": "2026-10-21T12:00:17.090Z",
+        "operator": "Owner",
+        "action": "updated",
+        "result": "",
+        "note": ""
+      },
+      {
+        "time": "2026-10-21T12:00:17.245Z",
+        "operator": "Owner",
+        "action": "updated",
+        "result": "",
+        "note": ""
+      },
+      {
+        "time": "2026-10-21T12:00:17.423Z",
+        "operator": "Owner",
+        "action": "updated",
+        "result": "",
+        "note": ""
+      },
+      {
+        "time": "2026-10-21T12:00:18.936Z",
+        "operator": "Owner",
+        "action": "updated",
+        "result": "",
+        "note": ""
+      },
+      {
+        "time": "2026-10-21T12:00:19.088Z",
+        "operator": "Owner",
+        "action": "updated",
+        "result": "",
+        "note": ""
+      },
+      {
+        "time": "2026-10-21T12:00:19.292Z",
+        "operator": "Owner",
+        "action": "updated",
+        "result": "",
+        "note": ""
+      },
+      {
+        "time": "2026-10-21T12:00:19.479Z",
+        "operator": "Owner",
+        "action": "updated",
+        "result": "",
+        "note": ""
+      },
+      {
+        "time": "2026-10-21T12:00:19.691Z",
+        "operator": "Owner",
+        "action": "updated",
+        "result": "",
+        "note": ""
+      },
+      {
+        "time": "2026-10-21T12:10:39.219Z",
+        "operator": "Owner",
+        "action": "updated",
+        "result": "",
+        "note": ""
+      },
+      {
+        "time": "2026-10-21T12:10:50.433Z",
+        "operator": "Owner",
+        "action": "updated",
+        "result": "",
+        "note": ""
+      },
+      {
+        "time": "2026-10-21T12:50:52.541Z",
+        "operator": "Owner",
+        "action": "updated",
+        "result": "",
+        "note": ""
+      },
+      {
+        "time": "2026-10-21T12:50:55.494Z",
+        "operator": "Owner",
+        "action": "updated",
+        "result": "",
+        "note": ""
+      },
+      {
+        "time": "2026-10-21T12:50:59.607Z",
+        "operator": "Owner",
+        "action": "updated",
+        "result": "",
+        "note": ""
+      },
+      {
+        "time": "2026-10-21T12:50:59.774Z",
+        "operator": "Owner",
+        "action": "updated",
+        "result": "",
+        "note": ""
+      },
+      {
+        "time": "2026-10-21T12:57:57.949Z",
+        "operator": "Owner",
+        "owner": "wang",
+        "action": "updated",
+        "result": "",
+        "note": ""
+      },
+      {
+        "time": "2026-10-21T12:58:06.367Z",
+        "operator": "Owner",
+        "owner": "自己",
+        "action": "updated",
+        "result": "",
+        "note": ""
+      },
+      {
+        "time": "2026-10-21T12:58:09.031Z",
+        "operator": "Owner",
+        "owner": "Owner",
+        "action": "updated",
+        "result": "",
+        "note": ""
+      }
+    ],
+    "createdAt": "2026-10-20T17:27:11.876Z",
+    "updatedAt": "2026-10-21T12:58:09.031Z"
+  },
+  {
+    "id": "fu_mvgyh7ca",
+    "customerKey": "v_zq1hcy6imvgtq9cg",
+    "email": "",
+    "status": "converted",
+    "nextAt": null,
+    "owner": "",
+    "note": "",
+    "history": [
+      {
+        "time": "2026-10-20T17:27:10.953Z",
+        "action": "created",
+        "note": ""
+      },
+      {
+        "time": "2026-10-20T20:13:01.395Z",
+        "action": "updated",
+        "note": ""
+      },
+      {
+        "time": "2026-10-20T20:13:05.138Z",
+        "action": "updated",
+        "note": ""
+      }
+    ],
+    "createdAt": "2026-10-20T17:27:10.953Z",
+    "updatedAt": "2026-10-20T20:13:05.138Z"
+  },
+  {
+    "id": "fu_mvgy9twy",
+    "customerKey": "cyloct@gmail.com",
+    "email": "cyloct@gmail.com",
+    "status": "converted",
+    "nextAt": null,
+    "owner": "",
+    "note": "",
+    "history": [
+      {
+        "time": "2026-10-20T17:21:26.962Z",
+        "action": "created",
+        "note": ""
+      },
+      {
+        "time": "2026-10-20T17:26:53.555Z",
+        "action": "updated",
+        "note": ""
+      },
+      {
+        "time": "2026-10-20T17:26:56.722Z",
+        "action": "updated",
+        "note": ""
+      },
+      {
+        "time": "2026-10-20T17:26:56.909Z",
+        "action": "updated",
+        "note": ""
+      },
+      {
+        "time": "2026-10-21T03:59:38.946Z",
+        "operator": "Owner",
+        "action": "updated",
+        "result": "",
+        "note": ""
+      },
+      {
+        "time": "2026-10-21T03:59:39.234Z",
+        "operator": "Owner",
+        "action": "updated",
+        "result": "",
+        "note": ""
+      },
+      {
+        "time": "2026-10-21T03:59:41.408Z",
+        "operator": "Owner",
+        "action": "updated",
+        "result": "",
+        "note": ""
+      },
+      {
+        "time": "2026-10-21T03:59:41.826Z",
+        "operator": "Owner",
+        "action": "updated",
+        "result": "",
+        "note": ""
+      },
+      {
+        "time": "2026-10-21T03:59:42.433Z",
+        "operator": "Owner",
+        "action": "updated",
+        "result": "",
+        "note": ""
+      },
+      {
+        "time": "2026-10-21T03:59:42.756Z",
+        "operator": "Owner",
+        "action": "updated",
+        "result": "",
+        "note": ""
+      },
+      {
+        "time": "2026-10-21T03:59:42.923Z",
+        "operator": "Owner",
+        "action": "updated",
+        "result": "",
+        "note": ""
+      },
+      {
+        "time": "2026-10-21T03:59:43.055Z",
+        "operator": "Owner",
+        "action": "updated",
+        "result": "",
+        "note": ""
+      },
+      {
+        "time": "2026-10-21T03:59:43.258Z",
+        "operator": "Owner",
+        "action": "updated",
+        "result": "",
+        "note": ""
+      },
+      {
+        "time": "2026-10-21T03:59:43.416Z",
+        "operator": "Owner",
+        "action": "updated",
+        "result": "",
+        "note": ""
+      },
+      {
+        "time": "2026-10-21T03:59:43.569Z",
+        "operator": "Owner",
+        "action": "updated",
+        "result": "",
+        "note": ""
+      },
+      {
+        "time": "2026-10-21T03:59:43.695Z",
+        "operator": "Owner",
+        "action": "updated",
+        "result": "",
+        "note": ""
+      },
+      {
+        "time": "2026-10-21T03:59:43.832Z",
+        "operator": "Owner",
+        "action": "updated",
+        "result": "",
+        "note": ""
+      },
+      {
+        "time": "2026-10-21T03:59:44.017Z",
+        "operator": "Owner",
+        "action": "updated",
+        "result": "",
+        "note": ""
+      },
+      {
+        "time": "2026-10-21T03:59:44.172Z",
+        "operator": "Owner",
+        "action": "updated",
+        "result": "",
+        "note": ""
+      },
+      {
+        "time": "2026-10-21T03:59:44.345Z",
+        "operator": "Owner",
+        "action": "updated",
+        "result": "",
+        "note": ""
+      },
+      {
+        "time": "2026-10-21T03:59:44.501Z",
+        "operator": "Owner",
+        "action": "updated",
+        "result": "",
+        "note": ""
+      },
+      {
+        "time": "2026-10-21T03:59:44.625Z",
+        "operator": "Owner",
+        "action": "updated",
+        "result": "",
+        "note": ""
+      },
+      {
+        "time": "2026-10-21T03:59:44.795Z",
+        "operator": "Owner",
+        "action": "updated",
+        "result": "",
+        "note": ""
+      },
+      {
+        "time": "2026-10-21T03:59:44.938Z",
+        "operator": "Owner",
+        "action": "updated",
+        "result": "",
+        "note": ""
+      },
+      {
+        "time": "2026-10-21T03:59:45.105Z",
+        "operator": "Owner",
+        "action": "updated",
+        "result": "",
+        "note": ""
+      },
+      {
+        "time": "2026-10-21T03:59:45.261Z",
+        "operator": "Owner",
+        "action": "updated",
+        "result": "",
+        "note": ""
+      },
+      {
+        "time": "2026-10-21T03:59:45.402Z",
+        "operator": "Owner",
+        "action": "updated",
+        "result": "",
+        "note": ""
+      },
+      {
+        "time": "2026-10-21T03:59:45.541Z",
+        "operator": "Owner",
+        "action": "updated",
+        "result": "",
+        "note": ""
+      },
+      {
+        "time": "2026-10-21T03:59:45.705Z",
+        "operator": "Owner",
+        "action": "updated",
+        "result": "",
+        "note": ""
+      },
+      {
+        "time": "2026-10-21T03:59:45.853Z",
+        "operator": "Owner",
+        "action": "updated",
+        "result": "",
+        "note": ""
+      },
+      {
+        "time": "2026-10-21T03:59:46.055Z",
+        "operator": "Owner",
+        "action": "updated",
+        "result": "",
+        "note": ""
+      },
+      {
+        "time": "2026-10-21T03:59:46.194Z",
+        "operator": "Owner",
+        "action": "updated",
+        "result": "",
+        "note": ""
+      },
+      {
+        "time": "2026-10-21T03:59:46.329Z",
+        "operator": "Owner",
+        "action": "updated",
+        "result": "",
+        "note": ""
+      },
+      {
+        "time": "2026-10-21T03:59:46.544Z",
+        "operator": "Owner",
+        "action": "updated",
+        "result": "",
+        "note": ""
+      },
+      {
+        "time": "2026-10-21T03:59:47.100Z",
+        "operator": "Owner",
+        "action": "updated",
+        "result": "",
+        "note": ""
+      },
+      {
+        "time": "2026-10-21T03:59:47.277Z",
+        "operator": "Owner",
+        "action": "updated",
+        "result": "",
+        "note": ""
+      },
+      {
+        "time": "2026-10-21T03:59:47.414Z",
+        "operator": "Owner",
+        "action": "updated",
+        "result": "",
+        "note": ""
+      },
+      {
+        "time": "2026-10-21T04:02:43.400Z",
+        "operator": "Owner",
+        "action": "updated",
+        "result": "",
+        "note": ""
+      },
+      {
+        "time": "2026-10-21T04:02:48.302Z",
+        "operator": "Owner",
+        "action": "updated",
+        "result": "",
+        "note": ""
+      },
+      {
+        "time": "2026-10-21T04:02:50.036Z",
+        "operator": "Owner",
+        "action": "updated",
+        "result": "",
+        "note": ""
+      },
+      {
+        "time": "2026-10-21T04:03:04.379Z",
+        "operator": "Owner",
+        "action": "updated",
+        "result": "",
+        "note": ""
+      },
+      {
+        "time": "2026-10-21T04:04:36.416Z",
+        "operator": "Owner",
+        "action": "updated",
+        "result": "",
+        "note": ""
+      }
+    ],
+    "createdAt": "2026-10-20T17:21:26.962Z",
+    "updatedAt": "2026-10-21T04:04:36.416Z"
+  },
+  {
+    "id": "fu_mvfbvztw",
+    "customerKey": "v_rgvu9ziqmvf9qsz6",
+    "email": "",
+    "status": "lost",
+    "nextAt": null,
+    "owner": "自己",
+    "note": "",
+    "history": [
+      {
+        "time": "2026-10-19T14:07:03.716Z",
+        "action": "created",
+        "note": ""
+      },
+      {
+        "time": "2026-10-19T19:47:07.646Z",
+        "action": "updated",
+        "note": ""
+      },
+      {
+        "time": "2026-10-19T19:47:09.243Z",
+        "action": "updated",
+        "note": ""
+      },
+      {
+        "time": "2026-10-19T19:47:09.424Z",
+        "action": "updated",
+        "note": ""
+      },
+      {
+        "time": "2026-10-19T19:47:09.615Z",
+        "action": "updated",
+        "note": ""
+      },
+      {
+        "time": "2026-10-21T04:02:32.957Z",
+        "operator": "Owner",
+        "action": "updated",
+        "result": "",
+        "note": ""
+      }
+    ],
+    "createdAt": "2026-10-19T14:07:03.716Z",
+    "updatedAt": "2026-10-21T04:02:32.957Z"
+  }
+]
