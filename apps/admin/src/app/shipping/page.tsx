@@ -17,7 +17,9 @@ const STATUS: [string, string][] = [
 ];
 const STATUS_LABEL: Record<string, string> = { pending: '待发货', shipped: '已发货', in_transit: '运输中', delivered: '已签收', exception: '异常' };
 
-type ShipOrder = Order;
+type ShipOrder = Order & {
+  oms?: { trackingNumber?: string; trackSyncedAt?: string; lastTrackStatus?: string; pushedAt?: string };
+};
 
 export default async function ShippingPage({
   searchParams,
@@ -72,7 +74,7 @@ export default async function ShippingPage({
         <div>
           <span className="eyebrow">销售 · 物流</span>
           <h1 style={{ marginTop: 6 }}>物流管理</h1>
-          <div className="sub">共 {all.length} 个包裹 · 轨迹为手工维护的时间轴（免费方案）；接入 AfterShip / 17TRACK 后自动拉取。「客户链接」可发给客户免注册查单。</div>
+          <div className="sub">走 OMS 代发的订单轨迹<b>自动同步</b>（每 30 分钟，右上角「同步 OMS 轨迹」可立即刷新）；17TRACK 同步与手工时间轴仅作兜底。「客户链接」可发给客户免注册查单。</div>
         </div>
         <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
           <a className="btn btn-ghost" href="https://t.17track.net/en" target="_blank" rel="noopener noreferrer">17TRACK ↗</a>
@@ -107,6 +109,7 @@ export default async function ShippingPage({
             const st = o.shipment?.status || 'pending';
             const events = [...(o.shipment?.events || [])].reverse();
             const latest = events[0];
+            const isOms = Boolean(o.oms?.trackingNumber);
             return (
               <div key={o.orderNo} style={{ padding: '12px 16px', borderBottom: '1px solid var(--line)' }}>
                 <div style={{ display: 'flex', gap: 12, alignItems: 'baseline', flexWrap: 'wrap' }}>
@@ -117,6 +120,7 @@ export default async function ShippingPage({
                   <span className="mono dim" style={{ fontSize: 'var(--fs-small)' }}>
                     {o.shipment?.carrier} · {o.shipment?.trackingNo}
                   </span>
+                  {isOms && <span className="badge ok" title="此单由 OMS 推送，轨迹自动同步">OMS 自动</span>}
                   <span style={{ flex: 1 }} />
                   <a className="btn btn-sm btn-ghost" href={carrierUrl(o)} target="_blank" rel="noopener noreferrer">承运商查询 ↗</a>
                   <a className="btn btn-sm btn-ghost" href={guestOrderPath(o.orderNo)} target="_blank" rel="noopener noreferrer"
@@ -132,40 +136,49 @@ export default async function ShippingPage({
                   )}
                 </div>
 
-                {/* 展开才渲染完整轨迹 + 添加事件表单 */}
+                {/* 展开才渲染完整轨迹；OMS 单自动同步不显示手工表单 */}
                 <details style={{ marginTop: 8 }}>
                   <summary style={{ cursor: 'pointer', fontSize: 'var(--fs-micro)', color: 'var(--text-3)', width: 'fit-content' }}>管理轨迹</summary>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: 20, marginTop: 10 }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: isOms ? '1fr' : '1.2fr 1fr', gap: 20, marginTop: 10 }}>
                     <div>
                       <span className="eyebrow">轨迹时间轴</span>
+                      {isOms && (
+                        <div className="dim" style={{ fontSize: 'var(--fs-micro)', marginTop: 6, lineHeight: 1.7 }}>
+                          此单由 OMS 代发，轨迹自动从服务商拉取（每 30 分钟；点页面右上角「同步 OMS 轨迹」立即刷新），无需手工维护。
+                          {o.oms?.trackSyncedAt ? ` 上次同步：${new Date(o.oms.trackSyncedAt).toLocaleString('zh-CN', { hour12: false })}。` : ' 尚未同步过，等下一轮或点右上角立即同步。'}
+                        </div>
+                      )}
                       <div style={{ marginTop: 10 }}>
                         {events.length ? events.map((ev, i) => (
                           <div key={i} className="mini-row" style={{ alignItems: 'baseline' }}>
                             <span className="mono">{new Date(ev.time).toLocaleString('zh-CN', { hour12: false })}{ev.location ? ` · ${ev.location}` : ''}</span>
                             <span style={{ textAlign: 'right', color: i === 0 ? 'var(--text)' : undefined }}>{ev.description}</span>
                           </div>
-                        )) : <p className="dim" style={{ marginTop: 10 }}>暂无轨迹事件</p>}
+                        )) : <p className="dim" style={{ marginTop: 10 }}>{isOms ? '暂无轨迹事件 — 等待服务商上网，稍后自动同步' : '暂无轨迹事件'}</p>}
                       </div>
                     </div>
-                    <form action={addShipmentEvent}>
-                      <input type="hidden" name="orderNo" value={o.orderNo} />
-                      <span className="eyebrow">添加轨迹事件</span>
-                      <div className="form-grid" style={{ marginTop: 10, gridTemplateColumns: '1fr' }}>
-                        <div className="field">
-                          <label>时间（留空 = 现在）</label>
-                          <input className="input" name="time" type="datetime-local" />
+                    {!isOms && (
+                      <form action={addShipmentEvent}>
+                        <input type="hidden" name="orderNo" value={o.orderNo} />
+                        <span className="eyebrow">手工添加事件（仅兜底）</span>
+                        <div className="dim" style={{ fontSize: 'var(--fs-micro)', marginTop: 4 }}>走 OMS 代发的订单不需要在这里填，轨迹会自动同步；此表单用于手工发货的老单 / OMS 故障兜底。</div>
+                        <div className="form-grid" style={{ marginTop: 10, gridTemplateColumns: '1fr' }}>
+                          <div className="field">
+                            <label>时间（留空 = 现在）</label>
+                            <input className="input" name="time" type="datetime-local" />
+                          </div>
+                          <div className="field">
+                            <label>地点</label>
+                            <input className="input" name="location" placeholder="Shenzhen, CN" />
+                          </div>
+                          <div className="field">
+                            <label>描述（含 Delivered 自动标记签收）</label>
+                            <input className="input" name="description" placeholder="Departed sorting center" required />
+                          </div>
                         </div>
-                        <div className="field">
-                          <label>地点</label>
-                          <input className="input" name="location" placeholder="Shenzhen, CN" />
-                        </div>
-                        <div className="field">
-                          <label>描述（含 Delivered 自动标记签收）</label>
-                          <input className="input" name="description" placeholder="Departed sorting center" required />
-                        </div>
-                      </div>
-                      <button className="btn btn-sm" type="submit" style={{ marginTop: 4 }}>添加事件</button>
-                    </form>
+                        <button className="btn btn-sm" type="submit" style={{ marginTop: 4 }}>添加事件</button>
+                      </form>
+                    )}
                   </div>
                 </details>
               </div>
