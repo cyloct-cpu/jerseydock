@@ -113,7 +113,7 @@ export async function callOms<T = unknown>(
   timeoutMs = 20000
 ): Promise<OmsEnvelope<T>> {
   if (!cfg.customerCode || !cfg.customerPwd) {
-    throw new Error('OMS 账号未配置（请在后台设置 → OMS 代发中填写 customer_code / customer_pwd）');
+    throw new Error('服务商账号未配置（请在后台 设置 → 服务商代发 中填写客户代码与密码）');
   }
   const base = cfg.baseUrl.replace(/\/+$/, '');
   const ctrl = new AbortController();
@@ -126,11 +126,11 @@ export async function callOms<T = unknown>(
       signal: ctrl.signal,
       cache: 'no-store',
     });
-    if (!res.ok) throw new Error(`OMS HTTP ${res.status}`);
+    if (!res.ok) throw new Error(`服务商接口 HTTP ${res.status}`);
     const j = (await res.json()) as { Code?: number; Msg?: string; Data?: T; Data2?: string };
     return { code: Number(j.Code ?? 0), msg: String(j.Msg ?? ''), data: (j.Data ?? j) as T, data2: j.Data2 };
   } catch (e) {
-    if (e instanceof Error && e.name === 'AbortError') throw new Error('OMS 请求超时');
+    if (e instanceof Error && e.name === 'AbortError') throw new Error('服务商接口请求超时');
     throw e instanceof Error ? e : new Error(String(e));
   } finally {
     clearTimeout(timer);

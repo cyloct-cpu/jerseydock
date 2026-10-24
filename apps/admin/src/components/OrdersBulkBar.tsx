@@ -6,7 +6,7 @@ import { deleteOrders, pushOrdersToOms, setCodCollectedBulk } from '@/lib/action
 const FORM_ID = 'orders-bulk-delete';
 
 /**
- * 订单批量操作条：全选本页 + 已选计数 + 批量推送 OMS / 批量标记回款 / 批量删除。
+ * 订单批量操作条：全选本页 + 已选计数 + 批量推送服务商 / 批量标记回款 / 批量删除。
  * 行内复选框通过 form 属性关联到删除表单；推送/回款按钮用 JS 把勾选单号同步到各自表单的隐藏域。
  */
 export function OrdersBulkBar() {
@@ -54,7 +54,7 @@ export function OrdersBulkBar() {
         <span className="dim" style={{ fontSize: 'var(--fs-small)' }}>已选 {count} 单</span>
         <button className="btn btn-sm" type="button" disabled={count === 0} onClick={() => submitWith(pushForm)}
           style={count === 0 ? { opacity: 0.45 } : undefined}>
-          批量推送 OMS
+          批量推送服务商
         </button>
         <button className="btn btn-sm" type="button" disabled={count === 0} onClick={() => submitWith(collectForm)}
           style={count === 0 ? { opacity: 0.45 } : { borderColor: 'var(--ok, #46A758)', color: 'var(--ok, #46A758)' }}>

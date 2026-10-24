@@ -27,7 +27,7 @@ export const MONEY_LABEL: Record<MoneyKey, string> = {
   transfer_waiting: '转账待确认',
   prepaid: '已预付',
   refunded: '已退款',
-  cod_pending: 'COD·待推送',
+  cod_pending: '货到付款·待推送',
   cod_push_failed: '推送失败',
   cod_transit: '代收在途',
   cod_signed: '已签收·待回款',

@@ -18,7 +18,7 @@ export async function POST(req: NextRequest) {
   }
   const cfg = readOmsConfig();
   if (!cfg.enabled) {
-    return NextResponse.json({ ok: false, error: 'OMS 未启用：请先到 设置 → OMS 代发 完成绑定并开启' }, { status: 400 });
+    return NextResponse.json({ ok: false, error: '服务商代发未启用：请先到 设置 → 服务商代发 完成绑定并开启' }, { status: 400 });
   }
 
   let orderNos: string[] = [];

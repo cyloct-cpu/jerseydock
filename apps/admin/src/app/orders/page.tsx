@@ -20,8 +20,8 @@ const FULFILLMENT_LABEL: Record<string, string> = {
 };
 
 const MONEY_STATES: MoneyKey[] = Object.keys(MONEY_LABEL) as MoneyKey[];
-/** 履约下拉的伪选项：按 OMS 推送状态过滤 */
-const FUL_EXTRA = [{ v: 'awaiting', label: '待推送（未推 OMS）' }, { v: 'push_failed', label: '推送失败' }];
+/** 履约下拉的伪选项：按服务商推送状态过滤 */
+const FUL_EXTRA = [{ v: 'awaiting', label: '待推送（未推服务商）' }, { v: 'push_failed', label: '推送失败' }];
 
 type Ord = Order & {
   phone?: string;
@@ -117,7 +117,7 @@ export default async function OrdersPage({
         </div>
       </div>
 
-      {sp.pushed && <div className="notice ok">OMS 推送完成：{sp.pushed} 单成功{Number(sp.failed) ? `，${sp.failed} 单失败（见行内原因）` : ''}。</div>}
+      {sp.pushed && <div className="notice ok">推送服务商完成：{sp.pushed} 单成功{Number(sp.failed) ? `，${sp.failed} 单失败（见行内原因）` : ''}。</div>}
       {sp.shipped && <div className="notice ok">批量发货完成：{sp.shipped} 单成功{Number(sp.failed) ? `，${sp.failed} 单失败` : ''}。</div>}
       {sp.deleted && <div className="notice ok">已删除 {sp.deleted} 个订单。</div>}
 
@@ -168,7 +168,7 @@ export default async function OrdersPage({
           <label>支付方式</label>
           <select className="select" name="pm" defaultValue={pm}>
             <option value="">全部</option>
-            <option value="cod">货到付款 COD</option>
+            <option value="cod">货到付款</option>
             <option value="online">在线支付</option>
             <option value="transfer">银行转账</option>
           </select>
@@ -301,7 +301,7 @@ export default async function OrdersPage({
                         <form action={pushOrdersToOms} style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
                           <input type="hidden" name="orderNos" value={o.orderNo} />
                           {!o.phone && <input className="input" name="phone" placeholder="收件人电话(必填)" style={{ width: 150, height: 28 }} />}
-                          <button className="btn btn-sm" type="submit">推送 OMS</button>
+                          <button className="btn btn-sm" type="submit">推送服务商</button>
                         </form>
                       )}
                       {canPush && pushFailedRow && (
@@ -330,7 +330,7 @@ export default async function OrdersPage({
                     )}
                     {!hasTrack && (
                       <details style={{ marginTop: 6 }}>
-                        <summary className="dim" style={{ fontSize: 'var(--fs-micro)', cursor: 'pointer' }}>手工发货（OMS 故障兜底）</summary>
+                        <summary className="dim" style={{ fontSize: 'var(--fs-micro)', cursor: 'pointer' }}>手工发货（服务商故障兜底）</summary>
                         <form action={shipOrder} style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginTop: 6 }}>
                           <input type="hidden" name="orderNo" value={o.orderNo} />
                           <select className="select" name="carrier" style={{ width: 108, height: 28 }} defaultValue="yunexpress">
@@ -367,7 +367,7 @@ export default async function OrdersPage({
       )}
 
       <div className="a-card a-card-pad" style={{ marginTop: 20 }}>
-        <span className="eyebrow">批量填物流单号（OMS 故障时手工兜底）</span>
+        <span className="eyebrow">批量填物流单号（服务商故障时手工兜底）</span>
         <p className="dim" style={{ margin: '8px 0 10px' }}>
           每行一条：<span className="mono">订单号,承运商,追踪号</span>（逗号分隔）。例如：
           <span className="mono"> KV-AB12CD,yunexpress,YT123456789CN</span>

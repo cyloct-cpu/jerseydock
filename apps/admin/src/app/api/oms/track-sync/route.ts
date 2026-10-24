@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
   }
   const cfg = readOmsConfig();
   if (!cfg.enabled) {
-    return NextResponse.json({ ok: false, error: 'OMS 未启用' }, { status: 400 });
+    return NextResponse.json({ ok: false, error: '服务商代发未启用' }, { status: 400 });
   }
   const r = await syncOmsTracks();
   return NextResponse.json({ ok: true, synced: r.synced, changed: r.changed, reports: r.reports.slice(0, 10) });

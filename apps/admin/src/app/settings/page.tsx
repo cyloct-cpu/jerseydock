@@ -317,10 +317,10 @@ export default async function SettingsPage({
           <PaymentCard initial={normalizePayment(settings.payment)} placeholderText={settings.paymentPlaceholder} />
 
           <form action={saveOmsSettings} className="a-card a-card-pad">
-            <span className="eyebrow">OMS 代发 · 物流服务商绑定</span>
+            <span className="eyebrow">服务商代发绑定（物流）</span>
             <div style={{ display: 'grid', gap: 12, marginTop: 12 }}>
               <label style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontSize: 'var(--fs-small)', color: 'var(--text-2)', cursor: 'pointer' }}>
-                <ToggleField name="omsEnabled" defaultOn={omsCfg.enabled} label="启用 OMS 代发（支付/下单后自动推送订单、回传单号与轨迹）" />
+                <ToggleField name="omsEnabled" defaultOn={omsCfg.enabled} label="启用服务商代发（支付/下单后自动推送订单、回传单号与轨迹）" />
               </label>
 
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 14 }}>
@@ -359,14 +359,14 @@ export default async function SettingsPage({
 
               <div className="notice" style={{ marginBottom: 0, fontSize: 'var(--fs-micro)', lineHeight: 1.8 }}>
                 <b>工作方式</b>：启用后，货到付款订单下单即自动推送服务商（在线/转账订单在确认收款后推送）；
-                推送成功实时拿回快递单号并自动下载面单；轨迹每 30 分钟自动同步，订单页可手动「同步 OMS 轨迹」。<br />
+                推送成功实时拿回快递单号并自动下载面单；轨迹每 30 分钟自动同步，订单页可手动「同步服务商轨迹」。<br />
                 <b>渠道 / 仓库</b>： og_id 与 service_code 以服务商返回为准——填好账号后点下方按钮拉取最新列表核对。
                 {channelCount != null && <> 当前缓存：渠道 <b>{channelCount}</b> 个{warehouseCount != null ? <> · 仓库 <b>{warehouseCount}</b> 个</> : ''}。</>}<br />
                 <b>安全</b>：账号密码仅存服务端 settings.json，不出前端、不打日志。
               </div>
 
               <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', alignItems: 'center' }}>
-                <button className="btn" type="submit">保存 OMS 配置</button>
+                <button className="btn" type="submit">保存代发配置</button>
               </div>
               <OmsRefreshButton />
             </div>

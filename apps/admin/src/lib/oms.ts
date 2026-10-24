@@ -252,10 +252,10 @@ export async function processPushQueue(): Promise<{ pushed: number; failed: numb
           dirtyOrders = true;
           awaiting++;
         } else {
-          throw new Error('OMS 未返回跟踪单号');
+          throw new Error('服务商未返回跟踪单号');
         }
       } else {
-        throw new Error(r.msg || 'OMS 拒绝（Code 0）');
+        throw new Error(r.msg || '服务商拒绝下单');
       }
     } catch (e) {
       row.attempts += 1;

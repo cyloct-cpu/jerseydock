@@ -34,7 +34,7 @@ export async function POST(req: NextRequest) {
   if (denied) return denied;
   const cfg = readOmsConfig();
   if (!cfg.customerCode) {
-    return NextResponse.json({ ok: false, error: '请先保存 OMS 账号（customer_code / customer_pwd）' }, { status: 400 });
+    return NextResponse.json({ ok: false, error: '请先保存服务商账号（customer_code / customer_pwd）' }, { status: 400 });
   }
   const r = await refreshOmsReferenceData();
   return NextResponse.json({

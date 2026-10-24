@@ -33,7 +33,7 @@ export function OmsSyncButton() {
     <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
       <button className="btn" type="button" disabled={phase === 'syncing'} onClick={sync}
         style={ok ? { borderColor: 'var(--ok, #46A758)', color: 'var(--ok, #46A758)' } : undefined}>
-        {phase === 'syncing' ? '同步中…' : '同步 OMS 轨迹'}
+        {phase === 'syncing' ? '同步中…' : '同步服务商轨迹'}
       </button>
       {msg && <span className="dim" style={{ fontSize: 'var(--fs-micro)', color: ok ? 'var(--ok, #46A758)' : '#E5484D' }}>{msg}</span>}
     </div>
