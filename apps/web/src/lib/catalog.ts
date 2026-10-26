@@ -1,13 +1,14 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import { PRODUCTS, CATEGORIES, CATEGORY_GROUPS, type SlimProduct, type Category } from '@kitvault/shared';
+import { CATEGORIES, CATEGORY_GROUPS, type SlimProduct, type Category } from '@kitvault/shared';
+import { dbReadAllCatalog } from './db-store';
 
 /**
- * 商品目录（前台数据源）
- * 组成：采集自 chenyikan.shop 的静态数据集（@kitvault/shared）
- *       + 后台导入的商品（data/admin/imported-products.json）
- *       + 后台覆盖：上架状态 / 改价 / 改标题（data/admin/overrides.json）
- * 采集商品默认 active；后台导入的商品默认 draft，需在后台勾选上架。
+ * 商品目录（前台数据源，K-S0-4 起查 SQLite 库）
+ * 组成：采集自 chenyikan.shop 的数据集（种子入 Product 表，ext.src='dataset'）
+ *       + 后台导入的商品（Product 表导入域）——将来主站同步商品也落同一张表
+ *       + 后台覆盖：上架状态 / 改价 / 改标题（data/admin/overrides.json，仍走文件）
+ * 上架默认 active；软删（archived）行不出库。
  */
 
 export type ProductOverride = {
@@ -28,12 +29,10 @@ export type ProductOverride = {
 };
 
 const OVERRIDES_PATH = path.resolve(process.cwd(), '..', '..', 'data', 'admin', 'overrides.json');
-const IMPORTED_PATH = path.resolve(process.cwd(), '..', '..', 'data', 'admin', 'imported-products.json');
 
 // mtime 缓存：后台写文件后前台下一次请求自动生效，无需重启
 type CacheEntry<T> = { mtimeMs: number; data: T } | null;
 let ovCache: CacheEntry<Record<string, ProductOverride>> = null;
-let imCache: CacheEntry<SlimProduct[]> = null;
 
 function readCached<T>(file: string, cache: CacheEntry<T>, parse: (raw: string) => T, empty: T): { entry: CacheEntry<T>; data: T } {
   try {
@@ -53,10 +52,16 @@ export function loadOverrides(): Record<string, ProductOverride> {
   return r.data;
 }
 
-export function loadImported(): SlimProduct[] {
-  const r = readCached(IMPORTED_PATH, imCache, raw => JSON.parse(raw) as SlimProduct[], []);
-  imCache = r.entry;
-  return r.data;
+// 目录库读缓存（TTL 5s）：全表 ~3.7k 行，避免每请求重复 JSON.parse；后台导入/同步后最迟 5s 生效
+let catalogCache: { at: number; data: SlimProduct[] } | null = null;
+const CATALOG_TTL_MS = 5000;
+
+export function loadCatalog(): SlimProduct[] {
+  const now = Date.now();
+  if (catalogCache && now - catalogCache.at < CATALOG_TTL_MS) return catalogCache.data;
+  const data = dbReadAllCatalog() as unknown as SlimProduct[];
+  catalogCache = { at: now, data };
+  return data;
 }
 
 /** 全部商品（采集 + 导入），应用后台覆盖；已删除的单品不返回 */
@@ -81,7 +86,7 @@ export function allProducts(): SlimProduct[] {
     }
     return next;
   };
-  return [...PRODUCTS.map(apply), ...loadImported().map(apply)].filter(p => !ov[p.h]?.deleted);
+  return loadCatalog().map(apply).filter(p => !ov[p.h]?.deleted);
 }
 
 /** 是否上架（默认上架；后台可下架/归档） */

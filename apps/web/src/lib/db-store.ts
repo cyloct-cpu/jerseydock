@@ -256,16 +256,19 @@ export function dbWriteFollowups(rows: Record<string, unknown>[]): void {
 
 // ---------------- 导入商品 / 批次 / 媒体 ----------------
 
-/** 导入商品：ext 里存原对象（含 h 短字段），列表直接还原原 JSON 结构 */
+// 导入域 = ext 无 src 标记的 Product 行（数据集种子带 src:'dataset'，同步商品将来带 src:'sync'）
+const IMPORTED_DOMAIN = "ext IS NOT NULL AND json_extract(ext,'$.h') IS NOT NULL AND json_extract(ext,'$.src') IS NULL";
+
+/** 导入商品（仅导入域）：列表直接还原原 JSON 结构 */
 export function dbReadImported(): Record<string, unknown>[] {
-  return (db().prepare("SELECT ext FROM Product WHERE ext IS NOT NULL AND json_extract(ext,'$.h') IS NOT NULL ORDER BY rowid").all() as Record<string, unknown>[]).map((r) => JSON.parse(r.ext as string));
+  return (db().prepare(`SELECT ext FROM Product WHERE ${IMPORTED_DOMAIN} ORDER BY rowid`).all() as Record<string, unknown>[]).map((r) => JSON.parse(r.ext as string));
 }
 
 export function dbWriteImported(rows: Record<string, unknown>[]): void {
   const d = db();
   d.exec('BEGIN');
   try {
-    d.exec("DELETE FROM Product WHERE ext IS NOT NULL AND json_extract(ext,'$.h') IS NOT NULL");
+    d.exec(`DELETE FROM Product WHERE ${IMPORTED_DOMAIN}`);
     const ins = d.prepare('INSERT INTO Product (id,sku,slug,titleEn,basePriceUsd,comparePriceUsd,images,status,ext,createdAt,updatedAt) VALUES (lower(hex(randomblob(12))),?,?,?,?,?,?,?,?,?,?)');
     const now = new Date().toISOString();
     for (const r of rows) {
@@ -277,6 +280,11 @@ export function dbWriteImported(rows: Record<string, unknown>[]): void {
     d.exec('ROLLBACK');
     throw e;
   }
+}
+
+/** 前台目录（K-S0-4）：全部商品（数据集种子 + 导入域），返回原 JSON 对象；软删（archived）不返回 */
+export function dbReadAllCatalog(): Record<string, unknown>[] {
+  return (db().prepare("SELECT ext FROM Product WHERE status != 'archived' AND ext IS NOT NULL AND json_extract(ext,'$.h') IS NOT NULL ORDER BY rowid").all() as Record<string, unknown>[]).map((r) => JSON.parse(r.ext as string));
 }
 
 export function dbReadBatches(): Record<string, unknown>[] {
