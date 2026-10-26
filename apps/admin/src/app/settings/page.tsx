@@ -3,6 +3,7 @@ import { saveSettings, saveOmsSettings, requirePage } from '@/lib/actions';
 import { normalizePayment, normalizeOmsConfig } from '@kitvault/shared';
 import { readRefCache } from '@/lib/oms';
 import { ColorField } from '@/components/ColorField';
+import { VisionProviderPicker } from '@/components/VisionProviderPicker';
 import { ReviewsEditor } from '@/components/ReviewsEditor';
 import { CustomizeEditor, type CustomizeValue } from '@/components/CustomizeEditor';
 import { HeroSlidesEditor, type HeroValue } from '@/components/HeroSlidesEditor';
@@ -335,6 +336,11 @@ export default async function SettingsPage({
                 <div className="field">
                   <label>接口地址</label>
                   <input className="input" name="omsBaseUrl" defaultValue={omsCfg.baseUrl} />
+                  {!/^https:/i.test(omsCfg.baseUrl) && (
+                    <span style={{ display: 'block', marginTop: 6, fontSize: 'var(--fs-small)', color: '#d64545' }}>
+                      ⚠ 当前接口地址不是 HTTPS：账号密码与运单数据将以明文传输，建议要求服务商提供 HTTPS 地址
+                    </span>
+                  )}
                 </div>
               </div>
 
@@ -374,34 +380,11 @@ export default async function SettingsPage({
 
           <div className="a-card a-card-pad">
             <span className="eyebrow">以图搜款 · 视觉 API（可选）</span>
-            <div className="field" style={{ marginTop: 12 }}>
-              <label>API Keys（每行一个，格式：类型:密钥）</label>
-              <textarea
-                className="input"
-                name="visionKeys"
-                rows={4}
-                form="settings-form"
-                defaultValue={settings.visionApi?.keys || ''}
-                placeholder={'groq:gsk_…\nopenrouter:sk-or-…\nhuggingface:hf_…'}
-                style={{ fontFamily: 'var(--font-mono)', fontSize: 'var(--fs-micro)' }}
-              />
+            <div style={{ marginTop: 12 }}>
+              <VisionProviderPicker name="visionKeys" formId="settings-form" defaultValue={settings.visionApi?.keys || ''} />
             </div>
-            <p className="dim" style={{ marginTop: 10, fontSize: 'var(--fs-micro)', lineHeight: 1.7 }}>
-              以图搜款主通道为本地 CLIP 模型（无需配置）。此处为<b>兜底通道</b>：当主通道匹配置信度不足时，
-              调用视觉大模型提取「球队 / 赛季 / 颜色 / 款式」再走文本检索。支持 Groq / OpenRouter / HuggingFace 三家免费额度，
-              按顺序轮换、失败自动冷却 10 分钟；留空则仅用主通道。
-            </p>
           </div>
 
-          <div className="a-card a-card-pad">
-            <span className="eyebrow">数据与导出</span>
-            <div style={{ display: 'grid', gap: 8, marginTop: 12 }}>
-              <a className="btn btn-ghost btn-sm" href="/api/export?type=orders">导出订单 CSV</a>
-              <a className="btn btn-ghost btn-sm" href="/api/export?type=customers">导出客户 CSV</a>
-              <a className="btn btn-ghost btn-sm" href="/api/export?type=events">导出埋点 CSV</a>
-            </div>
-            <p className="dim" style={{ marginTop: 10, fontSize: 'var(--fs-micro)' }}>导出文件同时写入 data/exports/ 目录留存。</p>
-          </div>
 
           <div className="a-card a-card-pad">
             <span className="eyebrow">说明</span>

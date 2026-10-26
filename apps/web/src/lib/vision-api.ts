@@ -43,19 +43,55 @@ const PROVIDERS: Record<VisionProviderType, ProviderDef> = {
   },
 };
 
-/** 解析设置里的 key 列表（格式 "groq:gsk_xxx"，每行一个） */
-export function parseVisionKeys(raw: string): { type: VisionProviderType; key: string }[] {
+export type VisionKeyConfig = {
+  /** 类型名：内置三家之一，或自定义聚合站的任意名字 */
+  type: string;
+  key: string;
+  /** 模型名（覆盖内置默认；自定义聚合站必填） */
+  model?: string;
+  /** OpenAI 兼容接口地址（内置三家可省略，自定义必填） */
+  endpoint?: string;
+};
+
+/**
+ * 解析设置里的 key 列表，每行一个，支持 2~4 段（冒号分隔）：
+ *   类型:密钥                       —— 内置三家，用默认模型
+ *   类型:密钥:模型                  —— 内置三家换模型（如 openrouter 换其它免费模型）
+ *   类型:密钥:模型:接口地址         —— 任意 OpenAI 兼容聚合站（硅基流动 / DeepSeek / 自建网关…）
+ * 未知类型且没给齐「模型+接口地址」的行无法调用，直接忽略。
+ */
+export function parseVisionKeys(raw: string): VisionKeyConfig[] {
   return String(raw || '')
     .split(/\r?\n/)
     .map(l => l.trim())
     .filter(Boolean)
-    .map(l => {
-      const idx = l.indexOf(':');
-      const type = l.slice(0, idx).trim() as VisionProviderType;
-      const key = l.slice(idx + 1).trim();
-      return PROVIDERS[type] ? { type, key } : null;
+    .map((line): VisionKeyConfig | null => {
+      const i1 = line.indexOf(':');
+      if (i1 <= 0) return null;
+      const type = line.slice(0, i1).trim();
+      const rest = line.slice(i1 + 1).trim();
+      const i2 = rest.indexOf(':');
+      const key = (i2 === -1 ? rest : rest.slice(0, i2)).trim();
+      if (!type || !key) return null;
+      // tail 是「模型[:接口地址]」：模型名可含冒号（如 openrouter 的 :free 后缀），
+      // 所以接口地址只能认「:http(s)://」边界，不能按冒号盲切
+      const tail = i2 === -1 ? '' : rest.slice(i2 + 1).trim();
+      let model = tail;
+      let endpoint: string | undefined;
+      if (tail) {
+        const m = tail.match(/:(https?:\/\/\S+)$/);
+        if (m) { endpoint = m[1]; model = tail.slice(0, m.index).trim(); }
+      }
+      if (type in PROVIDERS) {
+        const def = PROVIDERS[type as VisionProviderType];
+        return { type, key, model: model || def.defaultModel, endpoint: endpoint || def.endpoint };
+      }
+      // 自定义聚合站：模型 + 接口地址缺一不可；地址没写到 /chat/completions 就按 OpenAI 惯例补全
+      if (!model || !endpoint) return null;
+      const base = endpoint.replace(/\/+$/, '');
+      return { type, key, model, endpoint: /\/chat\/completions$/.test(base) ? base : `${base}/chat/completions` };
     })
-    .filter((x): x is { type: VisionProviderType; key: string } => x !== null && !!x.key);
+    .filter((x): x is VisionKeyConfig => x !== null);
 }
 
 // ---------------- 缓存与冷却 ----------------
@@ -121,19 +157,21 @@ export async function describeImage(buf: Buffer, keysRaw: string): Promise<Visio
   }
 
   const now = Date.now();
-  // 轮换顺序：按配置顺序跳过冷却中的 provider
-  const ordered = [...providers].sort((a, b) => (cache.cooldown[a.type] || 0) - (cache.cooldown[b.type] || 0));
+  const ckOf = (p: VisionKeyConfig) => `${p.type}:${p.model || ''}`;
+  // 轮换顺序：最久没失败的优先，冷却中的跳过
+  const ordered = [...providers].sort((a, b) => (cache.cooldown[ckOf(a)] || 0) - (cache.cooldown[ckOf(b)] || 0));
 
   for (const p of ordered) {
-    if ((cache.cooldown[p.type] || 0) > now) continue; // 冷却中
-    const def = PROVIDERS[p.type];
+    // 冷却键带模型名：同一个站换模型不影响冷却状态
+    const ckKey = `${p.type}:${p.model || ''}`;
+    if ((cache.cooldown[ckKey] || 0) > now) continue; // 冷却中
     try {
       const b64 = buf.toString('base64');
-      const res = await fetch(def.endpoint, {
+      const res = await fetch(p.endpoint!, {
         method: 'POST',
         headers: { Authorization: `Bearer ${p.key}`, 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          model: def.defaultModel,
+          model: p.model!,
           messages: [{
             role: 'user',
             content: [
@@ -145,18 +183,18 @@ export async function describeImage(buf: Buffer, keysRaw: string): Promise<Visio
           max_tokens: 300,
         }),
       });
-      if (!res.ok) throw new Error(`${def.type} ${res.status}`);
+      if (!res.ok) throw new Error(`${p.type} ${res.status}`);
       const data = await res.json();
       const text: string = data?.choices?.[0]?.message?.content || '';
       const jsonMatch = text.match(/\{[\s\S]*\}/);
       if (!jsonMatch) throw new Error('no json in response');
       const attrs = JSON.parse(jsonMatch[0]) as VisionAttrs;
       cache.results[fp] = JSON.stringify(attrs);
-      delete cache.cooldown[p.type];
+      delete cache.cooldown[ckKey];
       writeCache(cache);
       return attrs;
     } catch {
-      cache.cooldown[p.type] = now + COOLDOWN_MS;
+      cache.cooldown[ckKey] = now + COOLDOWN_MS;
       writeCache(cache);
       // 继续下一个 provider
     }

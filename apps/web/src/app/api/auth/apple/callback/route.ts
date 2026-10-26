@@ -15,8 +15,9 @@ export async function POST(req: NextRequest) {
   const err = form.get('error');
   if (err) return loginErr(`Apple sign-in cancelled (${err})`);
 
-  const next = await verifyStateCookie('apple', form.get('state') as string | null);
-  if (next === null) return loginErr('Sign-in session expired — please try again');
+  const state = await verifyStateCookie('apple', form.get('state') as string | null);
+  if (!state) return loginErr('Sign-in session expired — please try again');
+  const next = state.next;
 
   const code = form.get('code');
   if (typeof code !== 'string' || !code) return loginErr('Apple did not return an authorization code');

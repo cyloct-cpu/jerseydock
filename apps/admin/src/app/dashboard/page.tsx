@@ -102,7 +102,10 @@ export default async function DashboardPage() {
           <h1 style={{ marginTop: 6 }}>经营总览</h1>
           <div className="sub">订单、履约、客户与流量的实时汇总 · 近 7 天趋势 · 待办事项直达</div>
         </div>
-        <Link className="btn btn-ghost" href="/api/export?type=orders">导出订单 CSV</Link>
+        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+          <Link className="btn btn-ghost" href="/api/export?type=events">导出埋点 CSV</Link>
+          <Link className="btn btn-ghost" href="/api/export?type=orders">导出订单 CSV</Link>
+        </div>
       </div>
 
       {/* —— 今日待办（该做的事直达入口）—— */}

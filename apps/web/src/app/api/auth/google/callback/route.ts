@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { decodeJwtPayload, finishOAuthLogin, googleConfigured, verifyStateCookie } from '@/lib/oauth';
+import { finishOAuthLogin, googleConfigured, verifyGoogleIdToken, verifyStateCookie } from '@/lib/oauth';
 
 export const dynamic = 'force-dynamic';
 
@@ -11,13 +11,14 @@ export async function GET(req: NextRequest) {
   const err = req.nextUrl.searchParams.get('error');
   if (err) return loginErr(`Google sign-in cancelled (${err})`);
 
-  const next = await verifyStateCookie('google', req.nextUrl.searchParams.get('state'));
-  if (next === null) return loginErr('Sign-in session expired — please try again');
+  const state = await verifyStateCookie('google', req.nextUrl.searchParams.get('state'));
+  if (!state) return loginErr('Sign-in session expired — please try again');
+  const { next, nonce } = state;
 
   const code = req.nextUrl.searchParams.get('code');
   if (!code) return loginErr('Google did not return an authorization code');
 
-  // 换 token（直连 Google 的 TLS 请求，id_token 无需再验签）
+  // 换 token；id_token 仍走 JWKS 严格验签 + nonce 比对（K-SEC-3，直连 TLS 不作为免验签理由）
   const tokenRes = await fetch('https://oauth2.googleapis.com/token', {
     method: 'POST',
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -34,7 +35,12 @@ export async function GET(req: NextRequest) {
     return loginErr(`Google token exchange failed: ${token?.error_description || tokenRes.status}`);
   }
 
-  const claims = decodeJwtPayload(token.id_token);
+  let claims: Record<string, unknown>;
+  try {
+    claims = await verifyGoogleIdToken(token.id_token, nonce);
+  } catch (e) {
+    return loginErr(`Google sign-in verification failed: ${e instanceof Error ? e.message : 'unknown'}`);
+  }
   const email = String(claims.email || '');
   if (!email) return loginErr('Google account has no email');
 

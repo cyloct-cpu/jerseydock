@@ -54,8 +54,8 @@ export async function writeStateCookie(provider: 'google' | 'apple', next: strin
   return `${b64url(Buffer.from(state.n))}.${b64url(Buffer.from(next))}`;
 }
 
-/** 校验 state（provider 必须一致、nonce 必须与 cookie 内记录一致、未过期）；返回 next */
-export async function verifyStateCookie(provider: 'google' | 'apple', stateParam: string | null): Promise<string | null> {
+/** 校验 state（provider 必须一致、nonce 必须与 cookie 内记录一致、未过期）；返回 next 与 nonce（nonce 需与 id_token 回传值比对） */
+export async function verifyStateCookie(provider: 'google' | 'apple', stateParam: string | null): Promise<{ next: string; nonce: string } | null> {
   if (!stateParam) return null;
   const store = await cookies();
   const raw = store.get(STATE_COOKIE)?.value;
@@ -65,7 +65,7 @@ export async function verifyStateCookie(provider: 'google' | 'apple', stateParam
     const state = JSON.parse(Buffer.from(raw, 'base64url').toString('utf8')) as StatePayload;
     const [nonce] = String(stateParam).split('.');
     if (state.p !== provider || !state.n || nonce !== state.n || state.exp < Date.now()) return null;
-    return safeNext(state.next);
+    return { next: safeNext(state.next), nonce: state.n };
   } catch {
     return null;
   }
@@ -97,6 +97,66 @@ export function decodeJwtPayload(idToken: string): Record<string, unknown> {
   const part = String(idToken || '').split('.')[1];
   if (!part) throw new Error('malformed id_token');
   return JSON.parse(Buffer.from(part, 'base64url').toString('utf8')) as Record<string, unknown>;
+}
+
+// ---------------- Google id_token 严格验签（JWKS） ----------------
+
+type GoogleJwk = { kty: string; kid: string; n: string; e: string };
+let googleJwksCache: { keys: Map<string, crypto.KeyObject>; fetchedAt: number } | null = null;
+const GOOGLE_JWKS_TTL_MS = 60 * 60 * 1000;
+
+async function googleSigningKeys(): Promise<Map<string, crypto.KeyObject>> {
+  if (googleJwksCache && Date.now() - googleJwksCache.fetchedAt < GOOGLE_JWKS_TTL_MS) {
+    return googleJwksCache.keys;
+  }
+  const res = await fetch('https://www.googleapis.com/oauth2/v3/certs', { cache: 'no-store' });
+  if (!res.ok) throw new Error(`google jwks fetch failed: ${res.status}`);
+  const data = await res.json() as { keys?: GoogleJwk[] };
+  const keys = new Map<string, crypto.KeyObject>();
+  for (const k of data.keys ?? []) {
+    if (k.kty !== 'RSA' || !k.kid) continue;
+    keys.set(k.kid, crypto.createPublicKey({ key: k as unknown as crypto.JsonWebKey, format: 'jwk' }));
+  }
+  googleJwksCache = { keys, fetchedAt: Date.now() };
+  return keys;
+}
+
+/**
+ * 严格验签 Google id_token（K-SEC-3）：
+ * RS256 签名（JWKS，kid 轮换时强制刷新一次）+ iss + aud + exp + nonce。
+ * 直连 token endpoint 换取不作为免验签理由（防御纵深，防将来获取方式变更/中间态）。
+ * 校验失败抛错，由调用方转为登录失败提示。
+ */
+export async function verifyGoogleIdToken(idToken: string, expectedNonce: string): Promise<Record<string, unknown>> {
+  const seg = String(idToken || '').split('.');
+  if (seg.length !== 3) throw new Error('malformed id_token');
+  const header = JSON.parse(Buffer.from(seg[0], 'base64url').toString('utf8')) as { alg?: string; kid?: string };
+  if (header.alg !== 'RS256' || !header.kid) throw new Error('unexpected id_token alg/kid');
+
+  const verify = async (keys: Map<string, crypto.KeyObject>): Promise<Record<string, unknown>> => {
+    const key = keys.get(header.kid as string);
+    if (!key) return {};
+    const ok = crypto.createVerify('RSA-SHA256').update(`${seg[0]}.${seg[1]}`).verify(key, seg[2], 'base64url');
+    if (!ok) throw new Error('id_token signature invalid');
+    return decodeJwtPayload(idToken);
+  };
+
+  let claims = await verify(await googleSigningKeys());
+  if (!claims.iss) {
+    // kid 未命中（Google 轮换密钥）：强制刷新 JWKS 后重验一次
+    claims = await verify(await googleSigningKeys());
+    if (!claims.iss) throw new Error('id_token kid not found in JWKS');
+  }
+
+  const now = Math.floor(Date.now() / 1000);
+  const iss = String(claims.iss);
+  const aud = Array.isArray(claims.aud) ? claims.aud.map(String) : [String(claims.aud)];
+  const clientId = String(process.env.GOOGLE_CLIENT_ID || '');
+  if (iss !== 'https://accounts.google.com' && iss !== 'accounts.google.com') throw new Error(`id_token iss unexpected: ${iss}`);
+  if (!clientId || !aud.includes(clientId)) throw new Error('id_token audience mismatch');
+  if (Number(claims.exp) + 60 < now) throw new Error('id_token expired');
+  if (!expectedNonce || String(claims.nonce || '') !== expectedNonce) throw new Error('id_token nonce mismatch');
+  return claims;
 }
 
 // ---------------- Apple client_secret（ES256 JWT，Apple 每次换 token 都要带） ----------------

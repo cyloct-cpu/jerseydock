@@ -10,6 +10,8 @@ export async function GET(req: NextRequest) {
   }
   const next = safeNext(req.nextUrl.searchParams.get('next'));
   const state = await writeStateCookie('google', next);
+  // state 第一段即 base64url(nonce)，授权请求带上后 Google 会在 id_token 中原样回传
+  const nonce = Buffer.from(state.split('.')[0], 'base64url').toString('utf8');
   const redirectUri = `${req.nextUrl.origin}/api/auth/google/callback`;
   const url = new URL('https://accounts.google.com/o/oauth2/v2/auth');
   url.searchParams.set('client_id', String(process.env.GOOGLE_CLIENT_ID));
@@ -17,6 +19,7 @@ export async function GET(req: NextRequest) {
   url.searchParams.set('response_type', 'code');
   url.searchParams.set('scope', 'openid email profile');
   url.searchParams.set('state', state);
+  url.searchParams.set('nonce', nonce);
   url.searchParams.set('prompt', 'select_account');
   return NextResponse.redirect(url);
 }

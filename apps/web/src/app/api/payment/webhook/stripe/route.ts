@@ -38,11 +38,14 @@ export async function POST(req: NextRequest) {
   const secret = settings.stripe.webhookSecret;
   const raw = await req.text();
 
-  if (secret) {
-    const sig = req.headers.get('stripe-signature') || '';
-    if (!verifyStripeSig(raw, sig, secret)) {
-      return NextResponse.json({ ok: false, error: 'Invalid signature' }, { status: 400 });
-    }
+  if (!secret) {
+    // 未配置 webhook 密钥时一律拒绝：验签是回调唯一身份凭据，跳过等于开放伪造置单
+    console.error('[stripe-webhook] rejected: Stripe webhookSecret not configured');
+    return NextResponse.json({ ok: false, error: 'Webhook not configured' }, { status: 400 });
+  }
+  const sig = req.headers.get('stripe-signature') || '';
+  if (!verifyStripeSig(raw, sig, secret)) {
+    return NextResponse.json({ ok: false, error: 'Invalid signature' }, { status: 400 });
   }
 
   let event: { type?: string; data?: { object?: Record<string, unknown> } };
