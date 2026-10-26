@@ -78,14 +78,13 @@ export function currencyForCountry(country?: string | null): CurrencyCode {
   return found ? found.code : 'USD';
 }
 
-/** USD → 目标币种换算 + 心理价位取整（.90 / .00；零小数币种取整） */
+/** USD → 目标币种换算（精确值；零小数币种取整）。
+ *  注意：这里绝不做 .90/.00 心理价位取整 —— convert 同时用于订单小计/折扣/总额等
+ *  精确金额展示，取整曾把 $5 显示成 $0.00、$55 显示成 $50.00（前台与后台实收差 $5 资损）。
+ *  营销价的 .90/.00 视觉应在定价环节处理，展示层一律精确。 */
 export function convert(usd: number, rate: number, code: CurrencyCode): number {
   const v = usd * rate;
-  if (ZERO_DECIMAL.has(code)) return Math.round(v);
-  const r = Math.round(v);
-  const last = r % 10;
-  if (last === 9 || last === 0) return r;
-  return last > 6 ? r - last + 9 : r - last + 0; // 取整到 .90 或 .00
+  return ZERO_DECIMAL.has(code) ? Math.round(v) : Math.round(v * 100) / 100;
 }
 
 export function format(usd: number, code: CurrencyCode, rate: number): string {

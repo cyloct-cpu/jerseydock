@@ -242,7 +242,8 @@ export default async function DashboardPage() {
           <div style={{ marginTop: 12, display: 'grid', gap: 8 }}>
             {funnel.map((st, i) => {
               const prev = i > 0 ? funnel[i - 1].n : 0;
-              const rate = i > 0 && prev > 0 ? Math.round((st.n / prev) * 1000) / 10 + '%' : '—';
+              // 上级为 0 或本级反超上级（历史埋点缺失/双计）时显示 —，避免出现 1100% 这类误导数字
+              const rate = i > 0 && prev > 0 && st.n <= prev ? Math.round((st.n / prev) * 1000) / 10 + '%' : '—';
               const maxN = Math.max(1, funnel[0].n);
               return (
                 <div key={st.label}>

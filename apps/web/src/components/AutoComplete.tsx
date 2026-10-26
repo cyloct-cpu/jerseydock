@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { useT } from '@/lib/store';
 
 /**
  * 自动匹配输入（单选 combobox）
@@ -31,6 +32,7 @@ export function AutoComplete({
   const [query, setQuery] = useState('');
   const [active, setActive] = useState(-1);
   const boxRef = useRef<HTMLDivElement>(null);
+  const t = useT();
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -118,7 +120,7 @@ export function AutoComplete({
             ))}
             {!filtered.length && (
               <div style={{ padding: '14px 12px', fontSize: 'var(--fs-small)', color: 'var(--text-3)' }}>
-                {allowFreeText ? '列表中没有匹配项 — 将按输入内容提交' : '没有匹配的选项'}
+                {allowFreeText ? t('autocomplete.no_match_free') : t('autocomplete.no_match')}
               </div>
             )}
           </div>

@@ -195,10 +195,10 @@ export default async function OrdersPage({
       </form>
 
       <div className="a-table-wrap">
-        <table className="a-table">
+        <table className="a-table a-table--sticky-last">
           <thead>
             <tr>
-              <th style={{ width: 36 }}></th><th>订单号</th><th>时间</th><th>客户</th><th>商品</th><th>金额</th><th style={{ minWidth: 190 }}>款项</th><th style={{ minWidth: 190 }}>物流</th><th style={{ minWidth: 250 }}>操作</th>
+              <th style={{ width: 36 }}></th><th>订单号</th><th style={{ minWidth: 88 }}>时间</th><th>客户</th><th>商品</th><th>金额</th><th style={{ minWidth: 190 }}>款项</th><th style={{ minWidth: 190 }}>物流</th><th style={{ minWidth: 250 }}>操作</th>
             </tr>
           </thead>
           <tbody>
@@ -211,7 +211,11 @@ export default async function OrdersPage({
                 <tr key={o.orderNo}>
                   <td><input type="checkbox" name="orderNos" value={o.orderNo} form="orders-bulk-delete" /></td>
                   <td className="mono" style={{ color: 'var(--text-2)' }}>{o.orderNo}</td>
-                  <td className="dim">{new Date(o.createdAt).toLocaleString('zh-CN', { hour12: false })}</td>
+                  <td className="dim">
+                    {/* 日期/时间两行显示，压缩宽表横向宽度 */}
+                    <div>{new Date(o.createdAt).toLocaleDateString('zh-CN')}</div>
+                    <div style={{ fontSize: 'var(--fs-micro)' }}>{new Date(o.createdAt).toLocaleTimeString('zh-CN', { hour12: false })}</div>
+                  </td>
                   <td className="wrap">
                     <div style={{ color: 'var(--text)' }}>{o.email}</div>
                     <div className="dim">{o.name || ''}{(o as unknown as { country?: string }).country ? ` · ${(o as unknown as { country?: string }).country}` : ''}</div>

@@ -341,16 +341,16 @@ export default function CheckoutClient({ saved, paymentMode = 'placeholder', sig
                   />
                   <span style={{ minWidth: 0 }}>
                     <b style={{ fontWeight: 500, color: payMethod === 'transfer' ? 'var(--accent)' : 'var(--text)' }}>
-                      银行转账 · {transfer.channel}
+                      {t('checkout.pay_transfer').replace('{channel}', transfer.channel)}
                     </b>
                     <span style={{ display: 'block', fontSize: 'var(--fs-micro)', color: 'var(--text-3)', marginTop: 3, lineHeight: 1.6 }}>
-                      下单后按以下收款信息转账，到账确认后发货
+                      {t('checkout.pay_transfer_desc')}
                     </span>
                     {payMethod === 'transfer' && (
                       <span style={{ display: 'block', marginTop: 8, padding: '8px 10px', border: '1px solid var(--line-2)', borderRadius: 3, fontSize: 'var(--fs-micro)', lineHeight: 1.8, color: 'var(--text-2)' }}>
-                        收款人：<b className="mono" style={{ color: 'var(--text)' }}>{transfer.accountName}</b><br />
-                        收款账号：<b className="mono" style={{ color: 'var(--text)' }}>{transfer.accountNumber}</b><br />
-                        开户行：{transfer.bankName}{transfer.swiftCode ? <> · SWIFT: {transfer.swiftCode}</> : null}
+                        {t('checkout.pay_transfer_name')}：<b className="mono" style={{ color: 'var(--text)' }}>{transfer.accountName}</b><br />
+                        {t('checkout.pay_transfer_account')}：<b className="mono" style={{ color: 'var(--text)' }}>{transfer.accountNumber}</b><br />
+                        {t('checkout.pay_transfer_bank')}：{transfer.bankName}{transfer.swiftCode ? <> · SWIFT: {transfer.swiftCode}</> : null}
                         {transfer.note ? <><br />{transfer.note}</> : null}
                       </span>
                     )}

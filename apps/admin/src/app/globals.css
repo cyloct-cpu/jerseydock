@@ -99,6 +99,11 @@ table.a-table td { padding: 9px 12px; border-bottom: 1px solid var(--line); colo
 table.a-table tr:hover td { background: rgba(255, 255, 255, 0.02); color: var(--text); }
 table.a-table tr:last-child td { border-bottom: 0; }
 table.a-table .wrap { white-space: normal; min-width: 220px; }
+/* 宽表修饰（订单管理在用）：横向滚动时末列（操作）常驻可见。
+   背景必须不透明——tr:hover 的半透明背景会让滚动内容透出来。 */
+table.a-table--sticky-last th:last-child { right: 0; z-index: 2; box-shadow: -8px 0 10px -8px rgba(0, 0, 0, 0.7); }
+table.a-table--sticky-last td:last-child { position: sticky; right: 0; background: var(--surface); box-shadow: -8px 0 10px -8px rgba(0, 0, 0, 0.7); }
+table.a-table--sticky-last tr:hover td:last-child { background: var(--surface); }
 .a-thumb { width: 34px; height: 44px; object-fit: cover; background: var(--surface-3); border-radius: 2px; }
 .mono { font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace; font-size: var(--fs-micro); color: var(--text-3); }
 

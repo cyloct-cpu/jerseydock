@@ -85,7 +85,7 @@ export function AddToCart({
       customText: c.customText,
       armband: c.armband,
     }, qty);
-    track({ type: 'checkout_start', handle: product.h, size });
+    // checkout_start 由结账页统一上报 —— 这里曾重复上报一次，导致漏斗"开始结算 > 加购"（120%）
     window.location.href = '/checkout';
   };
 

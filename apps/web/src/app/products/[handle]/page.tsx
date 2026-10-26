@@ -6,7 +6,7 @@ import { ProductCard } from '@/components/ProductCard';
 import { Reveal } from '@/components/Reveal';
 import { Breadcrumb } from '@/components/Breadcrumb';
 import { productByHandle, similarProducts, categoryBySlug } from '@/lib/catalog';
-import { trackView } from '@/lib/track';
+import { TrackView } from '@/components/TrackView';
 import { AddToCart } from './AddToCart';
 import { Price } from '@/components/Price';
 import { Gallery } from '@/components/Gallery';
@@ -42,7 +42,6 @@ export default function ProductPage({ params }: Props) {
   const { handle } = use(params);
   const product = productByHandle(handle);
   if (!product) notFound();
-  trackView(product.h);
 
   const images = product.i.length ? product.i : [product.v];
   const sizes = product.s.length ? product.s : ['S', 'M', 'L', 'XL', '2XL'];
@@ -70,6 +69,7 @@ export default function ProductPage({ params }: Props) {
 
   return (
     <div className="container">
+      <TrackView handle={product.h} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }} />
       <Breadcrumb
         items={[

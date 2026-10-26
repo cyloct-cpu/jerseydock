@@ -7,6 +7,10 @@
 export const COUNTRIES = [
   'United States', 'United Kingdom', 'Germany', 'France', 'Spain', 'Italy', 'Netherlands',
   'Portugal', 'Brazil', 'Mexico', 'Canada', 'Australia', 'Japan', 'Other',
+  // 东南亚 / 中东 COD 主力市场
+  'Thailand', 'Malaysia', 'Singapore', 'Philippines', 'Vietnam', 'Indonesia',
+  'Saudi Arabia', 'United Arab Emirates', 'Kuwait', 'Qatar',
+  'South Korea', 'India', 'Turkey', 'Poland',
 ];
 
 export const COUNTRY_CITIES: Record<string, string[]> = {
@@ -59,5 +63,52 @@ export const COUNTRY_CITIES: Record<string, string[]> = {
   Japan: [
     'Tokyo', 'Osaka', 'Yokohama', 'Nagoya', 'Sapporo', 'Fukuoka', 'Kobe',
     'Kyoto', 'Sendai', 'Hiroshima',
+  ],
+  Thailand: [
+    'Bangkok', 'Chiang Mai', 'Pattaya', 'Phuket', 'Hat Yai', 'Khon Kaen',
+    'Nonthaburi', 'Udon Thani', 'Chonburi', 'Surat Thani',
+  ],
+  Malaysia: [
+    'Kuala Lumpur', 'Johor Bahru', 'Penang', 'Ipoh', 'Shah Alam', 'Petaling Jaya',
+    'Malacca City', 'Kota Kinabalu', 'Kuching', 'Putrajaya',
+  ],
+  Singapore: ['Singapore'],
+  Philippines: [
+    'Manila', 'Quezon City', 'Cebu City', 'Davao City', 'Makati', 'Taguig',
+    'Pasig', 'Parañaque', 'Baguio', 'Iloilo City',
+  ],
+  Vietnam: [
+    'Ho Chi Minh City', 'Hanoi', 'Da Nang', 'Hai Phong', 'Can Tho', 'Nha Trang',
+    'Bien Hoa', 'Hue', 'Buon Ma Thuot', 'Vung Tau',
+  ],
+  Indonesia: [
+    'Jakarta', 'Surabaya', 'Bandung', 'Medan', 'Semarang', 'Makassar',
+    'Palembang', 'Tangerang', 'Depok', 'Denpasar',
+  ],
+  'Saudi Arabia': [
+    'Riyadh', 'Jeddah', 'Mecca', 'Medina', 'Dammam', 'Khobar', 'Dhahran',
+    'Taif', 'Buraidah', 'Abha',
+  ],
+  'United Arab Emirates': [
+    'Dubai', 'Abu Dhabi', 'Sharjah', 'Al Ain', 'Ajman', 'Ras Al Khaimah',
+    'Fujairah', 'Umm Al Quwain',
+  ],
+  Kuwait: ['Kuwait City', 'Hawalli', 'Salmiya', 'Jahra', 'Farwaniya', 'Mangaf'],
+  Qatar: ['Doha', 'Al Rayyan', 'Al Wakrah', 'Umm Salal', 'Al Khor'],
+  'South Korea': [
+    'Seoul', 'Busan', 'Incheon', 'Daegu', 'Daejeon', 'Gwangju', 'Ulsan',
+    'Suwon', 'Changwon', 'Jeju City',
+  ],
+  India: [
+    'Mumbai', 'Delhi', 'Bengaluru', 'Hyderabad', 'Chennai', 'Kolkata',
+    'Pune', 'Ahmedabad', 'Jaipur', 'Surat',
+  ],
+  Turkey: [
+    'Istanbul', 'Ankara', 'Izmir', 'Bursa', 'Antalya', 'Adana', 'Konya',
+    'Gaziantep', 'Mersin', 'Kayseri',
+  ],
+  Poland: [
+    'Warsaw', 'Kraków', 'Łódź', 'Wrocław', 'Poznań', 'Gdańsk', 'Szczecin',
+    'Bydgoszcz', 'Lublin', 'Katowice',
   ],
 };

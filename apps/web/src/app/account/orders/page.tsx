@@ -78,7 +78,7 @@ export default async function AccountOrdersPage() {
                     {o.items?.slice(0, 2).map((it, i) => (
                       <div key={i} className="dim" style={{ fontSize: 'var(--fs-micro)', marginTop: 2 }}>
                         {it.title} · {it.size} ×{it.qty}
-                        {(it.customText || it.armband) && <span style={{ color: 'var(--accent)' }}>（定制）</span>}
+                        {(it.customText || it.armband) && <span style={{ color: 'var(--accent)' }}> · {t('cart.custom_tag')}</span>}
                       </div>
                     ))}
                     {o.items && o.items.length > 2 && (

@@ -58,7 +58,7 @@
   },
   "hero": {
     "enabled": true,
-    "intervalMs": 7000,
+    "intervalMs": 5000,
     "slides": [
       {
         "id": "hero_default_1",
@@ -127,7 +127,7 @@
     "keys": ""
   },
   "paymentPlaceholder": "Online payment — coming soon",
-  "updatedAt": "2026-10-20T22:51:34.369Z",
+  "updatedAt": "2026-10-26T17:24:20.624Z",
   "sync": {
     "enabled": true,
     "baseUrl": "http://127.0.0.1:3101",
@@ -145,12 +145,14 @@
       "mediaFetched": 0,
       "mediaSkipped": 0,
       "mediaFailed": 0,
-      "cursor": 2,
-      "latest": 2,
-      "errors": [],
-      "at": "2026-10-26T10:52:00.122Z",
-      "ok": true
+      "cursor": 0,
+      "latest": 0,
+      "errors": [
+        "master 401 Unauthorized"
+      ],
+      "at": "2026-10-26T17:33:50.668Z",
+      "ok": false
     },
-    "updatedAt": "2026-10-26T10:52:00.123Z"
+    "updatedAt": "2026-10-26T17:33:50.669Z"
   }
 }

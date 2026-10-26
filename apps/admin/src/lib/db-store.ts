@@ -55,9 +55,11 @@ function dbRowToOrder(r: Record<string, unknown>): OrderRow {
   return o;
 }
 
-/** 原 JSONL 订单对象 → DB 行（known 字段映射，其余进 ext） */
+/** 原 JSONL 订单对象 → DB 行（known 字段映射，其余进 ext）
+ *  注意：shipment/shippedAt 不能列入 known —— Order 表没有这两列，列入即静默丢数据
+ *  （shipOrder 写的运单号只剩审计日志：物流页 0 包裹、前台看不到运单）。放 ext 往返无损。 */
 function orderToDbRow(o: OrderRow): Record<string, string | number | null> {
-  const known = new Set(['orderNo', 'email', 'name', 'address', 'city', 'country', 'zip', 'currency', 'items', 'subtotalUsd', 'discountUsd', 'shippingUsd', 'totalUsd', 'paymentMethod', 'paymentStatus', 'fulfillmentStatus', 'shipment', 'createdAt', 'shippedAt', 'phone']);
+  const known = new Set(['orderNo', 'email', 'name', 'address', 'city', 'country', 'zip', 'currency', 'items', 'subtotalUsd', 'discountUsd', 'shippingUsd', 'totalUsd', 'paymentMethod', 'paymentStatus', 'fulfillmentStatus', 'createdAt', 'phone']);
   const ext: Record<string, unknown> = {};
   for (const [k, v] of Object.entries(o)) if (!known.has(k)) ext[k] = v;
   const addr: Record<string, unknown> = {};
@@ -222,13 +224,25 @@ export function dbAppendAudit(row: Record<string, unknown>): void {
 
 // ---------------- 回访（followups.json ⇄ FollowUp） ----------------
 
+// ---------------- 回访（followups.json ⇄ FollowUp） ----------------
+
+/** nextAt 统一规范成 ISO 字符串：曾混入数字时间戳（如 1792534320000），
+ *  String(数字) 再 new Date(...) 得 "Invalid Date"（数据看板回访提醒）。原 JSON 约定就是 ISO 字符串。 */
+function normalizeNextAt(v: unknown): string | null {
+  if (v == null) return null;
+  if (typeof v === 'number') return new Date(v).toISOString();
+  const s = String(v);
+  if (/^\d+$/.test(s)) return new Date(Number(s)).toISOString();
+  return s;
+}
+
 export function dbReadFollowups(): Record<string, unknown>[] {
   return (db().prepare('SELECT * FROM FollowUp').all() as Record<string, unknown>[]).map((r) => ({
     id: r.id,
     customerKey: r.customerKey,
     email: r.customerKey,
     status: r.status,
-    nextAt: r.nextAt,
+    nextAt: normalizeNextAt(r.nextAt),
     owner: r.owner,
     note: r.note,
     history: JSON.parse((r.history as string) ?? '[]'),

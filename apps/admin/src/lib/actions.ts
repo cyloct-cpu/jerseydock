@@ -1139,6 +1139,15 @@ export async function saveSettings(formData: FormData) {
         })(),
     updatedAt: new Date().toISOString(),
   };
+  // 兜底合并：本表单不管理的节点（sync / oms / 未来新增）原样保留。
+  // 曾发生：设置页整表单提交把 settings.json 里的 sync 节点整个吃掉
+  // （sharedMediaDir 丢失 → /media 全站 404、同步 worker 停摆）。
+  const MANAGED = new Set(['brand', 'announcement', 'announcementBar', 'reviews', 'visitors', 'customize', 'hero', 'payment', 'visionApi', 'paymentPlaceholder', 'updatedAt']);
+  let prevSettings: Record<string, unknown> = {};
+  try { prevSettings = readJson<Record<string, unknown>>(paths.settings, {}) || {}; } catch { /* 文件不存在则跳过 */ }
+  for (const [k, v] of Object.entries(prevSettings)) {
+    if (!MANAGED.has(k) && settings[k] === undefined) settings[k] = v;
+  }
   writeJson(paths.settings, settings);
   audit(null, 'settings:save');
   revalidatePath('/settings');
