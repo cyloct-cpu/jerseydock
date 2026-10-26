@@ -1,56 +1,60 @@
 /**
- * 主站商品同步消费端（K-S2，开发执行文档 §12.3）
- * 协议：GET <主站>/api/sync/catalog?cursor=<seq>&limit=<n>，Bearer settings.sync.token
- * 返回 { entries: [{ seq, op: 'upsert'|'delete', contentHash, product? }], nextCursor }
- * - upsert：contentHash 与库中 ext.syncHash 相同则跳过；不同则重建本店 SlimProduct 同构 ext（src:'sync'）
- * - delete：tombstone → 库 status='archived' 软删（只动同步域）
- * - 媒体：先查共享目录（文件名=hash），命中零拷贝；未命中按 URL 补拉落盘并校验 bytes
- * - 本店差异（CatalogOverride 表）：价格 priceUsd/价格系数 priceFactor、标题、上下架在落库时应用
- * web/admin 两份同内容（与 db-store 同镜像约定）
+ * 主站商品同步消费端（K-S2；K-S2-5 起按 jerseyshelf 主站真实实现适配）
+ *
+ * 真实协议（主站 apps/api/catalog-sync.mjs + server.mjs:160，以此为准）：
+ *   GET <base>/api/sync/catalog?token=<令牌>&cursor=<seq>&limit=200[&full=1]
+ *   → { changes: [{ seq, op: 'product'|'collection', payload }], cursor, latest, publicBase }
+ *   - payload.contentHash：主站已算（32 hex），本店存 ext.syncHash 做幂等
+ *   - 价格单位为**分**（1700 = $17.00），本店落库转美元
+ *   - 无 delete op：主站下架 = payload.active=false → 本店 status='draft'；分类 deleted=true 跳过
+ *   - 媒体：payload.images = [{hash,name,contentType,bytes,path:'/media/<hash>.<ext>'}]，
+ *     URL = <publicBase||baseUrl> + path；共享目录（文件名=<hash>.<ext>）命中零拷贝，未命中补拉
+ *   - full=1：主站一次性快照（seq=0 的全量 changes，cursor=latest）；游标为 0 时自动走快照
+ *
+ * 本店差异（CatalogOverride 表）：价格 priceUsd/系数 priceFactor、标题，落库时应用。
+ * web/admin 两份同内容（与 db-store 同镜像约定）。
  */
 import fs from 'node:fs';
 import path from 'node:path';
-import crypto from 'node:crypto';
 import { CATEGORIES } from '@kitvault/shared';
 import {
   dbGetSyncCursor, dbSetSyncCursor, dbGetSyncHash,
-  dbUpsertSyncProduct, dbArchiveSyncProduct, dbGetCatalogOverride,
+  dbUpsertSyncProduct, dbUpsertSyncCollection, dbGetCatalogOverride,
 } from './db-store';
 
 export const SYNC_SOURCE = 'jerseyshelf';
 
-/** 本店已知分类 slug:主站分类与本店不一致时过滤,避免 /collections/<未知slug> 404 */
+/** 本店已知分类 slug（shared 常量）：主站分类落 Category 表，但前台归类仍以本店目录为准 */
 const KNOWN_COLLECTIONS = new Set(CATEGORIES.map(c => c.slug));
 
-// ---------------- 契约类型（以主站实现为准，K-S2-5 联调时核对） ----------------
+// ---------------- 主站契约类型 ----------------
 
-export type SyncMedia = { hash: string; ext: string; bytes: number; url: string };
-
-export type SyncProduct = {
-  slug: string;
-  titleEn: string;
-  description?: string;
-  basePriceUsd: number;
-  comparePriceUsd?: number | null;
-  sizes?: string[];
-  collections?: string[];
-  /** 主站状态；archived 等价 tombstone */
-  status?: 'active' | 'draft' | 'archived';
-  customization?: { textOn?: boolean; armbandOn?: boolean; textFeeUsd?: number; armbandFeeUsd?: number };
-  media: SyncMedia[];
+type MasterMedia = { hash: string; name: string; contentType: string; bytes: number; path: string };
+type MasterVariant = { sku: string; label: string; price: number; stock: number; active: boolean };
+type MasterProduct = {
+  kind: 'product'; slug: string; title: string; description: string;
+  price: number; comparePrice: number | null; active: boolean;
+  images: MasterMedia[]; searchKeywords: string;
+  customization: Record<string, unknown>;
+  translations: Record<string, { title?: string; description?: string }>;
+  recommendationMode: string; collections: string[];
+  variants: MasterVariant[]; contentHash: string;
 };
-
-export type SyncEntry = { seq: number; op: 'upsert' | 'delete'; contentHash: string; product?: SyncProduct };
-export type SyncPage = { entries: SyncEntry[]; nextCursor: number | null };
+type MasterCollection = {
+  kind: 'collection'; slug: string; name: string; kindKey: string; position: number;
+  image: MasterMedia | null; teamGroup: string; deleted: boolean; contentHash?: string;
+};
+type MasterEntry = { seq: number; op: 'product' | 'collection'; payload: MasterProduct | MasterCollection };
+type MasterPage = { changes: MasterEntry[]; cursor: number; latest: number; publicBase: string };
 
 // ---------------- 配置（data/admin/settings.json → sync 节） ----------------
 
 export type SyncSettings = {
   enabled: boolean;
-  baseUrl: string;       // 主站源，如 https://jerseyshelf.com
-  token: string;         // 主站 /api/sync/catalog 的访问令牌
-  sharedMediaDir?: string; // 共享图库目录；空 = <repo>/shared-media/（开发态），生产挂 /srv/media
-  intervalMinutes?: number; // 定时拉取间隔，默认 10
+  baseUrl: string;
+  token: string;
+  sharedMediaDir?: string;
+  intervalMinutes?: number;
   lastResult?: SyncStats & { at: string; ok: boolean };
 };
 
@@ -77,30 +81,27 @@ function sharedMediaDir(): string {
   return cfg.sharedMediaDir || path.resolve(process.cwd(), '..', '..', 'shared-media');
 }
 
-// ---------------- 本店差异（CatalogOverride） ----------------
+// ---------------- 媒体：共享目录命中零拷贝 / 未命中按 URL 补拉落盘 ----------------
 
-function loadOverride(slug: string): { priceUsd?: number | null; priceFactor?: number | null; titleEn?: string | null; status?: string | null } {
-  try {
-    return dbGetCatalogOverride(slug) ?? {};
-  } catch {
-    return {};
-  }
+function extOf(contentType: string): string {
+  if (contentType.includes('png')) return 'png';
+  if (contentType.includes('webp')) return 'webp';
+  if (contentType.includes('gif')) return 'gif';
+  return 'jpg';
 }
 
-// ---------------- 媒体：共享目录命中零拷贝 / 未命中补拉落盘 ----------------
-
-async function ensureMedia(items: SyncMedia[], stats: SyncStats): Promise<void> {
+async function ensureMedia(items: MasterMedia[], base: string, stats: SyncStats): Promise<void> {
   const dir = sharedMediaDir();
   fs.mkdirSync(dir, { recursive: true });
   for (const m of items || []) {
-    if (!m?.hash || !m?.url) continue;
-    const file = path.join(dir, `${m.hash}.${m.ext || 'jpg'}`);
+    if (!m?.hash || !m?.path) continue;
+    const file = path.join(dir, `${m.hash}.${extOf(m.contentType)}`);
     if (fs.existsSync(file)) {
       stats.mediaSkipped++;
       continue;
     }
     try {
-      const res = await fetch(m.url);
+      const res = await fetch(`${base}${m.path}`);
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const buf = Buffer.from(await res.arrayBuffer());
       if (m.bytes && buf.length !== m.bytes) throw new Error(`bytes mismatch: expect ${m.bytes} got ${buf.length}`);
@@ -113,38 +114,44 @@ async function ensureMedia(items: SyncMedia[], stats: SyncStats): Promise<void> 
   }
 }
 
-// ---------------- 落库 ----------------
+// ---------------- 商品/分类落库 ----------------
 
-/** SyncProduct + 本店差异 → SlimProduct 同构 ext（前台 catalog 无需感知同步域） */
-function buildExt(entry: SyncEntry, localMediaBase: string): string {
-  const p = entry.product as SyncProduct;
-  const ov = loadOverride(p.slug);
-  const base = Number(p.basePriceUsd) || 0;
+const PLACEHOLDER_SIZE = '规格待核实';
+
+/** 主站 payload → 本店 ext（SlimProduct 同构，src='sync'） */
+function buildProductExt(p: MasterProduct, entry: MasterEntry, mediaBase: string, stats: SyncStats): string {
+  const ov: { priceUsd?: number | null; priceFactor?: number | null; titleEn?: string | null; status?: string | null } = dbGetCatalogOverride(p.slug) ?? {};
+  const base = (Number(p.price) || 0) / 100; // 主站单位：分
   const price = ov.priceUsd != null ? Number(ov.priceUsd)
     : ov.priceFactor != null ? Math.round(base * Number(ov.priceFactor) * 100) / 100
     : base;
-  const compare = p.comparePriceUsd != null ? Number(p.comparePriceUsd) : null;
-  // 图片：共享媒体以 /media/<hash> 暴露（本店路由）；按主站 media 顺序
-  const images = (p.media || []).map(m => `${localMediaBase}${m.hash}`);
+  const compare = p.comparePrice != null ? Number(p.comparePrice) / 100 : null;
   const o = compare && compare > price ? Math.round((1 - price / compare) * 100) : 0;
+  const media = (p.images || []).filter(Boolean);
+  // 本店图片一律相对路径 /media/<hash>.<ext>：走本店路由（共享目录命中读文件/未命中已补拉副本），绝不热链主站
+  const images = media.map(m => m.path); // /media/<hash>.<ext>，本店同路径约定
+  const variantLabels = [...new Set((p.variants || []).map(v => String(v.label || '').trim()).filter(l => l && l !== PLACEHOLDER_SIZE))];
+  const enT = p.translations?.en?.title;
+  const enD = p.translations?.en?.description;
   const knownCl = (p.collections || []).filter(c => KNOWN_COLLECTIONS.has(c));
   const slim = {
     h: p.slug,
-    t: ov.titleEn || p.titleEn,
+    t: ov.titleEn || enT || p.title,
     p: price,
     c: compare,
     o,
-    s: p.sizes || ['S', 'M', 'L', 'XL', '2XL'],
+    s: variantLabels.length ? variantLabels : ['S', 'M', 'L', 'XL', '2XL'],
     i: images,
     v: images[0] ?? '',
     sa: 0,
     cl: knownCl.length ? knownCl : ['other'],
-    d: p.description || '',
+    d: enD || p.description || '',
     sku: p.slug,
   };
+  if (media.length) stats.mediaSeen += media.length;
   return JSON.stringify({
     src: 'sync',
-    syncHash: entry.contentHash,
+    syncHash: p.contentHash,
     masterSeq: entry.seq,
     sync: p,
     customization: p.customization ?? null,
@@ -152,60 +159,73 @@ function buildExt(entry: SyncEntry, localMediaBase: string): string {
   });
 }
 
-const localMediaBase = (): string => '/media/';
+/** 类型映射：主站 kind(club/national/other)与本店 Category.type 值域兼容，原值直存 */
+const ACCEPTED_KINDS = new Set(['national', 'club', 'season', 'retro', 'kids', 'outerwear', 'shorts', 'other']);
 
 // ---------------- 拉取主流程 ----------------
 
 export type SyncStats = {
   fetched: number; upserted: number; skipped: number; deleted: number;
-  mediaFetched: number; mediaSkipped: number; mediaFailed: number;
-  cursor: number; errors: string[];
+  collectionsSynced: number; collectionsSkippedDeleted: number;
+  mediaSeen: number; mediaFetched: number; mediaSkipped: number; mediaFailed: number;
+  cursor: number; latest: number; errors: string[];
 };
 
-export async function pullCatalog(cfg: SyncSettings, maxPages = 50): Promise<SyncStats> {
-  const stats: SyncStats = { fetched: 0, upserted: 0, skipped: 0, deleted: 0, mediaFetched: 0, mediaSkipped: 0, mediaFailed: 0, cursor: dbGetSyncCursor(SYNC_SOURCE), errors: [] };
+export async function pullCatalog(cfg: SyncSettings, maxPages = 300): Promise<SyncStats> {
+  const stats: SyncStats = { fetched: 0, upserted: 0, skipped: 0, deleted: 0, collectionsSynced: 0, collectionsSkippedDeleted: 0, mediaSeen: 0, mediaFetched: 0, mediaSkipped: 0, mediaFailed: 0, cursor: dbGetSyncCursor(SYNC_SOURCE), latest: 0, errors: [] };
+  const base = String(cfg.baseUrl || '').replace(/\/+$/, '');
   let cursor = stats.cursor;
-  const base = `${String(cfg.baseUrl || '').replace(/\/+$/, '')}/api/sync/catalog`;
 
   for (let page = 0; page < maxPages; page++) {
-    const u = `${base}?cursor=${cursor}&limit=200`;
-    const res = await fetch(u, { headers: { Authorization: `Bearer ${cfg.token}` } });
+    const full = cursor === 0 ? '&full=1' : ''; // 首连/清零后走主站全量快照
+    const u = `${base}/api/sync/catalog?token=${encodeURIComponent(cfg.token)}&cursor=${cursor}&limit=200${full}`;
+    const res = await fetch(u);
     if (!res.ok) throw new Error(`master ${res.status} ${res.statusText}`);
-    const data = await res.json() as SyncPage;
-    const entries = data.entries || [];
-    if (!entries.length) break;
+    const data = await res.json() as MasterPage;
+    const changes = data.changes || [];
+    // 补拉媒体始终走本店配置的主站地址（publicBase 是主站对外地址，本地/内网联调时可能配错端口）
+    const mediaBase = base;
 
-    for (const entry of entries) {
+    for (const entry of changes) {
       stats.fetched++;
-      cursor = Math.max(cursor, entry.seq); // 游标推进对所有 op 生效(含 delete)
       try {
-        if (entry.op === 'delete' || entry.product?.status === 'archived') {
-          if (dbArchiveSyncProduct(entry.product?.slug || '')) stats.deleted++;
+        if (entry.op === 'collection') {
+          const c = entry.payload as MasterCollection;
+          if (c.deleted) { stats.collectionsSkippedDeleted++; continue; }
+          const type = ACCEPTED_KINDS.has(c.kindKey) ? c.kindKey : 'other';
+          const ext = JSON.stringify({ src: 'sync', teamGroup: c.teamGroup || '', image: c.image?.path ?? null });
+          dbUpsertSyncCollection({ slug: c.slug, nameEn: c.name, type, sort: Number(c.position) || 0, ext });
+          stats.collectionsSynced++;
           continue;
         }
-        if (!entry.product) continue;
-        if (dbGetSyncHash(entry.product.slug) === entry.contentHash) {
+        const p = entry.payload as MasterProduct;
+        if (!p?.slug) continue;
+        if (dbGetSyncHash(p.slug) === p.contentHash) {
           stats.skipped++; // 内容未变，幂等跳过
         } else {
-          await ensureMedia(entry.product.media || [], stats);
+          await ensureMedia(p.images || [], mediaBase, stats);
           dbUpsertSyncProduct({
-            slug: entry.product.slug,
-            titleEn: entry.product.titleEn,
-            basePriceUsd: Number(entry.product.basePriceUsd) || 0,
-            comparePriceUsd: entry.product.comparePriceUsd ?? null,
-            images: (entry.product.media || []).map(m => `${localMediaBase()}${m.hash}`),
-            status: entry.product.status === 'draft' ? 'draft' : 'active',
-            ext: buildExt(entry, localMediaBase()),
+            slug: p.slug,
+            titleEn: p.translations?.en?.title || p.title,
+            basePriceUsd: (Number(p.price) || 0) / 100,
+            comparePriceUsd: p.comparePrice != null ? Number(p.comparePrice) / 100 : null,
+            images: (p.images || []).filter(Boolean).map(m => m.path),
+            status: p.active ? 'active' : 'draft', // 主站下架=本店 draft（前台 isActive 不展示）
+            ext: buildProductExt(p, entry, mediaBase, stats),
           });
           stats.upserted++;
         }
       } catch (e) {
-        stats.errors.push(`seq ${entry.seq}: ${e instanceof Error ? e.message : e}`);
+        stats.errors.push(`seq ${entry.seq} ${entry.op}: ${e instanceof Error ? e.message : e}`);
       }
     }
+
+    cursor = data.cursor ?? cursor; // 主站计算游标（本页最后 seq；快照=latest）
     dbSetSyncCursor(SYNC_SOURCE, cursor);
     stats.cursor = cursor;
-    if (data.nextCursor == null || data.nextCursor <= cursor) break;
+    stats.latest = data.latest ?? 0;
+    // 快照一次返回全部（seq=0），游标已到 latest；增量模式 cursor<latest 才继续翻页
+    if (cursor >= (data.latest ?? 0) || !changes.length) break;
   }
   return stats;
 }
@@ -220,7 +240,7 @@ export async function pullCatalogSafe(): Promise<SyncStats | { error: string }> 
     return stats;
   } catch (e) {
     const msg = e instanceof Error ? e.message : String(e);
-    try { saveSyncSettings({ lastResult: { fetched: 0, upserted: 0, skipped: 0, deleted: 0, mediaFetched: 0, mediaSkipped: 0, mediaFailed: 0, cursor: 0, errors: [msg], at: new Date().toISOString(), ok: false } }); } catch { /* ignore */ }
+    try { saveSyncSettings({ lastResult: { fetched: 0, upserted: 0, skipped: 0, deleted: 0, collectionsSynced: 0, collectionsSkippedDeleted: 0, mediaSeen: 0, mediaFetched: 0, mediaSkipped: 0, mediaFailed: 0, cursor: 0, latest: 0, errors: [msg], at: new Date().toISOString(), ok: false } }); } catch { /* ignore */ }
     return { error: msg };
   }
 }
@@ -231,9 +251,7 @@ export function ensureSyncTimer(): void {
   if (g.__kvSyncTimerStarted) return;
   g.__kvSyncTimerStarted = true;
   const tick = () => { void pullCatalogSafe(); };
-  setTimeout(tick, 30 * 1000); // 启动半分钟后先试一次
+  setTimeout(tick, 30 * 1000);
   const minutes = loadSyncSettings().intervalMinutes || 10;
   setInterval(tick, minutes * 60 * 1000).unref();
 }
-
-export const syncTestHelpers = { sharedMediaDir, hashOf: (s: string) => crypto.createHash('sha256').update(s).digest('hex') };

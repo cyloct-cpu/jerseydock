@@ -339,6 +339,14 @@ export function dbGetCatalogOverride(slug: string): { priceUsd: number | null; p
   };
 }
 
+/** 主站分类 upsert（K-S2-5 真实契约：op='collection'）；Category 表无时间戳列 */
+export function dbUpsertSyncCollection(c: { slug: string; nameEn: string; type: string; sort: number; ext: string }): void {
+  db().prepare(`INSERT INTO Category (id,slug,nameEn,type,sort,parentId,ext)
+    VALUES (lower(hex(randomblob(12))),?,?,?,?,NULL,?)
+    ON CONFLICT(slug) DO UPDATE SET nameEn=excluded.nameEn, type=excluded.type, sort=excluded.sort, ext=excluded.ext`)
+    .run(c.slug, c.nameEn, c.type, c.sort, c.ext);
+}
+
 export function dbReadBatches(): Record<string, unknown>[] {
   return (db().prepare('SELECT * FROM ImportBatch').all() as Record<string, unknown>[]).map((r) => ({
     id: r.id,

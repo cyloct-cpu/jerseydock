@@ -21,3 +21,4 @@ packages/db/prisma/*.db*
 data-backup-*/
 data/export-back-*/
 shared-media/
+data/sync/

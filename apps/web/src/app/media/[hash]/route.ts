@@ -28,7 +28,8 @@ export async function GET(_req: NextRequest, ctx: { params: Promise<{ hash: stri
     const candidates = fs.readdirSync(dir).filter(f => f.startsWith(hash + '.'));
     if (!candidates.length) return new NextResponse('Not found', { status: 404 });
     const file = path.join(dir, candidates[0]);
-    if (path.dirname(file) !== dir) return new NextResponse('Not found', { status: 404 });
+    // 防穿越(path.join 会把正斜杠归一成反斜杠,两侧都 resolve 后再比)
+    if (path.dirname(path.resolve(file)) !== path.resolve(dir)) return new NextResponse('Not found', { status: 404 });
     const buf = fs.readFileSync(file);
     const ext = path.extname(candidates[0]).slice(1).toLowerCase();
     const type = ext === 'png' ? 'image/png' : ext === 'webp' ? 'image/webp' : ext === 'gif' ? 'image/gif' : 'image/jpeg';

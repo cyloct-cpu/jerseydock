@@ -129,9 +129,30 @@
   "paymentPlaceholder": "Online payment — coming soon",
   "updatedAt": "2026-10-20T22:51:34.369Z",
   "sync": {
-    "enabled": false,
-    "baseUrl": "http://127.0.0.1:4599",
-    "token": "dev-sync-token",
-    "intervalMinutes": 10
+    "enabled": true,
+    "baseUrl": "http://127.0.0.1:3001",
+    "token": "4ae0c35c89e740c7807d9fff3156f5913a08c282bdcfc136",
+    "sharedMediaDir": "D:/球衣独立站/storage/media",
+    "intervalMinutes": 10,
+    "lastResult": {
+      "fetched": 0,
+      "upserted": 0,
+      "skipped": 0,
+      "deleted": 0,
+      "collectionsSynced": 0,
+      "collectionsSkippedDeleted": 0,
+      "mediaSeen": 0,
+      "mediaFetched": 0,
+      "mediaSkipped": 0,
+      "mediaFailed": 0,
+      "cursor": 0,
+      "latest": 0,
+      "errors": [
+        "fetch failed"
+      ],
+      "at": "2026-10-26T09:22:55.575Z",
+      "ok": false
+    },
+    "updatedAt": "2026-10-26T09:22:55.576Z"
   }
 }

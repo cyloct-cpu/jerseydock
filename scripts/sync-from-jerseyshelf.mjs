@@ -24,11 +24,30 @@ const flag = name => args.includes('--' + name);
 
 const base = (arg('base') || process.env.SYNC_BASE_URL || '').replace(/\/+$/, '');
 const token = arg('token') || process.env.SYNC_TOKEN || '';
-const dataDir = path.resolve(arg('data', 'data'));
+const dataDir = path.resolve(arg('data', 'data'));// --data 传项目数据根目录；脚本内部使用 data/sync 与 data/media;
 const syncDir = path.join(dataDir, 'sync');
 const mediaDir = path.resolve(arg('media', path.join(dataDir, 'media')));
 const sharedMediaDir = process.env.SYNC_SHARED_MEDIA_DIR ? path.resolve(process.env.SYNC_SHARED_MEDIA_DIR) : '';
 const full = flag('full');
+// 本店差异层：overrides.json（{ "product:slug": {"priceFactor":0.9,"active":false,"title":"…"} }）。
+// 主数据永不回写；价格系数作用于 variants 与商品价格，active/title 直接覆盖展示值。
+const overridesFile = arg('overrides') ? path.resolve(arg('overrides')) : path.join(syncDir, 'overrides.json');
+function loadOverrides() {
+  try { return JSON.parse(readFileSync(overridesFile, 'utf8')); } catch { return {}; }
+}
+function applyOverrides(payload, overrides) {
+  const rule = overrides[payload.kind + ':' + payload.slug];
+  if (!rule) return payload;
+  const out = { ...payload };
+  if (typeof rule.priceFactor === 'number' && rule.priceFactor > 0) {
+    out.price = Math.round(payload.price * rule.priceFactor);
+    out.comparePrice = payload.comparePrice ? Math.round(payload.comparePrice * rule.priceFactor) : 0;
+    out.variants = (payload.variants || []).map(v => ({ ...v, price: Math.round(v.price * rule.priceFactor) }));
+  }
+  if (typeof rule.active === 'boolean') out.active = rule.active;
+  if (typeof rule.title === 'string' && rule.title) out.title = rule.title;
+  return out;
+}
 
 if (!base || !token) {
   console.error('缺少 --base 或 --token（或环境变量 SYNC_BASE_URL / SYNC_TOKEN）');
@@ -52,20 +71,21 @@ function fetchJson(url) {
 
 const EXT = { 'image/png': 'png', 'image/jpeg': 'jpg', 'image/webp': 'webp', 'image/gif': 'gif' };
 async function ensureMedia(entry, publicBase) {
+  // 返回 {name, fetched}：命中共享目录/本地为 fetched:false，URL 下载为 fetched:true。
   if (!entry?.hash) return null;
   const ext = EXT[entry.contentType] || 'png';
   const name = entry.hash + '.' + ext;
   // 1) 已在本地媒体目录。
-  if (existsSync(path.join(mediaDir, name))) return name;
+  if (existsSync(path.join(mediaDir, name))) return { name, fetched: false };
   // 2) 同机共享图库：零复制直接命中（内容寻址同名）。
   if (sharedMediaDir) {
     for (const candidate of [entry.hash + '.' + ext, entry.hash + '.png', entry.hash + '.jpg', entry.hash + '.webp', entry.hash + '.gif']) {
       const shared = path.join(sharedMediaDir, candidate);
       if (existsSync(shared)) {
-        if (candidate === name) return name;
+        if (candidate === name) return { name, fetched: false };
         // 扩展名不同（主站登记的 content-type 与文件名后缀差异）：内容即真相，落本地标准名。
         writeFileSync(path.join(mediaDir, name), readFileSync(shared));
-        return name;
+        return { name, fetched: false };
       }
     }
   }
@@ -78,7 +98,7 @@ async function ensureMedia(entry, publicBase) {
   if (digest !== entry.hash) throw new Error('媒体哈希不一致：' + url + ' 期望 ' + entry.hash + ' 实际 ' + digest);
   if (entry.bytes && bytes.length !== entry.bytes) throw new Error('媒体大小不一致：' + url);
   writeFileSync(path.join(mediaDir, name), bytes);
-  return name;
+  return { name, fetched: true };
 }
 
 function readCatalogIndex() {
@@ -104,36 +124,52 @@ function applyEntity(change, publicBase) {
 
 async function main() {
   console.log('同步开始：base=' + base + ' mode=' + (full ? 'full' : 'increment') + ' cursor=' + state.cursor);
+  const overrides = loadOverrides();
+  const overridesHash = createHash('sha256').update(JSON.stringify(overrides)).digest('hex').slice(0, 16);
+  const overridesChanged = overridesHash !== state.overridesHash;
   const url = base + '/api/sync/catalog?' + new URLSearchParams({ token, ...(full ? { full: '1' } : { cursor: String(state.cursor), limit: '500' }) });
   const data = await fetchJson(url);
-  const index = readCatalogIndex();
-  let applied = 0, skipped = 0, mediaNew = 0;
+  // full 全量快照是替换式：以主站当前全集为准，主站已删除的实体会随之消失；增量才是合并式。
+  const index = full ? new Map() : readCatalogIndex();
+  let applied = 0, skipped = 0, mediaNew = 0, overridden = 0;
   for (const change of data.changes) {
     const payload = change.payload;
+    const effective = applyOverrides(payload, overrides);
+    if (effective !== payload) overridden++;
     const before = index.get(payload.kind + ':' + payload.slug);
-    if (before?.payload.contentHash === payload.contentHash) { skipped++; continue; }
-    // 媒体落盘：把 images[].path 替换为本地文件名（含共享目录命中）。
+    if (before?.payload.contentHash === payload.contentHash && !overridesChanged) { skipped++; continue; }
+    // 媒体落盘：把 images[].path 替换为本地文件名（含共享目录命中）。媒体与价格差异无关，处理主数据即可。
     for (const image of payload.images || []) {
       if (!image) continue;
-      const beforeName = image.localName;
-      const name = await ensureMedia(image, data.publicBase || base);
-      if (name && name !== beforeName) mediaNew++;
-      image.localName = name;
+      const got = await ensureMedia(image, data.publicBase || base);
+      if (got) { image.localName = got.name; if (got.fetched) mediaNew++; }
     }
     if (payload.kind === 'collection' && payload.image) {
-      payload.image.localName = await ensureMedia(payload.image, data.publicBase || base);
+      const got = await ensureMedia(payload.image, data.publicBase || base);
+      if (got) { payload.image.localName = got.name; if (got.fetched) mediaNew++; }
     }
-    index.set(payload.kind + ':' + payload.slug, { seq: change.seq, key: payload.slug, payload, syncedAt: new Date().toISOString() });
+    // payload 保存主数据原样；effective 为应用本店差异后的最终值，消费方（KITVAULT）读 effective。
+    index.set(payload.kind + ':' + payload.slug, { seq: change.seq, key: payload.slug, payload, effective, syncedAt: new Date().toISOString() });
     applied++;
+  }
+  // overrides 规则变化重放：无需主站有新变更，对已同步条目重算 effective。
+  if (overridesChanged) {
+    for (const key of Object.keys(overrides)) {
+      const row = index.get(key);
+      if (!row) continue;
+      row.effective = applyOverrides(row.payload, overrides);
+      overridden++;
+    }
+    console.log('overrides 规则变化：重放 ' + overridden + ' 个已同步条目');
   }
   writeCatalogIndex(index);
   if (data.cursor > state.cursor || full) {
     state.cursor = data.cursor;
     state.updatedAt = new Date().toISOString();
-    writeFileSync(stateFile, JSON.stringify(state, null, 2));
   }
-  console.log(`同步完成：应用 ${applied}（媒体新取 ${mediaNew}），内容未变跳过 ${skipped}，游标 ${state.cursor}/${data.latest}`);
-  if (!flag('once') === false) { /* --once 仅为语义占位：脚本天然单次执行 */ }
+  state.overridesHash = overridesHash;
+  writeFileSync(stateFile, JSON.stringify(state, null, 2));
+  console.log(`同步完成：应用 ${applied}（差异覆盖 ${overridden}，媒体新取 ${mediaNew}），内容未变跳过 ${skipped}，游标 ${state.cursor}/${data.latest}`);
 }
 
 main().catch(err => { console.error('同步失败：' + (err.message || err)); process.exit(1); });

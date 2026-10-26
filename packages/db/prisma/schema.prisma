@@ -75,6 +75,8 @@ model Category {
   parent   Category?           @relation("CategoryTree", fields: [parentId], references: [id])
   children Category[]          @relation("CategoryTree")
   sort     Int                 @default(0)
+  /// JSON 文本：主站同步分类的溢出字段（teamGroup/image 等，K-S2-5）
+  ext      String?
   products CollectionProduct[]
 }
 
