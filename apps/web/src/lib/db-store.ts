@@ -390,9 +390,9 @@ export function dbWriteMedia(rows: Record<string, unknown>[]): void {
   d.exec('BEGIN');
   try {
     d.exec('DELETE FROM MediaEntry');
-    const ins = d.prepare('INSERT INTO MediaEntry (url,name,size,source,uploadedAt) VALUES (?,?,?,?,?)');
+    const ins = d.prepare('INSERT INTO MediaEntry (id,url,name,size,source,uploadedAt) VALUES (?,?,?,?,?,?)');
     for (const m of rows) {
-      ins.run(S(m.url), S(m.name), N(m.size), S(m.source), S(m.uploadedAt) ?? new Date().toISOString());
+      ins.run(newId(), S(m.url), S(m.name), N(m.size), S(m.source), S(m.uploadedAt) ?? new Date().toISOString());
     }
     d.exec('COMMIT');
   } catch (e) {
