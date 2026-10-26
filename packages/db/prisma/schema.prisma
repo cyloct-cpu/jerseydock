@@ -1,61 +1,47 @@
-// Prisma schema —— 球衣跨境电商（开发执行文档 §5 数据模型）
-// 数据库：PostgreSQL。本地开发可用 Docker / Neon / Supabase 免费层（见 .env.example）。
+// Prisma schema —— 球衣跨境电商（开发执行文档 §5 数据模型 + §12 双店协同）
+// 数据库：SQLite（K-S0-1，双店同机零外部依赖；将来多机部署迁 PostgreSQL 时：
+//   - String 存 JSON 文本的字段改回 Json / String[]，状态字段改回 enum，金额改回 Decimal @db.Decimal(10, 2)）
 // 价格一律以 USD 基准存储，展示层换算；避免多币种对账混乱。
+// SQLite 限制（Prisma 5）：不支持 enum / String[] / Json / Decimal——
+//   状态字段以 String 存原 enum 值域（值域见行内注释），数组与结构化数据以 JSON 文本存 String。
 
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider = "sqlite"
+  url      = "file:./dev.db"
 }
 
 // ---------------- 商品 ----------------
 
-enum ProductStatus {
-  draft     // 导入后默认未上架
-  active    // 已上架
-  archived  // 软删除，可恢复
-}
-
-enum ProductType {
-  home
-  away
-  third
-  gk
-  training
-  retro
-}
-
-enum ProductVersion {
-  fan
-  player
-  kids
-}
-
 model Product {
-  id               String        @id @default(cuid())
-  sku              String        @unique
-  slug             String        @unique
-  titleKey         String?       // i18n key（动态标题预留）
-  titleEn          String
-  season           String?
-  teamId           String?
-  league           String?
-  type             ProductType   @default(home)
-  version          ProductVersion @default(fan)
-  basePriceUsd     Decimal       @db.Decimal(10, 2)
-  comparePriceUsd  Decimal?      @db.Decimal(10, 2)
-  descriptionKey   String?
-  images           String[]      // 图片 URL 数组
-  status           ProductStatus @default(draft)
-  importBatchId    String?
-  importBatch      ImportBatch?  @relation(fields: [importBatchId], references: [id])
-  collections      CollectionProduct[]
-  variants         Variant[]
-  createdAt        DateTime      @default(now())
-  updatedAt        DateTime      @updatedAt
+  id              String   @id @default(cuid())
+  sku             String   @unique
+  slug            String   @unique
+  titleKey        String? // i18n key（动态标题预留）
+  titleEn         String
+  season          String?
+  teamId          String?
+  league          String?
+  /// 值域（原 ProductType enum）：home | away | third | gk | training | retro
+  type            String   @default("home")
+  /// 值域（原 ProductVersion enum）：fan | player | kids
+  version         String   @default("fan")
+  basePriceUsd    Float // USD 两位小数（应用层格式化；迁 PG 改回 Decimal(10,2)）
+  comparePriceUsd Float?
+  descriptionKey  String?
+  /// JSON 文本：图片 URL 数组（迁 PG 改回 String[]）
+  images          String   @default("[]")
+  /// 值域（原 ProductStatus enum）：draft | active | archived（archived=软删除可恢复，同步 tombstone 落这里）
+  status          String   @default("draft")
+  importBatchId   String?
+  importBatch     ImportBatch? @relation(fields: [importBatchId], references: [id])
+  collections     CollectionProduct[]
+  variants        Variant[]
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 
   @@index([status])
   @@index([season])
@@ -66,46 +52,36 @@ model Variant {
   id             String  @id @default(cuid())
   productId      String
   product        Product @relation(fields: [productId], references: [id], onDelete: Cascade)
-  size           String  // S / M / L / XL / 2XL / 3XL / 4XL
+  size           String // S / M / L / XL / 2XL / 3XL / 4XL
   sku            String  @unique
   stock          Int     @default(0)
-  priceAdjustUsd Decimal @default(0) @db.Decimal(10, 2)
+  priceAdjustUsd Float   @default(0)
 
   @@unique([productId, size])
 }
 
 // ---------------- 分类 ----------------
 
-enum CategoryType {
-  national
-  club
-  season
-  retro
-  kids
-  outerwear
-  shorts
-  other
-}
-
 model Category {
-  id        String              @id @default(cuid())
-  slug      String              @unique
-  nameKey   String?
-  nameEn    String
-  type      CategoryType        @default(other)
-  parentId  String?
-  parent    Category?           @relation("CategoryTree", fields: [parentId], references: [id])
-  children  Category[]          @relation("CategoryTree")
-  sort      Int                 @default(0)
-  products  CollectionProduct[]
+  id       String              @id @default(cuid())
+  slug     String              @unique
+  nameKey  String?
+  nameEn   String
+  /// 值域（原 CategoryType enum）：national | club | season | retro | kids | outerwear | shorts | other
+  type     String              @default("other")
+  parentId String?
+  parent   Category?           @relation("CategoryTree", fields: [parentId], references: [id])
+  children Category[]          @relation("CategoryTree")
+  sort     Int                 @default(0)
+  products CollectionProduct[]
 }
 
 // 多对多：商品 ↔ 分类（跨集合商品合并归属）
 model CollectionProduct {
-  categoryId  String
-  productId   String
-  category    Category  @relation(fields: [categoryId], references: [id], onDelete: Cascade)
-  product     Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+  categoryId String
+  productId  String
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  product    Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
 
   @@id([categoryId, productId])
   @@index([productId])
@@ -120,15 +96,16 @@ model Customer {
   isRegistered        Boolean        @default(false)
   country             String?
   currency            String         @default("USD")
-  source              String?        // 来源渠道
+  source              String? // 来源渠道
   firstSeenAt         DateTime       @default(now())
   lastSeenAt          DateTime       @default(now())
   orderCount          Int            @default(0)
   repeatPurchaseCount Int            @default(0) // 回购次数
-  ltvUsd              Decimal        @default(0) @db.Decimal(10, 2)
+  ltvUsd              Float          @default(0)
   hasContact          Boolean        @default(false) // 是否留联系方式
-  contactType         String?        // email / whatsapp / phone
-  tags                String[]
+  contactType         String? // email / whatsapp / phone
+  /// JSON 文本：标签数组（迁 PG 改回 String[]）
+  tags                String         @default("[]")
   events              CustomerEvent[]
   followUps           FollowUp[]
   orders              Order[]
@@ -138,51 +115,37 @@ model Customer {
   @@index([orderCount])
 }
 
-enum CustomerEventType {
-  view_product
-  add_to_cart
-  remove_from_cart
-  checkout_start
-  order
-  contact
-  return_visit
-}
-
 model CustomerEvent {
-  id         String            @id @default(cuid())
+  id         String    @id @default(cuid())
   customerId String?
-  customer   Customer?         @relation(fields: [customerId], references: [id], onDelete: SetNull)
-  sessionId  String            // 访客 ID（前端 localStorage）
-  type       CustomerEventType
+  customer   Customer? @relation(fields: [customerId], references: [id], onDelete: SetNull)
+  sessionId  String // 访客 ID（前端 localStorage）
+  /// 值域（原 CustomerEventType enum）：view_product | add_to_cart | remove_from_cart | checkout_start | order | contact | return_visit
+  type       String
   productId  String?
-  durationMs Int?              // 停留时长
-  meta       Json?
-  createdAt  DateTime          @default(now())
+  durationMs Int? // 停留时长
+  /// JSON 文本（迁 PG 改回 Json）
+  meta       String?
+  createdAt  DateTime  @default(now())
 
   @@index([sessionId])
   @@index([type])
   @@index([createdAt])
 }
 
-enum FollowUpStatus {
-  pending    // 待回访
-  contacted  // 联系中
-  converted  // 已转化
-  lost       // 已流失
-  not_interested
-}
-
 model FollowUp {
-  id         String          @id @default(cuid())
+  id         String   @id @default(cuid())
   customerId String
-  customer   Customer        @relation(fields: [customerId], references: [id], onDelete: Cascade)
-  status     FollowUpStatus  @default(pending)
+  customer   Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  /// 值域（原 FollowUpStatus enum）：pending | contacted | converted | lost | not_interested
+  status     String   @default("pending")
   nextAt     DateTime?
   owner      String?
   note       String?
-  history    Json?           // 时间线：[{time, action, note}]
-  createdAt  DateTime        @default(now())
-  updatedAt  DateTime        @updatedAt
+  /// JSON 文本：时间线 [{time,action,note}]（迁 PG 改回 Json）
+  history    String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 
   @@index([status])
   @@index([nextAt])
@@ -190,40 +153,28 @@ model FollowUp {
 
 // ---------------- 订单与物流（N2 / N8） ----------------
 
-enum PaymentStatus {
-  pending   // 待支付（占位方案默认）
-  paid
-  failed
-  refunded
-}
-
-enum FulfillmentStatus {
-  unfulfilled
-  packing
-  shipped
-  in_transit
-  delivered
-  exception
-}
-
 model Order {
-  id                String            @id @default(cuid())
-  orderNo           String            @unique
+  id                String    @id @default(cuid())
+  orderNo           String    @unique
   customerId        String?
-  customer          Customer?         @relation(fields: [customerId], references: [id], onDelete: SetNull)
+  customer          Customer? @relation(fields: [customerId], references: [id], onDelete: SetNull)
   email             String
-  items             Json              // [{handle,title,priceUsd,size,qty,image}]
-  subtotalUsd       Decimal           @db.Decimal(10, 2)
-  discountUsd       Decimal           @default(0) @db.Decimal(10, 2)
-  shippingUsd       Decimal           @default(0) @db.Decimal(10, 2)
-  totalUsd          Decimal           @db.Decimal(10, 2)
-  currency          String            @default("USD") // 下单时展示币种快照
-  paymentStatus     PaymentStatus     @default(pending)
-  fulfillmentStatus FulfillmentStatus @default(unfulfilled)
-  address           Json?             // {name,address,city,country,zip}
+  /// JSON 文本：[{handle,title,priceUsd,size,qty,image}]（迁 PG 改回 Json）
+  items             String
+  subtotalUsd       Float
+  discountUsd       Float     @default(0)
+  shippingUsd       Float     @default(0)
+  totalUsd          Float
+  currency          String    @default("USD") // 下单时展示币种快照
+  /// 值域（原 PaymentStatus enum）：pending | paid | failed | refunded
+  paymentStatus     String    @default("pending")
+  /// 值域（原 FulfillmentStatus enum）：unfulfilled | packing | shipped | in_transit | delivered | exception
+  fulfillmentStatus String    @default("unfulfilled")
+  /// JSON 文本：{name,address,city,country,zip}（迁 PG 改回 Json）
+  address           String?
   shipments         Shipment[]
-  createdAt         DateTime          @default(now())
-  updatedAt         DateTime          @updatedAt
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
 
   @@index([paymentStatus])
   @@index([fulfillmentStatus])
@@ -231,72 +182,56 @@ model Order {
   @@index([createdAt])
 }
 
-enum ShipmentStatus {
-  pending
-  in_transit
-  delivered
-  exception
-}
-
 model Shipment {
-  id          String          @id @default(cuid())
+  id          String    @id @default(cuid())
   orderId     String
-  order       Order           @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  carrier     String?         // dhl / fedex / ups / yunexpress / 4px ...
+  order       Order     @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  carrier     String? // dhl / fedex / ups / yunexpress / 4px ...
   trackingNo  String?
-  status      ShipmentStatus  @default(pending)
-  events      Json?           // 轨迹：[{time,location,description}]
+  /// 值域（原 ShipmentStatus enum）：pending | in_transit | delivered | exception
+  status      String    @default("pending")
+  /// JSON 文本：轨迹 [{time,location,description}]（迁 PG 改回 Json）
+  events      String?
   shippedAt   DateTime?
   deliveredAt DateTime?
-  createdAt   DateTime        @default(now())
+  createdAt   DateTime  @default(now())
 
   @@index([trackingNo])
 }
 
 // ---------------- 批量导入（N3） ----------------
 
-enum ImportBatchStatus {
-  parsed
-  preview
-  imported
-  failed
-}
-
 model ImportBatch {
-  id           String           @id @default(cuid())
+  id           String   @id @default(cuid())
   folderName   String
-  fileCount    Int              @default(0)
-  productCount Int              @default(0)
-  status       ImportBatchStatus @default(parsed)
+  fileCount    Int      @default(0)
+  productCount Int      @default(0)
+  /// 值域（原 ImportBatchStatus enum）：parsed | preview | imported | failed
+  status       String   @default("parsed")
   log          String?
   createdBy    String?
   products     Product[]
-  createdAt    DateTime         @default(now())
+  createdAt    DateTime @default(now())
 }
 
 // ---------------- 后台权限（N6） ----------------
 
-enum AdminRole {
-  owner
-  operator
-  viewer
-}
-
 model AdminUser {
-  id           String     @id @default(cuid())
-  email        String     @unique
-  passwordHash String
-  name         String?
-  role         AdminRole  @default(operator)
+  id             String     @id @default(cuid())
+  email          String     @unique
+  passwordHash   String
+  name           String?
+  /// 值域（原 AdminRole enum）：owner | operator | viewer
+  role           String     @default("operator")
   /// 自定义角色名（仅标识用，不影响权限）
-  roleName     String?
-  /// 权限 key 数组（lib/perm-client.ts 集中定义）；owner 恒为全部
-  permissions  String[]   @default([])
-  lastLoginAt  DateTime?
+  roleName       String?
+  /// JSON 文本：权限 key 数组（lib/perm-client.ts 集中定义）；owner 恒为全部（迁 PG 改回 String[]）
+  permissions    String     @default("[]")
+  lastLoginAt    DateTime?
   /// 最后修改密码时间
   lastPasswordAt DateTime?
-  createdAt    DateTime   @default(now())
-  auditLogs    AuditLog[]
+  createdAt      DateTime   @default(now())
+  auditLogs      AuditLog[]
 }
 
 model AuditLog {
@@ -305,7 +240,8 @@ model AuditLog {
   adminUser   AdminUser? @relation(fields: [adminUserId], references: [id], onDelete: SetNull)
   action      String
   target      String?
-  meta        Json?
+  /// JSON 文本（迁 PG 改回 Json）
+  meta        String?
   createdAt   DateTime  @default(now())
 
   @@index([createdAt])
@@ -321,4 +257,28 @@ model ExchangeRate {
   updatedAt DateTime @default(now())
 
   @@unique([base, quote])
+}
+
+// ---------------- 双店同步（K 系列，开发执行文档 §12） ----------------
+
+/// 同步游标：本店已消费到主站 outbox（catalog_changes.seq）的位置
+model SyncCursor {
+  id        String   @id @default(cuid())
+  source    String   @unique // 同步源标识，如 "jerseyshelf"
+  cursor    Int      @default(0) // 已消费的最后 seq
+  updatedAt DateTime @updatedAt
+}
+
+/// 本店覆盖：同一商品在本店的差异化展示；主数据来自主站同步，永不回写主站
+model CatalogOverride {
+  id              String   @id @default(cuid())
+  productSlug     String   @unique // 对齐主站商品 slug
+  priceFactor     Float? // 价格系数（空 = 用主站基准价）
+  priceUsd        Float? // 直接指定本店价（优先于 priceFactor）
+  titleEn         String? // 本店标题文案
+  /// 本店上下架：active | hidden（空 = 跟随主站状态）
+  status          String?
+  customizationOn Boolean  @default(true) // 本店是否开放定制
+  note            String?
+  updatedAt       DateTime @updatedAt
 }

@@ -17,3 +17,4 @@ data/assets/*
 tmpwork/
 .workbuddy/
 apps/web/public/assets/
+packages/db/prisma/*.db*
