@@ -130,7 +130,7 @@
   "updatedAt": "2026-10-20T22:51:34.369Z",
   "sync": {
     "enabled": true,
-    "baseUrl": "http://127.0.0.1:3001",
+    "baseUrl": "http://127.0.0.1:3101",
     "token": "4ae0c35c89e740c7807d9fff3156f5913a08c282bdcfc136",
     "sharedMediaDir": "D:/球衣独立站/storage/media",
     "intervalMinutes": 10,
@@ -145,14 +145,12 @@
       "mediaFetched": 0,
       "mediaSkipped": 0,
       "mediaFailed": 0,
-      "cursor": 0,
-      "latest": 0,
-      "errors": [
-        "fetch failed"
-      ],
-      "at": "2026-10-26T10:42:55.689Z",
-      "ok": false
+      "cursor": 2,
+      "latest": 2,
+      "errors": [],
+      "at": "2026-10-26T10:52:00.122Z",
+      "ok": true
     },
-    "updatedAt": "2026-10-26T10:42:55.689Z"
+    "updatedAt": "2026-10-26T10:52:00.123Z"
   }
 }
