@@ -287,6 +287,58 @@ export function dbReadAllCatalog(): Record<string, unknown>[] {
   return (db().prepare("SELECT ext FROM Product WHERE status != 'archived' AND ext IS NOT NULL AND json_extract(ext,'$.h') IS NOT NULL ORDER BY rowid").all() as Record<string, unknown>[]).map((r) => JSON.parse(r.ext as string));
 }
 
+// ---------------- 主站商品同步（K-S2，开发执行文档 §12.3） ----------------
+
+/** 读同步游标 */
+export function dbGetSyncCursor(source: string): number {
+  const r = db().prepare('SELECT cursor FROM SyncCursor WHERE source = ?').get(source) as { cursor: number | bigint } | undefined;
+  return Number(r?.cursor ?? 0);
+}
+
+export function dbSetSyncCursor(source: string, cursor: number): void {
+  db().prepare('INSERT INTO SyncCursor (id,source,cursor,updatedAt) VALUES (lower(hex(randomblob(12))),?,?,?) ON CONFLICT(source) DO UPDATE SET cursor=excluded.cursor, updatedAt=excluded.updatedAt')
+    .run(source, cursor, new Date().toISOString());
+}
+
+/** 商品当前内容哈希（幂等比对用）；不存在返回 null */
+export function dbGetSyncHash(slug: string): string | null {
+  const r = db().prepare("SELECT json_extract(ext,'$.syncHash') h FROM Product WHERE slug = ?").get(slug) as { h: string | null } | undefined;
+  return r?.h ?? null;
+}
+
+/** 同步 upsert：只写同步域（ext.src='sync'），命中数据集/导入同 slug 时转为接管该行 */
+export function dbUpsertSyncProduct(p: { slug: string; titleEn: string; basePriceUsd: number; comparePriceUsd: number | null; images: string[]; status: string; ext: string }): void {
+  const now = new Date().toISOString();
+  db().prepare(`INSERT INTO Product (id,sku,slug,titleEn,basePriceUsd,comparePriceUsd,images,status,ext,createdAt,updatedAt)
+    VALUES (lower(hex(randomblob(12))),?,?,?,?,?,?,?,?,?,?)
+    ON CONFLICT(slug) DO UPDATE SET titleEn=excluded.titleEn, basePriceUsd=excluded.basePriceUsd, comparePriceUsd=excluded.comparePriceUsd,
+    images=excluded.images, status=excluded.status, ext=excluded.ext, updatedAt=excluded.updatedAt`)
+    .run(p.slug, p.slug, p.titleEn, p.basePriceUsd, p.comparePriceUsd, JSON.stringify(p.images), p.status, p.ext, now, now);
+}
+
+/** 同步删除（tombstone）：软删，且只动同步域，防误删数据集/导入商品 */
+export function dbArchiveSyncProduct(slug: string): boolean {
+  const r = db().prepare("UPDATE Product SET status='archived', updatedAt=? WHERE slug=? AND json_extract(ext,'$.src')='sync'").run(new Date().toISOString(), slug);
+  return r.changes > 0;
+}
+
+/** 清空同步域（测试/回退用）：物理删除 src='sync' 行 */
+export function dbClearSyncProducts(): number {
+  return Number(db().prepare("DELETE FROM Product WHERE json_extract(ext,'$.src')='sync'").run().changes);
+}
+
+/** 本店差异（同步落库时应用价格/标题/上下架） */
+export function dbGetCatalogOverride(slug: string): { priceUsd: number | null; priceFactor: number | null; titleEn: string | null; status: string | null } | null {
+  const r = db().prepare('SELECT priceUsd, priceFactor, titleEn, status FROM CatalogOverride WHERE productSlug = ?').get(slug) as { priceUsd: number | bigint | null; priceFactor: number | bigint | null; titleEn: string | null; status: string | null } | undefined;
+  if (!r) return null;
+  return {
+    priceUsd: r.priceUsd == null ? null : Number(r.priceUsd),
+    priceFactor: r.priceFactor == null ? null : Number(r.priceFactor),
+    titleEn: r.titleEn,
+    status: r.status,
+  };
+}
+
 export function dbReadBatches(): Record<string, unknown>[] {
   return (db().prepare('SELECT * FROM ImportBatch').all() as Record<string, unknown>[]).map((r) => ({
     id: r.id,

@@ -36,6 +36,7 @@ const GROUPS: { label: string; items: { href: string; label: string; badge?: str
     label: 'System',
     items: [
       { href: '/settings', label: '商店设置' },
+      { href: '/sync', label: '主站同步' },
       { href: '/admins', label: '账号管理' },
     ],
   },

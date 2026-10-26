@@ -127,5 +127,11 @@
     "keys": ""
   },
   "paymentPlaceholder": "Online payment — coming soon",
-  "updatedAt": "2026-10-20T22:51:34.369Z"
+  "updatedAt": "2026-10-20T22:51:34.369Z",
+  "sync": {
+    "enabled": false,
+    "baseUrl": "http://127.0.0.1:4599",
+    "token": "dev-sync-token",
+    "intervalMinutes": 10
+  }
 }

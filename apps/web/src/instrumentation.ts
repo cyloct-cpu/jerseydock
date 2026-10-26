@@ -8,13 +8,24 @@
 export async function register() {
   if (process.env.NEXT_RUNTIME !== 'nodejs') return;
   const proxy = process.env.HTTPS_PROXY || process.env.https_proxy || process.env.HTTP_PROXY || process.env.http_proxy;
-  if (!proxy) return;
-  try {
-    // webpackIgnore：让 webpack 不解析此导入，运行时由 Node 原生加载（undici 在 node_modules 根目录）
-    const { setGlobalDispatcher, EnvHttpProxyAgent } = await import(/* webpackIgnore: true */ 'undici');
-    setGlobalDispatcher(new EnvHttpProxyAgent({ connectTimeout: 30000 }));
-    console.log(`[instrumentation] outbound fetch via proxy ${proxy}`);
-  } catch (e) {
-    console.error('[instrumentation] proxy setup failed:', e instanceof Error ? e.message : e);
+  if (proxy) {
+    try {
+      // webpackIgnore：让 webpack 不解析此导入，运行时由 Node 原生加载（undici 在 node_modules 根目录）
+      const { setGlobalDispatcher, EnvHttpProxyAgent } = await import(/* webpackIgnore: true */ 'undici');
+      setGlobalDispatcher(new EnvHttpProxyAgent({ connectTimeout: 30000 }));
+      console.log(`[instrumentation] outbound fetch via proxy ${proxy}`);
+    } catch (e) {
+      console.error('[instrumentation] proxy setup failed:', e instanceof Error ? e.message : e);
+    }
+  }
+  // 主站商品同步定时器（K-S2；enabled 才实际拉取，globalThis 锁防热重载重复）
+  // 仅 Node 运行时加载（编译期守卫让 edge bundle 剔除 node:sqlite 依赖树）
+  if (process.env.NEXT_RUNTIME === 'nodejs') {
+    try {
+      const { ensureSyncTimer } = await import('./lib/catalog-sync');
+      ensureSyncTimer();
+    } catch (e) {
+      console.error('[instrumentation] sync timer start failed:', e instanceof Error ? e.message : e);
+    }
   }
 }

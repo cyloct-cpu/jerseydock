@@ -20,3 +20,4 @@ apps/web/public/assets/
 packages/db/prisma/*.db*
 data-backup-*/
 data/export-back-*/
+shared-media/

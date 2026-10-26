@@ -98,6 +98,7 @@ export const PAGE_PERMISSIONS: Record<string, string> = {
   '/customers': 'customers.view',
   '/customers/followup': 'followup.view',
   '/settings': 'settings.edit',
+  '/sync': 'settings.edit',
   '/admins': PERM_ADMINS_MANAGE,
 };
 
