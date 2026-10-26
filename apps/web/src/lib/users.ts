@@ -1,17 +1,15 @@
-import fs from 'node:fs';
-import path from 'node:path';
 import crypto from 'node:crypto';
 import { cookies } from 'next/headers';
+import { dbReadUsers, dbWriteUsers } from './db-store';
 
 /**
  * 前台用户（终端顾客）账号存储与会话
- * - 存储：data/users.jsonl（JSON Lines，与订单/后台数据同目录）
+ * - 存储：SQLite（packages/db/prisma/dev.db，K-S0-3 起替代 users.jsonl）
  * - 密码：scrypt 单向哈希（与后台 admin 同算法，盐随机）
  * - 会话：HMAC-SHA256 签名 cookie（kv_session），30 天
  * - 仅服务端使用（Server Action / Server Component），勿在客户端 import
  */
 
-const USERS_PATH = path.resolve(process.cwd(), '..', '..', 'data', 'users.jsonl');
 export const SESSION_COOKIE = 'kv_session';
 const SESSION_DAYS = 30;
 
@@ -50,20 +48,11 @@ export type UserAddress = {
 export type PublicUser = { id: string; email: string; name: string };
 
 function readUsers(): StoredUser[] {
-  try {
-    return fs.readFileSync(USERS_PATH, 'utf8')
-      .split('\n')
-      .map(l => l.trim())
-      .filter(Boolean)
-      .map(l => JSON.parse(l) as StoredUser);
-  } catch {
-    return [];
-  }
+  return dbReadUsers() as unknown as StoredUser[];
 }
 
 function writeUsers(users: StoredUser[]): void {
-  fs.mkdirSync(path.dirname(USERS_PATH), { recursive: true });
-  fs.writeFileSync(USERS_PATH, users.map(u => JSON.stringify(u)).join('\n') + (users.length ? '\n' : ''));
+  dbWriteUsers(users as never);
 }
 
 // ---------------- 密码（与后台同算法） ----------------

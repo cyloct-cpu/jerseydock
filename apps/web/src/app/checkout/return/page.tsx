@@ -1,10 +1,9 @@
 import type { Metadata } from 'next';
-import fs from 'node:fs';
-import path from 'node:path';
 import Link from 'next/link';
 import { loadPaymentSettings, markOrderPaid } from '@/lib/payment';
 import { getSessionUserFull } from '@/lib/users';
 import { guestOrderPath } from '@/lib/order-token';
+import { dbReadOrders } from '@/lib/db-store';
 import { PayPalProvider } from '@kitvault/shared';
 
 export const metadata: Metadata = { title: 'Payment' };
@@ -27,10 +26,7 @@ export default async function CheckoutReturnPage({
   // 查单页需要邮箱做归属校验：从订单记录取下单邮箱
   function orderEmail(no: string): string {
     try {
-      const log = path.resolve(process.cwd(), '..', '..', 'data', 'orders.jsonl');
-      return fs.readFileSync(log, 'utf8').split('\n').filter(Boolean)
-        .map(l => { try { return JSON.parse(l) as { orderNo?: string; email?: string }; } catch { return null; } })
-        .find(o => o?.orderNo?.toUpperCase() === no.toUpperCase())?.email || '';
+      return String(dbReadOrders().find(o => o.orderNo.toUpperCase() === no.toUpperCase())?.email ?? '');
     } catch { return ''; }
   }
   const email = orderEmail(orderNo);

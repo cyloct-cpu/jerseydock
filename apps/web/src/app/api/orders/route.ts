@@ -1,12 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import fs from 'node:fs';
 import { guestOrderPath } from '@/lib/order-token';
-import path from 'node:path';
 import { priceOrder } from '@/lib/pricing';
 import { loadBrand } from '@/lib/brand';
 import { allProducts } from '@/lib/catalog';
-
-const ORDERS_LOG = path.resolve(process.cwd(), '..', '..', 'data', 'orders.jsonl');
+import { dbAppendOrder } from '@/lib/db-store';
 
 function genOrderNo(): string {
   const t = Date.now().toString(36).toUpperCase();
@@ -141,8 +138,7 @@ export async function POST(req: NextRequest) {
       createdAt: new Date().toISOString(),
     };
 
-    fs.mkdirSync(path.dirname(ORDERS_LOG), { recursive: true });
-    fs.appendFileSync(ORDERS_LOG, JSON.stringify(order) + '\n', 'utf8');
+    dbAppendOrder(order as never);
 
     // 货到付款：下单即入 OMS 推送队列（后台 worker 消费）；在线/转账：支付确认后入队（payment.ts / 后台标记已支付）
     if (paymentMethod === 'cod') {

@@ -5,12 +5,9 @@ import { translate } from '@/lib/i18n';
 import { Price } from '@/components/Price';
 import { T } from '@/components/ContentT9n';
 import { FULFILLMENT_LABEL } from '@/lib/shipping';
-import fs from 'node:fs';
-import path from 'node:path';
+import { dbReadOrders } from '@/lib/db-store';
 
 export const dynamic = 'force-dynamic';
-
-const ORDERS_LOG = path.resolve(process.cwd(), '..', '..', 'data', 'orders.jsonl');
 
 type StoredOrder = {
   orderNo: string;
@@ -25,13 +22,9 @@ type StoredOrder = {
 
 function readOrdersByEmail(email: string): StoredOrder[] {
   try {
-    return fs.readFileSync(ORDERS_LOG, 'utf8')
-      .split('\n')
-      .map(l => l.trim())
-      .filter(Boolean)
-      .map(l => { try { return JSON.parse(l) as StoredOrder; } catch { return null; } })
-      .filter((o): o is StoredOrder => o !== null && o.email.toLowerCase() === email.toLowerCase())
-      .reverse();
+    return dbReadOrders()
+      .filter((o): o is StoredOrder => o !== null && String(o.email ?? '').toLowerCase() === email.toLowerCase())
+      .reverse() as StoredOrder[];
   } catch {
     return [];
   }

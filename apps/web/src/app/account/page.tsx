@@ -1,25 +1,17 @@
 import Link from 'next/link';
-import fs from 'node:fs';
-import path from 'node:path';
 import { getSessionUserFull } from '@/lib/users';
 import { getLocaleFromCookies } from '@/lib/locale-server';
 import { translate } from '@/lib/i18n';
 import { updateProfileAction } from '@/lib/auth-actions';
 import { PhoneInput } from '@/components/PhoneInput';
 import { T } from '@/components/ContentT9n';
+import { dbReadOrders } from '@/lib/db-store';
 
 export const dynamic = 'force-dynamic';
 
-const ORDERS_LOG = path.resolve(process.cwd(), '..', '..', 'data', 'orders.jsonl');
-
 function countOrders(email: string): number {
   try {
-    return fs.readFileSync(ORDERS_LOG, 'utf8')
-      .split('\n')
-      .map(l => l.trim())
-      .filter(Boolean)
-      .map(l => { try { return JSON.parse(l) as { email: string }; } catch { return null; } })
-      .filter(o => o && o.email.toLowerCase() === email.toLowerCase()).length;
+    return dbReadOrders().filter(o => String(o.email ?? '').toLowerCase() === email.toLowerCase()).length;
   } catch {
     return 0;
   }

@@ -2,12 +2,9 @@ import Link from 'next/link';
 import { OrderDetailView } from '@/components/OrderDetailView';
 import { verifyGuestOrderToken } from '@/lib/order-token';
 import { loadBrand } from '@/lib/brand';
-import fs from 'node:fs';
-import path from 'node:path';
+import { dbReadOrders } from '@/lib/db-store';
 
 export const dynamic = 'force-dynamic';
-
-const ORDERS_LOG = path.resolve(process.cwd(), '..', '..', 'data', 'orders.jsonl');
 
 type StoredOrder = {
   orderNo: string;
@@ -30,13 +27,7 @@ type StoredOrder = {
 
 function readOrder(orderNo: string): StoredOrder | undefined {
   try {
-    return fs.readFileSync(ORDERS_LOG, 'utf8')
-      .split('\n')
-      .map(l => l.trim())
-      .filter(Boolean)
-      .map(l => { try { return JSON.parse(l) as StoredOrder; } catch { return null; } })
-      .filter((o): o is StoredOrder => o !== null)
-      .find(o => o.orderNo.toUpperCase() === orderNo.toUpperCase());
+    return dbReadOrders().find(o => o.orderNo.toUpperCase() === orderNo.toUpperCase()) as StoredOrder | undefined;
   } catch {
     return undefined;
   }
