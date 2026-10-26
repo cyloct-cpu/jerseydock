@@ -36,6 +36,8 @@ model Product {
   images          String   @default("[]")
   /// 值域（原 ProductStatus enum）：draft | active | archived（archived=软删除可恢复，同步 tombstone 落这里）
   status          String   @default("draft")
+  /// JSON 文本：迁移/导入时原对象保真（未知短字段全存这里，K-S0-4 读路径以库为准）
+  ext             String?
   importBatchId   String?
   importBatch     ImportBatch? @relation(fields: [importBatchId], references: [id])
   collections     CollectionProduct[]
@@ -134,9 +136,11 @@ model CustomerEvent {
 }
 
 model FollowUp {
-  id         String   @id @default(cuid())
-  customerId String
-  customer   Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  id          String   @id @default(cuid())
+  customerId  String?
+  /// 原文件客户键（email），CRM 宽松关联；customerId 暂空（Customer 表由 CRM 运行时派生）
+  customerKey String?
+  customer    Customer? @relation(fields: [customerId], references: [id], onDelete: Cascade)
   /// 值域（原 FollowUpStatus enum）：pending | contacted | converted | lost | not_interested
   status     String   @default("pending")
   nextAt     DateTime?
@@ -149,6 +153,7 @@ model FollowUp {
 
   @@index([status])
   @@index([nextAt])
+  @@index([customerKey])
 }
 
 // ---------------- 订单与物流（N2 / N8） ----------------
@@ -158,6 +163,8 @@ model Order {
   orderNo           String    @unique
   customerId        String?
   customer          Customer? @relation(fields: [customerId], references: [id], onDelete: SetNull)
+  userId            String?
+  user              User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
   email             String
   /// JSON 文本：[{handle,title,priceUsd,size,qty,image}]（迁 PG 改回 Json）
   items             String
@@ -170,8 +177,13 @@ model Order {
   paymentStatus     String    @default("pending")
   /// 值域（原 FulfillmentStatus enum）：unfulfilled | packing | shipped | in_transit | delivered | exception
   fulfillmentStatus String    @default("unfulfilled")
+  phone             String?
+  /// 支付方式：cod | online_stripe | online_paypal | transfer（运行时值域，见 CheckoutClient）
+  paymentMethod     String?
   /// JSON 文本：{name,address,city,country,zip}（迁 PG 改回 Json）
   address           String?
+  /// JSON 文本：迁移/运行时溢出字段（shipment 内嵌运单、OMS 推送结果、款项明细等），往返无损
+  ext               String?
   shipments         Shipment[]
   createdAt         DateTime  @default(now())
   updatedAt         DateTime  @updatedAt
@@ -257,6 +269,32 @@ model ExchangeRate {
   updatedAt DateTime @default(now())
 
   @@unique([base, quote])
+}
+
+// ---------------- 前台客户账号与媒体（K-S0-2 数据迁移） ----------------
+
+/// 前台注册用户（原 data/users.jsonl）；后台管理员在 AdminUser，两套账号互不相通
+model User {
+  id           String    @id // 原 u_* id 保留
+  email        String    @unique
+  name         String?
+  passwordHash String
+  phone        String?
+  createdAt    DateTime  @default(now())
+  lastLoginAt  DateTime?
+  /// JSON 文本：溢出字段（whatsapp、addresses、address 等），往返无损
+  ext          String?
+  orders       Order[]
+}
+
+/// 媒体登记（原 data/admin/media.json）：后台本地上传与导入图的统一索引
+model MediaEntry {
+  id         String   @id @default(cuid())
+  url        String   @unique
+  name       String
+  size       Int      @default(0)
+  source     String? // contact | hero | product | media | imports ...
+  uploadedAt DateTime @default(now())
 }
 
 // ---------------- 双店同步（K 系列，开发执行文档 §12） ----------------
