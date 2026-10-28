@@ -134,6 +134,33 @@ const PAGES: Record<string, PageDef> = {
       { kind: 'contact' },
     ],
   },
+  privacy: {
+    title: 'Privacy policy',
+    eyebrow: 'Legal',
+    blocks: [
+      { kind: 'p', text: 'This policy explains what information JERSEYDOCK (jerseydock.shop) collects when you browse or shop with us, how we use it, and the choices you have. It was last updated in October 2026.' },
+      { kind: 'h', text: 'What we collect' },
+      { kind: 'ul', items: [
+        'Account details — your email address and password (stored only as a salted hash) when you create an account, including accounts created by signing in with Google.',
+        'Order details — the items you buy, shipping address, and order history, so we can fulfil and support your purchases.',
+        'Usage data — anonymous analytics about pages visited and features used, which helps us improve the store.',
+      ] },
+      { kind: 'h', text: 'How we use it' },
+      { kind: 'ul', items: [
+        'To create and secure your account and process sign-ins.',
+        'To take, ship, and support your orders, including email notifications about order status.',
+        'To send service emails such as verification codes. We do not send marketing emails unless you opt in.',
+      ] },
+      { kind: 'h', text: 'Who we share it with' },
+      { kind: 'p', text: 'We share only what is necessary with the partners that help us run the store: our email delivery provider (verification and order emails) and our logistics carriers (shipping address and tracking). We never sell your personal data.' },
+      { kind: 'h', text: 'Cookies' },
+      { kind: 'p', text: 'We use a small number of essential cookies to keep you signed in and remember your cart and language. No advertising cookies are set.' },
+      { kind: 'h', text: 'Your choices' },
+      { kind: 'p', text: 'You may request a copy of your data, correct it, or delete your account at any time by contacting us. Orders that have already shipped are retained as required for accounting and dispute resolution.' },
+      { kind: 'h', text: 'Contact' },
+      { kind: 'p', text: 'For any privacy question or request, email our support team or use the contact page — we reply within one business day.' },
+    ],
+  },
 };
 
 export default function StaticPage({ params }: { params: Promise<{ slug: string }> }) {

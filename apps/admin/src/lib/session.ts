@@ -23,17 +23,22 @@ function b64urlToBytes(s: string): Uint8Array {
   return bytes;
 }
 
-/** Web Crypto 的 BufferSource 在不同 TS lib 版本下对 Uint8Array 泛型要求不同，统一转成独立 ArrayBuffer */
-function asBuffer(u8: Uint8Array): ArrayBuffer {
-  return u8.buffer.slice(u8.byteOffset, u8.byteOffset + u8.byteLength) as ArrayBuffer;
+/**
+ * ⚠️ 不要把这里的 Uint8Array 转成 ArrayBuffer（u8.buffer.slice）再传给 subtle.verify：
+ * Next 的 Edge 沙箱里跨 realm 的 ArrayBuffer 会过不了 node v22 SubtleCrypto 的类型检查
+ * （TypeError: 3rd argument is not instance of ArrayBuffer...），Uint8Array 本体则两端通用。
+ * TS 的 BufferSource 泛型差异用类型断言解决即可。
+ */
+function asBufferSource(u8: Uint8Array): BufferSource {
+  return u8 as unknown as BufferSource;
 }
 
 export async function verifySessionEdge(token: string): Promise<{ sub: string; exp: number } | null> {
   try {
     const [payload, sig] = token.split('.');
     if (!payload || !sig) return null;
-    const key = await crypto.subtle.importKey('raw', asBuffer(new TextEncoder().encode(secret())), { name: 'HMAC', hash: 'SHA-256' }, false, ['verify']);
-    const ok = await crypto.subtle.verify('HMAC', key, asBuffer(b64urlToBytes(sig)), asBuffer(new TextEncoder().encode(payload)));
+    const key = await crypto.subtle.importKey('raw', asBufferSource(new TextEncoder().encode(secret())), { name: 'HMAC', hash: 'SHA-256' }, false, ['verify']);
+    const ok = await crypto.subtle.verify('HMAC', key, asBufferSource(b64urlToBytes(sig)), asBufferSource(new TextEncoder().encode(payload)));
     if (!ok) return null;
     const data = JSON.parse(b64urlDecode(payload)) as { sub?: string; exp?: number };
     if (!data.sub || !data.exp || data.exp < Date.now()) return null;

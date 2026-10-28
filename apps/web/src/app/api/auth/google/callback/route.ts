@@ -5,7 +5,9 @@ export const dynamic = 'force-dynamic';
 
 /** GET /api/auth/google/callback?code=…&state=… → 换 token、找号/建号、落会话 */
 export async function GET(req: NextRequest) {
-  const loginErr = (msg: string) => NextResponse.redirect(new URL('/login?error=' + encodeURIComponent(msg), req.url));
+  // 反代下 req.url 是内网地址（0.0.0.0:3000），所有对外跳转必须走 SITE_URL
+  const publicOrigin = process.env.SITE_URL || req.nextUrl.origin;
+  const loginErr = (msg: string) => NextResponse.redirect(new URL('/login?error=' + encodeURIComponent(msg), publicOrigin));
   if (!googleConfigured()) return loginErr('Google sign-in is not configured');
 
   const err = req.nextUrl.searchParams.get('error');
@@ -26,7 +28,7 @@ export async function GET(req: NextRequest) {
       code,
       client_id: String(process.env.GOOGLE_CLIENT_ID),
       client_secret: String(process.env.GOOGLE_CLIENT_SECRET),
-      redirect_uri: `${req.nextUrl.origin}/api/auth/google/callback`,
+      redirect_uri: `${process.env.SITE_URL || req.nextUrl.origin}/api/auth/google/callback`,
       grant_type: 'authorization_code',
     }),
   });
@@ -45,5 +47,5 @@ export async function GET(req: NextRequest) {
   if (!email) return loginErr('Google account has no email');
 
   const target = await finishOAuthLogin(email, String(claims.name || ''), next);
-  return NextResponse.redirect(new URL(target, req.url));
+  return NextResponse.redirect(new URL(target, publicOrigin));
 }

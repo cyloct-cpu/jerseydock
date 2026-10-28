@@ -63,7 +63,8 @@ export async function verifyStateCookie(provider: 'google' | 'apple', stateParam
   if (!raw) return null;
   try {
     const state = JSON.parse(Buffer.from(raw, 'base64url').toString('utf8')) as StatePayload;
-    const [nonce] = String(stateParam).split('.');
+    // state 参数第一段是 b64url(nonce)，需解码后再与 cookie 内的 hex nonce 比对（此前直接比较编码值与原文，永远不等 → 一律 session expired）
+    const nonce = Buffer.from(String(stateParam).split('.')[0], 'base64url').toString('utf8');
     if (state.p !== provider || !state.n || nonce !== state.n || state.exp < Date.now()) return null;
     return { next: safeNext(state.next), nonce: state.n };
   } catch {

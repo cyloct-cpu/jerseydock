@@ -26,7 +26,14 @@ export async function middleware(req: NextRequest) {
     }
   }
 
-  if (req.nextUrl.pathname === '/login') return NextResponse.next();
+  // 已登录访问 /login 直接回工作台，避免「侧栏壳里套登录页」的诡异状态
+  if (req.nextUrl.pathname === '/login') {
+    const token = req.cookies.get('kv_admin_session')?.value;
+    if (token && (await verifySessionEdge(token))) {
+      return NextResponse.redirect(new URL('/dashboard', req.url));
+    }
+    return NextResponse.next();
+  }
   const token = req.cookies.get('kv_admin_session')?.value;
   const session = token ? await verifySessionEdge(token) : null;
   if (!session) {

@@ -2,7 +2,6 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { StoreProvider } from '@/lib/store';
 import { Announcement, Footer, Header } from '@/components/Chrome';
-import { FootballCursor } from '@/components/FootballCursor';
 import { FloatingContact } from '@/components/FloatingContact';
 import { loadBrand } from '@/lib/brand';
 import { getSessionUserServer } from '@/lib/users';
@@ -62,7 +61,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <main>{children}</main>
           <Footer brandName={brand.name} supportEmail={brand.supportEmail} />
           <FloatingContact whatsapp={brand.whatsapp} supportQr={brand.supportQr} supportEmail={brand.supportEmail} />
-          <FootballCursor />
         </StoreProvider>
       </body>
     </html>

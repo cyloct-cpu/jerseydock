@@ -126,6 +126,16 @@
       "createdAt": "2026-10-21T11:59:59.437Z",
       "lastLoginAt": null,
       "lastPasswordAt": "2026-10-21T11:59:59.437Z"
+    },
+    {
+      "id": "adm_admini",
+      "email": "admini",
+      "name": "Admini",
+      "role": "owner",
+      "roleName": "Owner",
+      "permissions": [],
+      "passwordHash": "scrypt$add5ef859ed69c0fd9d69eab3aa247aa$0fbc02be7deb787e96290b1ad9700c63048547398dc3ce8e5d785db458480846d8b35661b17e9f7724022292573bb55386b83d741f937d0ce34eb0ed3cc1d241",
+      "createdAt": "2026-10-27T09:27:15.727Z"
     }
   ]
 }

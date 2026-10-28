@@ -207,8 +207,12 @@ body.ball-cursor, body.ball-cursor a, body.ball-cursor button, body.ball-cursor 
   transition: color var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease);
 }
 .hero-link:hover { color: var(--text); border-color: var(--text); }
-/* 指示器：细线而非圆点，当前项金色加宽 */
-.hero-dots { display: flex; gap: 10px; margin-top: 48px; }
+/* 指示器：细线而非圆点，当前项金色加宽；固定在英雄区底缘居中，不随文字排版、不遮挡标题 */
+.hero-dots {
+  display: flex; gap: 10px;
+  position: absolute; left: 50%; transform: translateX(-50%);
+  bottom: 26px; margin-top: 0;
+}
 .hero-dot {
   width: 22px; height: 14px; padding: 0; border: 0; background: transparent;
   position: relative; cursor: pointer;

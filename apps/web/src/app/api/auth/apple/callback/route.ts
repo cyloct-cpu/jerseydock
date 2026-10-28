@@ -7,7 +7,8 @@ type AppleUserForm = { email?: string; name?: { firstName?: string; lastName?: s
 
 /** POST /api/auth/apple/callback（Apple 以 form_post 回调）→ 换 token、找号/建号、落会话 */
 export async function POST(req: NextRequest) {
-  const origin = req.nextUrl.origin;
+  // 反代下 nextUrl.origin 是内网地址，对外跳转统一走 SITE_URL
+  const origin = process.env.SITE_URL || req.nextUrl.origin;
   const loginErr = (msg: string) => NextResponse.redirect(new URL('/login?error=' + encodeURIComponent(msg), origin));
   if (!appleConfigured()) return loginErr('Apple sign-in is not configured');
 

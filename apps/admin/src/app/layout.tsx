@@ -10,6 +10,7 @@ export const metadata: Metadata = {
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const user = await currentUser();
+  const isProd = process.env.NODE_ENV === 'production';
   return (
     // translate="no"：告知翻译类浏览器扩展（沉浸式翻译 / Google Translate 等）跳过本页，
     // 避免其在水合前注入 <font>/属性导致 React Hydration 失败；
@@ -30,13 +31,13 @@ export default async function AdminLayout({ children }: { children: React.ReactN
               <span className="brand"><img src="/brand/logo-icon.png?v=2" alt="" width={36} height={36} />JERSEYDOCK admin</span>
               <AdminNav permissions={user.permissions} />
               <div className="foot">
-                独立后台 · 端口 3001<br />
+                独立后台{isProd ? '' : ' · 端口 3001'}<br />
                 与前台会话不互通
               </div>
             </aside>
             <div className="a-main">
               <div className="a-top">
-                <span className="env">DEV · 文件存储</span>
+                <span className="env">{isProd ? 'PROD · 文件存储' : 'DEV · 文件存储'}</span>
                 <span className="spacer" />
                 <span className="who">
                   <b>{user.name || user.email}</b> · {user.role === 'owner' ? 'Owner' : user.roleName}

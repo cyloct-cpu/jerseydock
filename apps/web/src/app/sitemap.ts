@@ -17,7 +17,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${BASE}/`, changeFrequency: 'daily', priority: 1 },
     { url: `${BASE}/clubs`, changeFrequency: 'weekly', priority: 0.8 },
     { url: `${BASE}/nations`, changeFrequency: 'weekly', priority: 0.8 },
-    ...['shipping', 'returns', 'about', 'faq', 'contact'].map(slug => ({
+    ...['shipping', 'returns', 'about', 'faq', 'contact', 'privacy'].map(slug => ({
       url: `${BASE}/pages/${slug}`,
       changeFrequency: 'monthly' as const,
       priority: 0.3,

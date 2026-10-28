@@ -1146,7 +1146,8 @@ export async function saveSettings(formData: FormData) {
   let prevSettings: Record<string, unknown> = {};
   try { prevSettings = readJson<Record<string, unknown>>(paths.settings, {}) || {}; } catch { /* 文件不存在则跳过 */ }
   for (const [k, v] of Object.entries(prevSettings)) {
-    if (!MANAGED.has(k) && settings[k] === undefined) settings[k] = v;
+    const bag = settings as Record<string, unknown>;
+    if (!MANAGED.has(k) && bag[k] === undefined) bag[k] = v;
   }
   writeJson(paths.settings, settings);
   audit(null, 'settings:save');

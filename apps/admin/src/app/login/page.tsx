@@ -16,7 +16,7 @@ export default function LoginPage() {
         {state?.error && <p className="login-err">{state.error}</p>}
         <div className="field">
           <label htmlFor="email">邮箱</label>
-          <input id="email" name="email" type="email" className="input" required autoComplete="username" placeholder="owner@kitvault.local" />
+          <input id="email" name="email" type="text" className="input" required autoComplete="username" placeholder="账号或邮箱" />
         </div>
         <div className="field">
           <label htmlFor="password">密码</label>
@@ -27,11 +27,13 @@ export default function LoginPage() {
         </button>
       </form>
 
-      <p className="login-hint">
-        演示账号：owner@kitvault.local / admin123<br />
-        账号数据在 data/admin/admins.json；接入数据库后切换为 AdminUser 表。<br />
-        会话密钥：环境变量 ADMIN_SESSION_SECRET（生产必须覆盖）。
-      </p>
+      {process.env.NODE_ENV !== 'production' && (
+        <p className="login-hint">
+          演示账号：owner@kitvault.local / admin123<br />
+          账号数据在 data/admin/admins.json；接入数据库后切换为 AdminUser 表。<br />
+          会话密钥：环境变量 ADMIN_SESSION_SECRET（生产必须覆盖）。
+        </p>
+      )}
     </div>
   );
 }
