@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useStore } from '@/lib/store';
 import { useT } from '@/lib/store';
+import { TextT9n } from '@/components/ContentT9n';
 import { format } from '@kitvault/shared';
 import type { SlimProduct } from '@kitvault/shared';
 import type { VisitorsConfig } from '@/lib/brand';
@@ -54,8 +55,8 @@ export function ProductCard({
         </div>
       </Link>
       <div className="meta">
-        <Link href={`/products/${product.h}`} className="name">{product.t}</Link>
-        <span className="sub">{product.cl.slice(0, 2).map(c => c.replace(/-/g, ' ')).join(' · ')}</span>
+        <Link href={`/products/${product.h}`} className="name"><TextT9n text={product.t} /></Link>
+        <span className="sub"><TextT9n text={product.cl.slice(0, 2).map(c => c.replace(/-/g, ' ')).join(' · ')} /></span>
         <div className="price">
           <Price usd={product.p} />
           {product.c > product.p && <span className="was"><Price usd={product.c} /></span>}

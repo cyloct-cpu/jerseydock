@@ -5,6 +5,7 @@ import { ReviewsCarousel } from '@/components/ReviewsCarousel';
 import { HeroCarousel } from '@/components/HeroCarousel';
 import { featured, groups, productsByCollection } from '@/lib/catalog';
 import { loadBrand } from '@/lib/brand';
+import { T, TextT9n } from '@/components/ContentT9n';
 import { activeVisitors } from '@/lib/visitors';
 
 // 后台改上架状态/价格后即时生效（catalog 读取 data/admin/*.json）
@@ -29,16 +30,16 @@ export default function HomePage() {
         <div className="container">
           <div className="section-head">
             <div>
-              <span className="eyebrow">Nations</span>
-              <h2 className="h2">Shop by nation</h2>
+              <span className="eyebrow"><T k="eyebrow.nations" /></span>
+              <h2 className="h2"><T k="sec.nations" /></h2>
             </div>
-            <Link className="link-more" href="/nations">View all</Link>
+            <Link className="link-more" href="/nations"><T k="sec.viewall" /></Link>
           </div>
           <div className="cat-grid">
             {nations.map((c, i) => (
               <Reveal key={c.slug} delay={i * 40} as="div">
                 <Link href={`/collections/${c.slug}`}>
-                  <span title={c.label}>{c.label}</span><i>{c.count}</i>
+                  <span title={c.label}><TextT9n text={c.label} /></span><i>{c.count}</i>
                 </Link>
               </Reveal>
             ))}
@@ -51,16 +52,16 @@ export default function HomePage() {
         <div className="container">
           <div className="section-head">
             <div>
-              <span className="eyebrow">Clubs</span>
-              <h2 className="h2">Shop by club</h2>
+              <span className="eyebrow"><T k="eyebrow.clubs" /></span>
+              <h2 className="h2"><T k="sec.clubs" /></h2>
             </div>
-            <Link className="link-more" href="/clubs">View all</Link>
+            <Link className="link-more" href="/clubs"><T k="sec.viewall" /></Link>
           </div>
           <div className="cat-grid">
             {clubs.map((c, i) => (
               <Reveal key={c.slug} delay={i * 40} as="div">
                 <Link href={`/collections/${c.slug}`}>
-                  <span title={c.label}>{c.label}</span><i>{c.count}</i>
+                  <span title={c.label}><TextT9n text={c.label} /></span><i>{c.count}</i>
                 </Link>
               </Reveal>
             ))}
@@ -73,15 +74,15 @@ export default function HomePage() {
         <div className="container">
           <div className="section-head">
             <div>
-              <span className="eyebrow">Seasons &amp; retro</span>
-              <h2 className="h2">Shop by season</h2>
+              <span className="eyebrow"><T k="eyebrow.seasons" /></span>
+              <h2 className="h2"><T k="sec.seasons" /></h2>
             </div>
           </div>
           <div className="cat-grid">
             {[...seasons, ...groups().retro, ...groups().kids, ...groups().outerwear, ...groups().shorts].map((c, i) => (
               <Reveal key={c.slug} delay={i * 40} as="div">
                 <Link href={`/collections/${c.slug}`}>
-                  <span title={c.label}>{c.label}</span><i>{c.count}</i>
+                  <span title={c.label}><TextT9n text={c.label} /></span><i>{c.count}</i>
                 </Link>
               </Reveal>
             ))}
@@ -94,10 +95,10 @@ export default function HomePage() {
         <div className="container">
           <div className="section-head">
             <div>
-              <span className="eyebrow">Featured</span>
-              <h2 className="h2">Featured this week</h2>
+              <span className="eyebrow"><T k="eyebrow.featured" /></span>
+              <h2 className="h2"><T k="sec.featured" /></h2>
             </div>
-            <Link className="link-more" href="/collections/2026-27-season">View all</Link>
+            <Link className="link-more" href="/collections/2026-27-season"><T k="sec.viewall" /></Link>
           </div>
           <div className="grid-products">
             {featuredList.map((p, i) => (
@@ -114,10 +115,10 @@ export default function HomePage() {
         <div className="container">
           <div className="section-head">
             <div>
-              <span className="eyebrow">Retro</span>
-              <h2 className="h2">From the archive</h2>
+              <span className="eyebrow"><T k="eyebrow.retro" /></span>
+              <h2 className="h2"><T k="home.archive" /></h2>
             </div>
-            <Link className="link-more" href="/collections/retro">View all</Link>
+            <Link className="link-more" href="/collections/retro"><T k="sec.viewall" /></Link>
           </div>
           <div className="grid-products">
             {retro.map((p, i) => (
