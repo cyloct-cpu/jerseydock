@@ -189,7 +189,7 @@ table.a-table--sticky-last tr:hover td:last-child { background: var(--surface); 
 
 /* 图库卡片：多选勾选框与选中态 */
 .media-check {
-  position: absolute; top: 6px; left: 6px; width: 20px; height: 20px; z-index: 2;
+  position: absolute; top: 6px; right: 6px; width: 20px; height: 20px; z-index: 2;
   display: grid; place-items: center; background: rgba(10,10,11,0.6); border-radius: 3px;
   cursor: pointer;
 }
