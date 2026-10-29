@@ -7,6 +7,9 @@ import { useT } from '@/lib/store';
  * 自动匹配输入（单选 combobox）
  * - 输入即过滤，↑/↓ 选择，Enter 确认，Esc 关闭
  * - allowFreeText：无匹配时保留输入内容原样提交（国家「Other」、城市自由填写）
+ * - display：value → 本地化显示名（如 Intl.DisplayNames 生成的各国语言国名）。
+ *   下拉展示本地化名，匹配同时比对「原值 + 本地化名」（去重音归一化），
+ *   提交仍是原值（value），保证订单 / 物流数据为英文规范名。
  * - 自绘下拉面板：修复原生 <select> 在深色主题下选项文字发灰看不清的问题
  */
 export function AutoComplete({
@@ -18,6 +21,7 @@ export function AutoComplete({
   hint,
   id,
   required,
+  display,
 }: {
   value: string;
   onChange: (v: string) => void;
@@ -27,6 +31,7 @@ export function AutoComplete({
   hint?: string;
   id?: string;
   required?: boolean;
+  display?: Record<string, string>;
 }) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState('');
@@ -34,11 +39,21 @@ export function AutoComplete({
   const boxRef = useRef<HTMLDivElement>(null);
   const t = useT();
 
+  /** 匹配归一化：NFD 去变音符号（é→e）+ 小写；阿拉伯语 / 泰语等不合成分音符，小写比较即可 */
+  const norm = (s: string) =>
+    s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
+
+  const label = (o: string) => display?.[o] || o;
+
   const filtered = useMemo(() => {
-    const q = query.trim().toLowerCase();
+    const q = norm(query);
     if (!q) return options;
-    return options.filter(o => o.toLowerCase().includes(q));
-  }, [options, query]);
+    return options.filter(o => {
+      const keys = [o, display?.[o]].filter(Boolean) as string[];
+      return keys.some(k => norm(k).includes(q));
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [options, query, display]);
 
   useEffect(() => {
     if (!open) return;
@@ -84,7 +99,7 @@ export function AutoComplete({
         autoComplete="off"
         required={required}
         placeholder={placeholder}
-        value={open ? query : value}
+        value={open ? query : label(value)}
         onFocus={() => { setOpen(true); setQuery(''); setActive(-1); }}
         onChange={e => {
           setQuery(e.target.value);
@@ -115,7 +130,7 @@ export function AutoComplete({
                   background: i === active ? 'var(--surface-3)' : 'transparent',
                 }}
               >
-                {o}
+                {label(o)}
               </div>
             ))}
             {!filtered.length && (

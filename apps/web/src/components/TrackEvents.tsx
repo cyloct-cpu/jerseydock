@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useStore } from '@/lib/store';
+import { useStore, useT } from '@/lib/store';
 
 type ShipmentEvent = { time: string; location?: string; description: string };
 
@@ -12,6 +12,7 @@ type ShipmentEvent = { time: string; location?: string; description: string };
  */
 export function TrackEvents({ events }: { events: ShipmentEvent[] | undefined }) {
   const { locale } = useStore();
+  const t = useT();
   const [map, setMap] = useState<Record<string, string>>({});
 
   const list = (events || []).slice().reverse();
@@ -50,7 +51,7 @@ export function TrackEvents({ events }: { events: ShipmentEvent[] | undefined })
       ))}
       {(!events || !events.length) && (
         <p className="dim" style={{ marginTop: 10, fontSize: 'var(--fs-small)' }}>
-          Tracking number assigned — detailed timeline updates shortly.
+          {t('track.assigned')}
         </p>
       )}
     </div>

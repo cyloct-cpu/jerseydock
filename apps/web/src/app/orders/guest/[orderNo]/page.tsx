@@ -2,6 +2,8 @@ import Link from 'next/link';
 import { OrderDetailView } from '@/components/OrderDetailView';
 import { verifyGuestOrderToken } from '@/lib/order-token';
 import { loadBrand } from '@/lib/brand';
+import { getLocaleFromCookies } from '@/lib/locale-server';
+import { translate } from '@/lib/i18n';
 import { dbReadOrders } from '@/lib/db-store';
 
 export const dynamic = 'force-dynamic';
@@ -47,6 +49,8 @@ export default async function GuestOrderPage({
   const { orderNo } = await params;
   const { t: token = '' } = await searchParams;
   const brand = loadBrand();
+  const locale = await getLocaleFromCookies();
+  const t = (k: string) => translate(locale, k);
 
   const order = readOrder(orderNo);
   const valid = !!order && verifyGuestOrderToken(orderNo, token);
@@ -54,13 +58,10 @@ export default async function GuestOrderPage({
   if (!valid) {
     return (
       <div className="container" style={{ paddingBlock: '80px 160px', maxWidth: 720 }}>
-        <span className="eyebrow">Orders</span>
-        <h1 className="h2" style={{ fontSize: 'clamp(24px,3vw,34px)', margin: '10px 0 14px' }}>Link not valid</h1>
-        <p className="muted">
-          This order link is invalid or incomplete. Please use the exact link from your checkout
-          confirmation, or contact us and we will resend it.
-        </p>
-        <Link className="btn btn-ghost btn-sm" href="/" style={{ marginTop: 16 }}>Back to the store</Link>
+        <span className="eyebrow">{t('guest.orders')}</span>
+        <h1 className="h2" style={{ fontSize: 'clamp(24px,3vw,34px)', margin: '10px 0 14px' }}>{t('guest.invalid_h1')}</h1>
+        <p className="muted">{t('guest.invalid_body')}</p>
+        <Link className="btn btn-ghost btn-sm" href="/" style={{ marginTop: 16 }}>{t('nf.cta_home')}</Link>
       </div>
     );
   }
@@ -68,9 +69,10 @@ export default async function GuestOrderPage({
   return (
     <OrderDetailView
       order={order!}
-      breadcrumb={[{ href: '/', label: 'Order' }]}
+      breadcrumb={[{ href: '/', label: t('od.order') }]}
       whatsapp={brand.whatsapp || ''}
       supportEmail={brand.supportEmail || ''}
+      locale={locale}
     />
   );
 }

@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useT } from '@/lib/store';
+import { TextT9n } from '@/components/ContentT9n';
 
 export type CrumbItem = { href?: string; label?: string; labelKey?: string };
 
@@ -27,7 +28,7 @@ export function Breadcrumb({ items }: { items: CrumbItem[] }) {
           <span key={`${it.label}-${i}`} style={{ display: 'flex', alignItems: 'center', gap: 6, minWidth: 0 }}>
             {i > 0 && <span aria-hidden="true">/</span>}
             {it.href && !last ? (
-              <Link href={it.href} style={{ color: 'var(--text-3)' }} title={it.label}>{it.label}</Link>
+              <Link href={it.href} style={{ color: 'var(--text-3)' }} title={it.label}><TextT9n text={it.label || ''} /></Link>
             ) : (
               <span
                 title={it.label}
@@ -39,7 +40,7 @@ export function Breadcrumb({ items }: { items: CrumbItem[] }) {
                   maxWidth: last ? 'min(56ch, 62vw)' : undefined,
                 }}
               >
-                {it.label}
+                <TextT9n text={it.label || ''} />
               </span>
             )}
           </span>

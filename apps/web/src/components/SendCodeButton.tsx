@@ -45,7 +45,7 @@ export function SendCodeButton({
     const el = emailId ? (document.getElementById(emailId) as HTMLInputElement | null) : null;
     const value = (email ?? el?.value ?? '').trim();
     if (!value || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(value)) {
-      setMsgBad(true); setMsg(t('search.no_results').slice(0, 0) || 'Invalid email'); return;
+      setMsgBad(true); setMsg(t('au.invalid_email')); return;
     }
     setPhase('sending'); setMsg('');
     try {
@@ -56,16 +56,16 @@ export function SendCodeButton({
       });
       const data = await res.json();
       if (!data.ok) {
-        setMsgBad(true); setMsg(data.error || '发送失败');
+        setMsgBad(true); setMsg(data.error || t('au.code_send_fail'));
       } else if (data.mode === 'dev') {
-        setMsgBad(false); setMsg(`开发模式（未配置 SMTP）— 验证码：${data.devCode}`);
+        setMsgBad(false); setMsg(`Dev mode — code: ${data.devCode}`);
         startCountdown();
       } else {
-        setMsgBad(false); setMsg('验证码已发送，请查收邮箱（10 分钟内有效）');
+        setMsgBad(false); setMsg(t('au.code_sent_ok'));
         startCountdown();
       }
     } catch {
-      setMsgBad(true); setMsg('发送失败，请重试');
+      setMsgBad(true); setMsg(t('au.code_send_fail'));
     }
   };
 

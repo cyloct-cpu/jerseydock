@@ -1,4 +1,5 @@
 import { cookies } from 'next/headers';
+import { ensureServerDicts } from '@/lib/server-dict';
 export type Locale = 'en' | 'zh' | 'es' | 'fr' | 'de' | 'pt' | 'ja' | 'ko' | 'ru' | 'ar' | 'it' | 'nl' | 'tr' | 'pl' | 'sv' | 'da' | 'fi' | 'no' | 'el' | 'cs' | 'hu' | 'ro' | 'uk' | 'th' | 'vi' | 'id' | 'ms' | 'hi' | 'he';
 
 /**
@@ -12,6 +13,7 @@ const LOCALES = new Set([
 ]);
 
 export async function getLocaleFromCookies(): Promise<Locale> {
+  ensureServerDicts(); // 服务端 translate 需要 MT 补全（磁盘缓存 → runtimeDict）
   try {
     const store = await cookies();
     const v = store.get('kv_locale')?.value || '';

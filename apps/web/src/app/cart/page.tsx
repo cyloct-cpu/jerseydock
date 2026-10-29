@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useStore, useT, cartItemKey } from '@/lib/store';
 import { Price } from '@/components/Price';
 import { Breadcrumb } from '@/components/Breadcrumb';
+import { TextT9n } from '@/components/ContentT9n';
 
 export default function CartPage() {
   const { cart, setQty, removeFromCart, cartTotalUsd, cartCount } = useStore();
@@ -13,7 +14,7 @@ export default function CartPage() {
     return (
       <div className="container" style={{ paddingBlock: '120px 170px', textAlign: 'center' }}>
         <Breadcrumb items={[{ labelKey: 'cart.title' }]} />
-        <span className="eyebrow">{cartCount} items</span>
+        <span className="eyebrow">{t('cart.items_n').replace('{n}', String(cartCount))}</span>
         <h1 className="h2" style={{ margin: '12px 0 20px', fontSize: 'clamp(24px,3vw,36px)' }}>{t('cart.empty')}</h1>
         <Link className="btn" href="/collections/2026-27-season">{t('cart.continue')}</Link>
       </div>
@@ -25,7 +26,7 @@ export default function CartPage() {
       <Breadcrumb items={[{ labelKey: 'cart.title' }]} />
       <div className="section-head" style={{ marginBottom: 20 }}>
         <div>
-          <span className="eyebrow">{cartCount} items</span>
+          <span className="eyebrow">{t('cart.items_n').replace('{n}', String(cartCount))}</span>
           <h1 className="h2" style={{ fontSize: 'clamp(26px,3.4vw,42px)' }}>{t('cart.title')}</h1>
         </div>
         <Link className="link-more" href="/collections/2026-27-season">{t('cart.continue')}</Link>
@@ -40,7 +41,7 @@ export default function CartPage() {
                 <img src={item.image} alt={item.title} />
               </Link>
               <div>
-                <Link href={`/products/${item.handle}`} style={{ fontWeight: 500 }}>{item.title}</Link>
+                <Link href={`/products/${item.handle}`} style={{ fontWeight: 500 }}><TextT9n text={item.title} /></Link>
                 <div className="dim" style={{ marginTop: 4 }}>{t('product.sizes')} · {item.size}</div>
                 {(item.customText || item.armband) && (
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginTop: 6 }}>
@@ -66,22 +67,22 @@ export default function CartPage() {
         </div>
 
         <aside className="panel panel-pad cart-summary">
-          <span className="eyebrow">Summary</span>
+          <span className="eyebrow">{t('cart.summary')}</span>
           <div className="summary-row" style={{ marginTop: 12 }}>
             <span className="muted">{t('cart.subtotal')}</span>
             <b><Price usd={cartTotalUsd} /></b>
           </div>
           <div className="summary-row">
             <span className="muted">{t('bar.shipping')}</span>
-            <span className="dim">{cartCount >= 3 ? 'Free' : 'At checkout'}</span>
+            <span className="dim">{cartCount >= 3 ? t('checkout.free') : t('cart.ship_at_checkout')}</span>
           </div>
           <div className="summary-row dim">
             <span>{t('bar.returns')}</span>
-            <span>30 days</span>
+            <span>{t('cart.returns_days')}</span>
           </div>
           <Link className="btn btn-block" href="/checkout" style={{ marginTop: 18 }}>{t('cart.checkout')}</Link>
           <p className="dim" style={{ marginTop: 12 }}>
-            Buy 3 save $5 · buy 8 save $10 — discount applies automatically at checkout.
+            {t('cart.promo_note')}
           </p>
         </aside>
       </div>

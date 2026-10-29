@@ -2,6 +2,8 @@ import { notFound } from 'next/navigation';
 import { getSessionUserFull } from '@/lib/users';
 import { OrderDetailView } from '@/components/OrderDetailView';
 import { loadBrand } from '@/lib/brand';
+import { getLocaleFromCookies } from '@/lib/locale-server';
+import { translate } from '@/lib/i18n';
 import { dbReadOrders } from '@/lib/db-store';
 
 export const dynamic = 'force-dynamic';
@@ -38,6 +40,7 @@ function readOrder(orderNo: string): StoredOrder | undefined {
 export default async function OrderDetailPage({ params }: { params: Promise<{ orderNo: string }> }) {
   const { orderNo } = await params;
   const user = await getSessionUserFull();
+  const locale = await getLocaleFromCookies();
   if (!user) return null; // account layout 已做登录守卫
 
   const order = readOrder(orderNo);
@@ -49,10 +52,11 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ or
   return (
     <OrderDetailView
       order={order}
-      breadcrumb={[{ href: '/account/orders', label: 'My orders' }]}
+      breadcrumb={[{ href: '/account/orders', label: translate(locale, 'acct.myorders') }]}
       customerName={user.name}
       whatsapp={brand.whatsapp || ''}
       supportEmail={brand.supportEmail || ''}
+      locale={locale}
     />
   );
 }

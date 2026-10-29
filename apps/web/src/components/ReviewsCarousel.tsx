@@ -2,6 +2,8 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { Review } from '@/lib/brand';
+import { useT } from '@/lib/store';
+import { TextT9n } from '@/components/ContentT9n';
 
 /**
  * 客户评价轮播
@@ -19,6 +21,7 @@ export function ReviewsCarousel({
   subtitle: string;
 }) {
   const list = reviews.filter(r => r.content);
+  const t = useT();
   const [index, setIndex] = useState(0);
   const trackRef = useRef<HTMLDivElement>(null);
 
@@ -51,14 +54,14 @@ export function ReviewsCarousel({
       <div className="container">
         <div className="section-head">
           <div>
-            <span className="eyebrow">Reviews</span>
-            <h2 className="h2" id="rv-title" style={{ marginTop: 8 }}>{title}</h2>
-            {subtitle && <p className="dim" style={{ marginTop: 8, maxWidth: '52ch' }}>{subtitle}</p>}
+            <span className="eyebrow">{t('rv.eyebrow')}</span>
+            <h2 className="h2" id="rv-title" style={{ marginTop: 8 }}><TextT9n text={title} /></h2>
+            {subtitle && <p className="dim" style={{ marginTop: 8, maxWidth: '52ch' }}><TextT9n text={subtitle} /></p>}
           </div>
           <div className="rv-score">
             <Stars value={avg} size={14} />
             <span className="rv-avg">{avg.toFixed(1)}</span>
-            <span className="dim" style={{ fontSize: 'var(--fs-micro)' }}>{list.length} 条评价</span>
+            <span className="dim" style={{ fontSize: 'var(--fs-micro)' }}>{t('rv.count_n').replace('{n}', String(list.length))}</span>
           </div>
         </div>
 
@@ -67,7 +70,7 @@ export function ReviewsCarousel({
             {list.map((r, i) => (
               <figure className={`rv-card${i === index ? ' on' : ''}`} key={r.id || i}>
                 <Stars value={r.rating} />
-                <blockquote className="rv-text">{r.content}</blockquote>
+                <blockquote className="rv-text"><TextT9n text={r.content} /></blockquote>
                 <figcaption className="rv-meta">
                   <span className="rv-avatar" aria-hidden>
                     {r.avatar
@@ -78,7 +81,7 @@ export function ReviewsCarousel({
                   <span>
                     <b>{r.name}</b>
                     <span className="dim" style={{ display: 'block', fontSize: 'var(--fs-micro)' }}>
-                      {r.location || 'Verified buyer'}{r.date ? ` · ${r.date}` : ''}
+                      {r.location || t('rv.verified')}{r.date ? ` · ${r.date}` : ''}
                     </span>
                   </span>
                 </figcaption>

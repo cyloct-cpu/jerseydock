@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
+import { useT } from '@/lib/store';
 
 /**
  * 退款申请弹窗
@@ -27,6 +28,8 @@ export function RefundModal({
     document.addEventListener('keydown', onKey);
     return () => document.removeEventListener('keydown', onKey);
   }, [open, onClose]);
+
+  const t = useT();
 
   if (!open) return null;
 
@@ -70,17 +73,16 @@ export function RefundModal({
         </button>
 
         <span className="eyebrow">Refund</span>
-        <h3 className="h2" style={{ fontSize: 20, marginTop: 8 }}>申请退款 / Request a refund</h3>
+        <h3 className="h2" style={{ fontSize: 20, marginTop: 8 }}>{t('rf.request')}</h3>
         <p className="dim" style={{ marginTop: 10, fontSize: 'var(--fs-small)', lineHeight: 1.75 }}>
-          退款由客服人工处理。请通过 WhatsApp 联系我们并附上订单号
+          {t('rf.desc')}
           <span className="mono" style={{ color: 'var(--text-2)' }}> {orderNo}</span>
-          ，我们会在 30 天退换政策内引导你完成。包裹未签收可直接拒收。
         </p>
 
         {waUrl ? (
           <div style={{ marginTop: 18, display: 'grid', gap: 14, justifyItems: 'center' }}>
             <a className="btn" href={waUrl} target="_blank" rel="noopener noreferrer" style={{ width: '100%' }}>
-              在 WhatsApp 联系客服 ↗
+              {t('rf.wa_btn')}
             </a>
             {qrUrl && (
               <div style={{ display: 'grid', gap: 8, justifyItems: 'center' }}>
@@ -93,28 +95,28 @@ export function RefundModal({
                   style={{ borderRadius: 3, background: '#fff', padding: 6 }}
                   onError={e => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }}
                 />
-                <span style={{ fontSize: 'var(--fs-micro)', color: 'var(--text-3)' }}>手机扫码可直接发起对话</span>
+                <span style={{ fontSize: 'var(--fs-micro)', color: 'var(--text-3)' }}>{t('rf.qr_hint')}</span>
               </div>
             )}
           </div>
         ) : (
           <div style={{ marginTop: 18 }}>
             <p style={{ fontSize: 'var(--fs-small)', color: 'var(--text-2)', lineHeight: 1.7 }}>
-              客服 WhatsApp 尚未配置。
+              {t('rf.wa_missing')}
               {mailUrl
-                ? <>请发送邮件至下方地址申请退款：</>
-                : '请先在后台「商店设置 · 品牌信息」中配置 WhatsApp 或客服邮箱。'}
+                ? <>{t('rf.mail_lead')}</>
+                : t('rf.admin_hint')}
             </p>
             {mailUrl && (
               <a className="btn" href={mailUrl} style={{ marginTop: 12, width: '100%' }}>
-                发送退款申请邮件 ↗
+                {t('rf.mail_btn')}
               </a>
             )}
           </div>
         )}
 
         <p className="dim" style={{ marginTop: 16, fontSize: 'var(--fs-micro)', lineHeight: 1.7 }}>
-          退款到账时间以支付渠道为准；货到付款订单在包裹拒收/退回后原路取消，无手续费。
+          {t('rf.timing_note')}
         </p>
       </div>
     </div>

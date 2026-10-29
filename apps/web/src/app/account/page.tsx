@@ -35,22 +35,22 @@ export default async function AccountOverviewPage({
     <>
       <div className="page-head" style={{ padding: 0, marginBottom: 20 }}>
         <div>
-          <span className="eyebrow">Account</span>
-          <h1 style={{ marginTop: 6, fontSize: 'clamp(24px,3vw,34px)' }}>{user.name || 'My account'}</h1>
+          <span className="eyebrow"><T k="acct.title" /></span>
+          <h1 style={{ marginTop: 6, fontSize: 'clamp(24px,3vw,34px)' }}>{user.name || t('acct.my_account')}</h1>
         </div>
       </div>
 
-      {sp.saved === 'profile' && <div className="notice ok" style={{ marginBottom: 16 }}>Your details have been saved.</div>}
+      {sp.saved === 'profile' && <div className="notice ok" style={{ marginBottom: 16 }}><T k="acct.saved_ok" /></div>}
 
       {/* 摘要 */}
       <div className="acct-stats">
         <div className="panel panel-pad">
-          <span className="eyebrow">Orders</span>
+          <span className="eyebrow"><T k="acct.ov_orders" /></span>
           <div style={{ fontSize: 26, marginTop: 8, color: 'var(--text)' }}>{orderCount}</div>
-          <div className="dim" style={{ fontSize: 'var(--fs-micro)' }}>lifetime orders</div>
+          <div className="dim" style={{ fontSize: 'var(--fs-micro)' }}><T k="acct.ov_lifetime" /></div>
         </div>
         <div className="panel panel-pad">
-          <span className="eyebrow">Member since</span>
+          <span className="eyebrow"><T k="acct.ov_member_since" /></span>
           <div style={{ fontSize: 26, marginTop: 8, color: 'var(--text)' }}>{memberSince}</div>
           <div className="dim" style={{ fontSize: 'var(--fs-micro)' }}>{user.email}</div>
         </div>
@@ -89,7 +89,7 @@ export default async function AccountOverviewPage({
       <section className="panel panel-pad" style={{ marginTop: 18 }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 12, flexWrap: 'wrap' }}>
           <span className="eyebrow"><T k="acct.default_addr" /></span>
-          <Link className="link-more" href="/account/addresses">{addr ? 'Edit' : 'Add'}</Link>
+          <Link className="link-more" href="/account/addresses">{addr ? t('acct.edit') : t('acct.add')}</Link>
         </div>
         {addr ? (
           <p className="dim" style={{ marginTop: 10, lineHeight: 1.8 }}>

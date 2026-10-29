@@ -1,9 +1,11 @@
 'use client';
 
 import { useState } from 'react';
+import { useT } from '@/lib/store';
 import { track } from '@/lib/track';
 
 export function ContactForm() {
+  const t = useT();
   const [form, setForm] = useState({ name: '', email: '', orderNo: '', message: '' });
   const [state, setState] = useState<'idle' | 'sending' | 'done' | 'error'>('idle');
   const [error, setError] = useState('');
@@ -34,8 +36,8 @@ export function ContactForm() {
   if (state === 'done') {
     return (
       <div className="panel panel-pad" style={{ marginTop: 22 }}>
-        <b style={{ color: 'var(--accent)', fontWeight: 500 }}>Message received.</b>
-        <p className="dim" style={{ marginTop: 8 }}>We reply within one business day — check your spam folder just in case.</p>
+        <b style={{ color: 'var(--accent)', fontWeight: 500 }}>{t('cf.received')}</b>
+        <p className="dim" style={{ marginTop: 8 }}>{t('cf.reply_note')}</p>
       </div>
     );
   }
@@ -44,25 +46,25 @@ export function ContactForm() {
     <form className="panel panel-pad" onSubmit={submit} style={{ marginTop: 22 }}>
       <div className="form-grid">
         <div className="field">
-          <label htmlFor="c-name">Name</label>
+          <label htmlFor="c-name">{t('cf.name')}</label>
           <input id="c-name" className="input" required value={form.name} onChange={set('name')} />
         </div>
         <div className="field">
-          <label htmlFor="c-email">Email</label>
+          <label htmlFor="c-email">{t('cf.email')}</label>
           <input id="c-email" className="input" type="email" required value={form.email} onChange={set('email')} placeholder="you@example.com" />
         </div>
         <div className="field" style={{ gridColumn: '1 / -1' }}>
-          <label htmlFor="c-order">Order number (optional)</label>
+          <label htmlFor="c-order">{t('cf.order_no')}</label>
           <input id="c-order" className="input" value={form.orderNo} onChange={set('orderNo')} placeholder="KV-XXXXXX" />
         </div>
         <div className="field" style={{ gridColumn: '1 / -1' }}>
-          <label htmlFor="c-message">Message</label>
+          <label htmlFor="c-message">{t('cf.message')}</label>
           <textarea id="c-message" className="input" required rows={5} value={form.message} onChange={set('message')}
             style={{ height: 'auto', padding: '10px 12px', resize: 'vertical' }} />
         </div>
       </div>
       <button className="btn" type="submit" disabled={state === 'sending'}>
-        {state === 'sending' ? 'Sending…' : 'Send message'}
+        {state === 'sending' ? t('cf.sending') : t('cf.send')}
       </button>
       {state === 'error' && <p style={{ color: '#E5484D', fontSize: 'var(--fs-small)', marginTop: 10 }}>{error}</p>}
     </form>

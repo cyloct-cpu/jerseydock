@@ -95,10 +95,10 @@ export function Footer({ brandName, supportEmail }: { brandName?: string; suppor
     <footer className="footer">
       <div className="container">
         <div className="trust">
-          <div><b>{t('bar.shipping')}</b>Buy 3 save $5 · buy 8 save $10</div>
-          <div><b>{t('bar.delivery')}</b>Tracked, insured worldwide shipping</div>
-          <div><b>{t('bar.returns')}</b>Full refund, no questions asked</div>
-          <div><b>Secure checkout</b>Encrypted payment</div>
+          <div><b>{t('bar.shipping')}</b>{t('bar.promo_detail')}</div>
+          <div><b>{t('bar.delivery')}</b>{t('bar.tracked')}</div>
+          <div><b>{t('bar.returns')}</b>{t('bar.refund_note')}</div>
+          <div><b>{t('bar.secure')}</b>{t('bar.encrypted')}</div>
         </div>
         <div className="footer-cols">
           <div>

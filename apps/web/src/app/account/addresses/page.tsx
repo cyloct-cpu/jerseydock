@@ -28,7 +28,7 @@ export default async function AccountAddressesPage({
     <>
       <div className="page-head" style={{ padding: 0, marginBottom: 20 }}>
         <div>
-          <span className="eyebrow">Account · Addresses</span>
+          <span className="eyebrow">{t('acct.title')} · {t('acct.nav_addresses')}</span>
           <h1 style={{ marginTop: 6, fontSize: 'clamp(24px,3vw,34px)' }}><T k="acct.addr_h1" /></h1>
         </div>
       </div>
@@ -54,7 +54,7 @@ export default async function AccountAddressesPage({
                 }}
               >
                 <div style={{ display: 'flex', gap: 6, alignItems: 'center', marginBottom: 8 }}>
-                  {i === 0 && <span className="tag on">Default</span>}
+                  {i === 0 && <span className="tag on">{t('acct.default')}</span>}
                   <span className="mono dim" style={{ fontSize: 'var(--fs-micro)' }}>{a.country || '—'}</span>
                 </div>
                 <div style={{ fontSize: 'var(--fs-small)', color: 'var(--text)', lineHeight: 1.6 }}>

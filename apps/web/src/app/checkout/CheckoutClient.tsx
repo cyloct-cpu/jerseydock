@@ -1,11 +1,13 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import Link from 'next/link';
-import { COUNTRIES, COUNTRY_CITIES } from '@kitvault/shared';
+import { COUNTRIES, COUNTRY_CITIES, COUNTRY_CODES } from '@kitvault/shared';
 import { useStore, useT, cartItemKey } from '@/lib/store';
+import { useCityDisplay } from '@/lib/use-city-display';
 import { Price } from '@/components/Price';
 import { Breadcrumb } from '@/components/Breadcrumb';
+import { TextT9n } from '@/components/ContentT9n';
 import { priceOrder } from '@/lib/pricing';
 import { track } from '@/lib/track';
 import { AutoComplete } from '@/components/AutoComplete';
@@ -39,8 +41,25 @@ const PAYMENT_MODE_LABEL: Record<PaymentMode, string> = {
 };
 
 export default function CheckoutClient({ saved, paymentMode = 'placeholder', signedIn = false, transfer }: { saved: SavedCheckoutInfo; paymentMode?: PaymentMode; signedIn?: boolean; transfer?: TransferInfo | null }) {
-  const { cart, cartTotalUsd, cartCount, currency, clearCart } = useStore();
+  const { cart, cartTotalUsd, cartCount, currency, clearCart, locale } = useStore();
   const t = useT();
+
+  // 国家本地化：Intl.DisplayNames 生成当前语言的国名（覆盖全部 29 种语言，零翻译 API）。
+  // 下拉显示本地化名 + 匹配输入；提交/存储仍是英文规范名（物流依赖）。
+  const countryDisplay = useMemo(() => {
+    if (locale === 'en' || typeof Intl === 'undefined' || typeof (Intl as { DisplayNames?: unknown }).DisplayNames !== 'function') return {};
+    const m: Record<string, string> = {};
+    try {
+      const dn = new Intl.DisplayNames(locale, { type: 'region' });
+      for (const c of COUNTRIES) {
+        const code = COUNTRY_CODES[c];
+        if (!code) continue;
+        const n = dn.of(code);
+        if (n && n !== c) m[c] = n;
+      }
+    } catch { /* DisplayNames 不可用 → 英文 */ }
+    return m;
+  }, [locale]);
 
   const [form, setForm] = useState({
     email: saved?.email || '',
@@ -58,6 +77,9 @@ export default function CheckoutClient({ saved, paymentMode = 'placeholder', sig
   const [guestUrl, setGuestUrl] = useState('');
   const [copied, setCopied] = useState(false);
 
+  // 城市建议名机翻（服务端缓存）；提交仍是英文名
+  const cityDisplay = useCityDisplay(COUNTRY_CITIES[form.country] || []);
+
   const set = (k: keyof typeof form) => (v: string) =>
     setForm(f => ({ ...f, [k]: v }));
 
@@ -65,7 +87,7 @@ export default function CheckoutClient({ saved, paymentMode = 'placeholder', sig
   const cityOptions = COUNTRY_CITIES[form.country] || [];
   const cityHint = cityOptions.length
     ? t('checkout.city_suggest').replace('{n}', String(cityOptions.length))
-    : undefined;
+    : t('checkout.city_suggest_none');
 
   const pricing = priceOrder(cartTotalUsd, cartCount);
 
@@ -93,7 +115,7 @@ export default function CheckoutClient({ saved, paymentMode = 'placeholder', sig
         }),
       });
       const data = await res.json();
-      if (!res.ok || !data.ok) throw new Error(data.error || 'Could not create the order');
+      if (!res.ok || !data.ok) throw new Error(data.error || t('checkout.err_create'));
       // 本地订单簿（免登录查单用）
       try {
         const key = 'kv_orders';
@@ -123,7 +145,7 @@ export default function CheckoutClient({ saved, paymentMode = 'placeholder', sig
       clearCart();
     } catch (err) {
       setStatus('error');
-      setError(err instanceof Error ? err.message : 'Something went wrong. Please try again.');
+      setError(err instanceof Error ? err.message : t('checkout.err_generic'));
     }
   }
 
@@ -131,20 +153,20 @@ export default function CheckoutClient({ saved, paymentMode = 'placeholder', sig
     return (
       <div className="container" style={{ paddingBlock: '100px 170px' }}>
         <div className="panel panel-pad success-panel">
-          <span className="eyebrow" style={{ color: 'var(--accent)' }}>Order received</span>
+          <span className="eyebrow" style={{ color: 'var(--accent)' }}>{t('checkout.received')}</span>
           <h1 className="h2" style={{ margin: '12px 0 14px', fontSize: 'clamp(24px,3vw,36px)' }}>
-            Thank you — {orderNo}
+            {t('checkout.thanks').replace('{no}', orderNo)}
           </h1>
           <p className="muted" style={{ maxWidth: '52ch', margin: '0 auto' }}>
             {payMethod === 'cod'
               ? t('checkout.cod_note')
               : payMethod === 'transfer'
-                ? (transfer?.note || 'Complete the bank transfer using the details above — we ship once payment is confirmed.')
+                ? (transfer?.note || t('checkout.transfer_note'))
                 : t('checkout.paynote')}
           </p>
           {!signedIn && guestUrl && (
             <p className="dim" style={{ fontSize: 'var(--fs-micro)', marginTop: 10 }}>
-              Tip: save the order link below (or copy it) — it opens your order status, tracking and support anytime, no account needed.
+              {t('checkout.tip_save_link')}
             </p>
           )}
           <div style={{ display: 'flex', gap: 12, marginTop: 28, justifyContent: 'center', flexWrap: 'wrap' }}>
@@ -155,13 +177,13 @@ export default function CheckoutClient({ saved, paymentMode = 'placeholder', sig
               </Link>
             ) : guestUrl ? (
               <>
-                <Link className="btn" href={guestUrl}>View your order</Link>
+                <Link className="btn" href={guestUrl}>{t('checkout.view_order')}</Link>
                 <button
                   type="button"
                   className="btn btn-ghost"
                   onClick={() => { try { navigator.clipboard.writeText(new URL(guestUrl, location.origin).href); setCopied(true); setTimeout(() => setCopied(false), 2000); } catch {} }}
                 >
-                  {copied ? 'Link copied ✓' : 'Copy order link'}
+                  {copied ? t('checkout.link_copied') : t('checkout.copy_link')}
                 </button>
               </>
             ) : null}
@@ -197,7 +219,9 @@ export default function CheckoutClient({ saved, paymentMode = 'placeholder', sig
         <div>
           {saved && (
             <p className="dim" style={{ fontSize: 'var(--fs-micro)', marginBottom: 14 }}>
-              Prefilled from your <Link href="/account" style={{ borderBottom: '1px solid var(--line-2)' }}>account details</Link> — adjust anything you like for this order.
+              {t('checkout.prefilled_a')}{' '}
+              <Link href="/account" style={{ borderBottom: '1px solid var(--line-2)' }}>{t('checkout.prefilled_b')}</Link>{' '}
+              {t('checkout.prefilled_c')}
             </p>
           )}
           {/* 地址簿：一键填充（选中态高亮；仍可手改任意字段） */}
@@ -220,7 +244,7 @@ export default function CheckoutClient({ saved, paymentMode = 'placeholder', sig
                       }}
                     >
                       <span className="tag on" style={{ marginRight: 6 }}>{i === 0 ? t('checkout.default') : `#${i + 1}`}</span>
-                      {a.address || '—'}, {a.city} {a.zip}, {a.country}
+                      {a.address || '—'}, {a.city} {a.zip}, {countryDisplay[a.country] || a.country}
                     </button>
                   );
                 })}
@@ -239,7 +263,7 @@ export default function CheckoutClient({ saved, paymentMode = 'placeholder', sig
                 <input id="name" className="input" required value={form.name} onChange={e => set('name')(e.target.value)} />
               </div>
               <div className="field">
-                <label htmlFor="phone">Phone (for delivery)</label>
+                <label htmlFor="phone">{t('checkout.phone_delivery')}</label>
                 <input id="phone" className="input" type="tel" required value={form.phone} onChange={e => set('phone')(e.target.value)} placeholder="+66 …" />
               </div>
             </div>
@@ -259,6 +283,7 @@ export default function CheckoutClient({ saved, paymentMode = 'placeholder', sig
                   value={form.city}
                   onChange={set('city')}
                   options={cityOptions}
+                  display={cityDisplay}
                   placeholder={t('checkout.city_ph')}
                   hint={cityHint}
                   required
@@ -275,6 +300,7 @@ export default function CheckoutClient({ saved, paymentMode = 'placeholder', sig
                   value={form.country}
                   onChange={set('country')}
                   options={COUNTRIES}
+                  display={countryDisplay}
                   placeholder={t('checkout.country_ph')}
                   hint={t('checkout.country_hint')}
                   required
@@ -362,7 +388,7 @@ export default function CheckoutClient({ saved, paymentMode = 'placeholder', sig
         </div>
 
         <aside className="panel panel-pad cart-summary">
-          <span className="eyebrow">Order summary</span>
+          <span className="eyebrow">{t('checkout.order_summary')}</span>
           <div style={{ marginTop: 12 }}>
             {cart.map(item => (
               <div className="order-mini" key={cartItemKey(item.handle, item.size, item)}>
@@ -371,7 +397,7 @@ export default function CheckoutClient({ saved, paymentMode = 'placeholder', sig
                   <img src={item.image} alt={item.title} />
                 </div>
                 <div>
-                  <div style={{ color: 'var(--text)' }}>{item.title}</div>
+                  <div style={{ color: 'var(--text)' }}><TextT9n text={item.title} /></div>
                   <div className="dim">{item.size} · ×{item.qty}</div>
                   {(item.customText || item.armband) && (
                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginTop: 4 }}>
@@ -390,24 +416,24 @@ export default function CheckoutClient({ saved, paymentMode = 'placeholder', sig
           </div>
           {pricing.discountUsd > 0 && (
             <div className="summary-row" style={{ color: 'var(--accent)' }}>
-              <span>Multi-buy discount</span>
+              <span>{t('checkout.multibuy')}</span>
               <b>−<Price usd={pricing.discountUsd} /></b>
             </div>
           )}
           <div className="summary-row">
             <span className="muted">{t('bar.delivery')}</span>
-            <span>{pricing.shippingUsd === 0 ? 'Free' : <Price usd={pricing.shippingUsd} />}</span>
+            <span>{pricing.shippingUsd === 0 ? t('checkout.free') : <Price usd={pricing.shippingUsd} />}</span>
           </div>
           <div className="summary-row total">
-            <span>Total</span>
+            <span>{t('checkout.total')}</span>
             <b><Price usd={pricing.totalUsd} /></b>
           </div>
           <button className="btn btn-block" type="submit" disabled={status === 'sending'} style={{ marginTop: 16 }}>
-            {status === 'sending' ? 'Placing order…' : t('checkout.place')}
+            {status === 'sending' ? t('checkout.placing') : t('checkout.place')}
           </button>
           {status === 'error' && <p style={{ color: '#E5484D', fontSize: 'var(--fs-small)', marginTop: 12 }}>{error}</p>}
           <p className="dim" style={{ marginTop: 12 }}>
-            Prices shown in {currency}. Charged amount is confirmed by our team before shipping.
+            {t('checkout.currency_note').replace('{cur}', currency)}
           </p>
         </aside>
       </form>

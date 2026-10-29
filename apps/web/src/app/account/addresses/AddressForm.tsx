@@ -1,11 +1,12 @@
 'use client';
 
-import { useState } from 'react';
-import { COUNTRIES, COUNTRY_CITIES } from '@kitvault/shared';
+import { useMemo, useState } from 'react';
+import { COUNTRIES, COUNTRY_CITIES, COUNTRY_CODES } from '@kitvault/shared';
+import { useCityDisplay } from '@/lib/use-city-display';
 import { saveAddressAction } from '@/lib/auth-actions';
 import { AutoComplete } from '@/components/AutoComplete';
 import { T } from '@/components/ContentT9n';
-import { useT } from '@/lib/store';
+import { useStore, useT } from '@/lib/store';
 
 /**
  * 收货地址表单（客户端组件）
@@ -26,12 +27,30 @@ export function AddressForm({
   initialZip: string;
 }) {
   const t = useT();
+  const { locale } = useStore();
   const [address, setAddress] = useState(initialAddress);
   const [city, setCity] = useState(initialCity);
   const [country, setCountry] = useState(initialCountry);
   const [zip, setZip] = useState(initialZip);
 
   const cityOptions = COUNTRY_CITIES[country] || [];
+
+  // 国家本地化（Intl.DisplayNames，29 语言）+ 城市建议名机翻；提交仍是英文规范名
+  const countryDisplay = useMemo(() => {
+    if (locale === 'en' || typeof Intl === 'undefined' || typeof (Intl as { DisplayNames?: unknown }).DisplayNames !== 'function') return {};
+    const m: Record<string, string> = {};
+    try {
+      const dn = new Intl.DisplayNames(locale, { type: 'region' });
+      for (const c of COUNTRIES) {
+        const code = COUNTRY_CODES[c];
+        if (!code) continue;
+        const n = dn.of(code);
+        if (n && n !== c) m[c] = n;
+      }
+    } catch { /* DisplayNames 不可用 → 英文 */ }
+    return m;
+  }, [locale]);
+  const cityDisplay = useCityDisplay(cityOptions);
 
   return (
     <form action={saveAddressAction} style={{ marginTop: 16, display: 'grid', gap: 14, maxWidth: 560 }}>
@@ -53,8 +72,9 @@ export function AddressForm({
             value={city}
             onChange={setCity}
             options={cityOptions}
+            display={cityDisplay}
             placeholder={t('addr.city_ph')}
-            hint={cityOptions.length ? `${cityOptions.length} cities matched — free text accepted` : 'Select a country first for city suggestions'}
+            hint={cityOptions.length ? t('checkout.city_suggest').replace('{n}', String(cityOptions.length)) : t('checkout.city_suggest_none')}
           />
         </div>
         <div className="field" style={{ marginBottom: 0 }}>
@@ -69,8 +89,9 @@ export function AddressForm({
           value={country}
           onChange={setCountry}
           options={COUNTRIES}
+          display={countryDisplay}
           placeholder={t('addr.country_ph')}
-          hint="Type to search — any country accepted"
+          hint={t('checkout.country_hint')}
         />
       </div>
       <div>

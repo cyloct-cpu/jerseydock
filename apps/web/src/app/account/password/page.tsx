@@ -23,7 +23,7 @@ export default async function AccountPasswordPage({
     <>
       <div className="page-head" style={{ padding: 0, marginBottom: 20 }}>
         <div>
-          <span className="eyebrow">Account · Password</span>
+          <span className="eyebrow">{t('acct.title')} · {t('acct.nav_password')}</span>
           <h1 style={{ marginTop: 6, fontSize: 'clamp(24px,3vw,34px)' }}><T k="acct.pw_h1" /></h1>
         </div>
       </div>

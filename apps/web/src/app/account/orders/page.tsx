@@ -30,14 +30,6 @@ function readOrdersByEmail(email: string): StoredOrder[] {
   }
 }
 
-const PAYMENT_LABEL: Record<string, string> = {
-  pending: 'Awaiting payment',
-  paid: 'Paid',
-  refunded: 'Refunded',
-  cancelled: 'Cancelled',
-  cod: 'Cash on delivery',
-};
-
 export default async function AccountOrdersPage() {
   const user = await getSessionUserFull();
   const locale = await getLocaleFromCookies();
@@ -49,7 +41,7 @@ export default async function AccountOrdersPage() {
     <>
       <div className="page-head" style={{ padding: 0, marginBottom: 20 }}>
         <div>
-          <span className="eyebrow">Account · Orders</span>
+          <span className="eyebrow">{t('acct.title')} · {t('acct.nav_orders')}</span>
           <h1 style={{ marginTop: 6, fontSize: 'clamp(24px,3vw,34px)' }}><T k="acct.myorders" /></h1>
           <p className="dim" style={{ fontSize: 'var(--fs-small)', marginTop: 6 }}></p>
         </div>
@@ -73,7 +65,7 @@ export default async function AccountOrdersPage() {
                     <Link href={`/account/orders/${encodeURIComponent(o.orderNo)}`} style={{ color: 'var(--text)' }}>{o.orderNo}</Link>
                     <div className="dim" style={{ fontSize: 'var(--fs-small)' }}>
                       {new Date(o.createdAt).toLocaleDateString('en-GB')}
-                      {o.items?.length ? ` · ${o.items.reduce((s, i) => s + (i.qty || 0), 0)} item(s)` : ''}
+                      {o.items?.length ? ` · {t('acct.items_n').replace('{n}', String(o.items.reduce((s, i) => s + (i.qty || 0), 0)))}` : ''}
                     </div>
                     {o.items?.slice(0, 2).map((it, i) => (
                       <div key={i} className="dim" style={{ fontSize: 'var(--fs-micro)', marginTop: 2 }}>
@@ -86,21 +78,21 @@ export default async function AccountOrdersPage() {
                     )}
                     {o.paymentStatus && (
                       <div className="dim" style={{ fontSize: 'var(--fs-micro)', marginTop: 4, color: o.paymentStatus === 'paid' ? 'var(--accent)' : 'var(--text-3)' }}>
-                        {PAYMENT_LABEL[o.paymentStatus] || o.paymentStatus}
+                        {['pending','paid','refunded','cancelled','cod'].includes(o.paymentStatus) ? t('pay.' + o.paymentStatus) : o.paymentStatus}
                       </div>
                     )}
                     {/* 物流一行摘要：状态 + 承运商 · 单号（完整轨迹在详情页） */}
                     {shipment && (
                       <div style={{ fontSize: 'var(--fs-micro)', marginTop: 4, color: 'var(--text-2)' }}>
                         <span className="tag on" style={{ marginRight: 6 }}>{FULFILLMENT_LABEL[statusKey] || statusKey}</span>
-                        {shipment.carrier || 'Carrier'} · {shipment.trackingNo}
+                        {shipment.carrier || t('od.carrier')} · {shipment.trackingNo}
                       </div>
                     )}
                   </div>
                   <div style={{ textAlign: 'right', flex: '0 0 auto' }}>
                     <div><Price usd={o.totalUsd} /></div>
                     <Link className="link-more" href={`/account/orders/${encodeURIComponent(o.orderNo)}`}>
-                      {shipment ? 'Details' : 'View'}
+                      {shipment ? t('acct.details') : t('acct.view')}
                     </Link>
                   </div>
                 </div>
@@ -109,11 +101,11 @@ export default async function AccountOrdersPage() {
           </div>
         ) : (
           <div style={{ marginTop: 4 }}>
-            <p className="muted">No orders yet.</p>
+            <p className="muted">{t('acct.orders_empty')}</p>
             <p className="dim" style={{ marginTop: 8 }}>
-              Orders placed with <b>{user.email}</b> will appear here automatically — tracking numbers and shipment timelines show on each order's page once shipped.
+              {t('acct.orders_hint_long').replace('{email}', user.email)}
             </p>
-            <Link className="btn btn-ghost btn-sm" href="/collections/2026-27-season" style={{ marginTop: 14 }}>Start shopping</Link>
+            <Link className="btn btn-ghost btn-sm" href="/collections/2026-27-season" style={{ marginTop: 14 }}>{t('acct.start_shopping')}</Link>
           </div>
         )}
       </section>

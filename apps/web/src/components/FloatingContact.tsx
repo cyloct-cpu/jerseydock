@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { useT } from '@/lib/store';
 
 /**
  * 悬浮「联系客服」按钮
@@ -22,6 +23,7 @@ export function FloatingContact({
   supportQr: string;
   supportEmail: string;
 }) {
+  const t = useT();
   const [open, setOpen] = useState(false);
   const [pos, setPos] = useState<{ x: number; y: number } | null>(null);
   const [side, setSide] = useState<'left' | 'right'>('left');
@@ -93,7 +95,7 @@ export function FloatingContact({
 
   const waDigits = (whatsapp || '').replace(/\D/g, '');
   const waUrl = waDigits
-    ? `https://wa.me/${waDigits}?text=${encodeURIComponent('Hello! I have a question about my order.')}`
+    ? `https://wa.me/${waDigits}?text=${encodeURIComponent(t('rf.wa_msg'))}`
     : '';
   const qrUrl = supportQr
     ? supportQr
@@ -137,7 +139,7 @@ export function FloatingContact({
           aria-label="Customer service options"
           style={side === 'right' ? { left: 'auto', right: 0 } : undefined}
         >
-          <span className="eyebrow">Customer service</span>
+          <span className="eyebrow">{t('fs.eyebrow')}</span>
           <p className="float-hint">建议下单之前先联系客服，确认尺码与库存。</p>
 
           {waUrl ? (
@@ -161,7 +163,7 @@ export function FloatingContact({
                 style={{ borderRadius: 4, background: '#fff', padding: 6 }}
                 onError={e => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }}
               />
-              <span>手机扫码联系客服</span>
+              <span>{t('fs.qr_hint')}</span>
             </div>
           ) : null}
 

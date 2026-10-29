@@ -36,6 +36,7 @@ const MT_PROVIDERS: Provider[] = [
       if (Array.isArray(first) && typeof first[0] === 'string') return (first[0] as string).trim() || null;
       return null;
     },
+    gap: 500,
   },
   {
     name: 'mymemory',
@@ -65,12 +66,22 @@ const MT_PROVIDERS: Provider[] = [
       const out = (arr[0] as Array<[string, string]>).map(seg => seg?.[0] ?? '').join('');
       return out.trim() || null;
     },
+    gap: 500,
   },
 ];
 
 /* --- 失败冷却：某源连续失败后 10 分钟内跳过 --- */
 const COOLDOWN_MS = 10 * 60 * 1000;
 const cooldownUntil: Record<string, number> = {};
+
+/* --- 每源请求节流：google 免费端点对突发高频连发会限流，按 gap 间隔打点 --- */
+const lastReqAt: Record<string, number> = {};
+async function throttle(name: string, gap?: number): Promise<void> {
+  if (!gap) return;
+  const wait = (lastReqAt[name] ?? 0) + gap - Date.now();
+  if (wait > 0) await sleep(wait);
+  lastReqAt[name] = Date.now();
+}
 
 /* --- 磁盘缓存（monorepo 根 data/mt-cache/，与其它数据文件同处） --- */
 const CACHE_CANDIDATES = [
@@ -120,6 +131,7 @@ export async function translateText(text: string, target: string): Promise<MTRes
   for (const p of MT_PROVIDERS) {
     if ((cooldownUntil[p.name] ?? 0) > now) continue;
     try {
+      await throttle(p.name, p.gap);
       const json = await fetchJson(p.url(text, target));
       const out = p.parse(json);
       // 译文与原文相同 → 该源没翻出来（或原文即目标语），换下一源，避免把原文缓存成"译文"

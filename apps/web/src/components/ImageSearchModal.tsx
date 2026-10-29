@@ -181,8 +181,8 @@ export function ImageSearchModal({ onClose }: { onClose: () => void }) {
             <div style={{ fontSize: 'var(--fs-small)', color: 'var(--text)', fontWeight: 500 }}>{t('search.image_empty')}</div>
             <p className="dim" style={{ fontSize: 'var(--fs-micro)', marginTop: 6 }}>{t('search.image_empty_hint')}</p>
             <div style={{ display: 'flex', gap: 8, justifyContent: 'center', marginTop: 16, flexWrap: 'wrap' }}>
-              <Link className="btn btn-sm" href="/collections/2026-27-season" onClick={onClose}>New season</Link>
-              <Link className="btn btn-ghost btn-sm" href="/collections/retro" onClick={onClose}>Retro</Link>
+              <Link className="btn btn-sm" href="/collections/2026-27-season" onClick={onClose}>{t('img.new_season')}</Link>
+              <Link className="btn btn-ghost btn-sm" href="/collections/retro" onClick={onClose}>{t('img.retro')}</Link>
               <button type="button" className="btn btn-ghost btn-sm" onClick={() => setState('idle')}>{t('search.image_reupload')}</button>
             </div>
           </div>

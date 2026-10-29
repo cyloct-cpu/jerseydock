@@ -13,6 +13,42 @@ export const COUNTRIES = [
   'South Korea', 'India', 'Turkey', 'Poland',
 ];
 
+/**
+ * 国家 → ISO 3166-1 alpha-2 代码
+ * 前台用 Intl.DisplayNames(当前语言) 生成 29 种语言的本地化国名（零翻译 API）；
+ * 存储 / 提交仍使用英文规范名（COUNTRIES 原文，物流与订单系统依赖）。
+ * 'Other' 无 ISO 码，显示与匹配退化为原文。
+ */
+export const COUNTRY_CODES: Record<string, string> = {
+  'United States': 'US',
+  'United Kingdom': 'GB',
+  'Germany': 'DE',
+  'France': 'FR',
+  'Spain': 'ES',
+  'Italy': 'IT',
+  'Netherlands': 'NL',
+  'Portugal': 'PT',
+  'Brazil': 'BR',
+  'Mexico': 'MX',
+  'Canada': 'CA',
+  'Australia': 'AU',
+  'Japan': 'JP',
+  'Thailand': 'TH',
+  'Malaysia': 'MY',
+  'Singapore': 'SG',
+  'Philippines': 'PH',
+  'Vietnam': 'VN',
+  'Indonesia': 'ID',
+  'Saudi Arabia': 'SA',
+  'United Arab Emirates': 'AE',
+  'Kuwait': 'KW',
+  'Qatar': 'QA',
+  'South Korea': 'KR',
+  'India': 'IN',
+  'Turkey': 'TR',
+  'Poland': 'PL',
+};
+
 export const COUNTRY_CITIES: Record<string, string[]> = {
   'United States': [
     'New York', 'Los Angeles', 'Chicago', 'Houston', 'Phoenix', 'Philadelphia',

@@ -2,6 +2,7 @@
 
 import { useMemo, useRef, useState } from 'react';
 import { PHONE_CC, joinPhoneValue, splitPhoneValue } from '@kitvault/shared';
+import { useT } from '@/lib/store';
 
 /**
  * 电话 / WhatsApp 号码输入（区号 + 号码两段式）
@@ -28,6 +29,7 @@ export function PhoneInput({
   const [open, setOpen] = useState(false);
   const [num, setNum] = useState(parsed.num);
   const rootRef = useRef<HTMLDivElement>(null);
+  const t = useT();
 
   const full = joinPhoneValue(cc, num);
 
@@ -101,7 +103,7 @@ export function PhoneInput({
             ))}
             {!matches.length && (
               <div className="dim" style={{ padding: '8px 10px', fontSize: 'var(--fs-micro)' }}>
-                无匹配区号 — 直接输入 +1234 格式可用
+                {t('phone.no_match')}
               </div>
             )}
           </div>

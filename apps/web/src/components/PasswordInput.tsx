@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useT } from '@/lib/store';
 
 /** 密码输入框：右侧「显示 / 隐藏」切换（与后台一致的交互） */
 export function PasswordInput({
@@ -19,6 +20,7 @@ export function PasswordInput({
   minLength?: number;
 }) {
   const [show, setShow] = useState(false);
+  const t = useT();
   const id = `pw_${name}`;
   return (
     <div className="field" style={{ marginBottom: 0 }}>
@@ -44,7 +46,7 @@ export function PasswordInput({
             fontSize: 'var(--fs-micro)', cursor: 'pointer', padding: '4px 6px',
           }}
         >
-          {show ? 'Hide' : 'Show'}
+          {show ? t('au.hide') : t('au.show')}
         </button>
       </div>
     </div>

@@ -2,6 +2,8 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { loadPaymentSettings, markOrderPaid } from '@/lib/payment';
 import { getSessionUserFull } from '@/lib/users';
+import { getLocaleFromCookies } from '@/lib/locale-server';
+import { translate } from '@/lib/i18n';
 import { guestOrderPath } from '@/lib/order-token';
 import { dbReadOrders } from '@/lib/db-store';
 import { PayPalProvider } from '@kitvault/shared';
@@ -21,6 +23,8 @@ export default async function CheckoutReturnPage({
   searchParams: Promise<{ orderNo?: string; session_id?: string; token?: string }>;
 }) {
   const sp = await searchParams;
+  const locale = await getLocaleFromCookies();
+  const t = (k: string, v?: Record<string, string | number>) => { let o = translate(locale, k); if (v) for (const [k2, v2] of Object.entries(v)) o = o.replaceAll('{' + k2 + '}', String(v2)); return o; };
   const orderNo = (sp.orderNo || '').trim();
 
   // 查单页需要邮箱做归属校验：从订单记录取下单邮箱
@@ -68,27 +72,27 @@ export default async function CheckoutReturnPage({
     <div className="container" style={{ paddingBlock: '100px 170px' }}>
       <div className="panel panel-pad success-panel">
         <span className="eyebrow" style={{ color: paid ? 'var(--accent)' : undefined }}>
-          {paid ? 'Payment received' : orderNo ? 'Payment pending' : 'Payment'}
+          {paid ? t('ret.paid_title') : orderNo ? t('ret.pending_title') : t('ret.payment_title')}
         </span>
         <h1 className="h2" style={{ margin: '12px 0 14px', fontSize: 'clamp(24px,3vw,36px)' }}>
-          {paid ? `Thank you — ${orderNo}` : orderNo ? `Order ${orderNo} — awaiting confirmation` : 'Payment status'}
+          {paid ? t('ret.thanks', { no: orderNo }) : orderNo ? t('ret.await_confirm', { no: orderNo }) : t('ret.status_title')}
         </h1>
         <p className="muted" style={{ maxWidth: '52ch', margin: '0 auto' }}>
           {paid
-            ? 'Your payment has been confirmed. We are preparing your parcel — a tracking number will appear on the order page once shipped.'
+            ? t('ret.confirmed_note')
             : checking
-              ? 'No order reference was provided.'
-              : 'We have not received a payment confirmation yet. If you completed the payment, this page updates automatically within a few minutes — our team will confirm by email shortly.'}
+              ? t('ret.no_ref')
+              : t('ret.not_confirmed')}
         </p>
         {orderNo && (
           <div style={{ display: 'flex', gap: 12, marginTop: 28, justifyContent: 'center', flexWrap: 'wrap' }}>
-            <Link className="btn" href={user ? `/account/orders/${encodeURIComponent(orderNo)}` : guestPath}>View order</Link>
-            <Link className="btn btn-ghost" href="/collections/2026-27-season">Continue shopping</Link>
+            <Link className="btn" href={user ? `/account/orders/${encodeURIComponent(orderNo)}` : guestPath}>{t('ret.view_order')}</Link>
+            <Link className="btn btn-ghost" href="/collections/2026-27-season">{t('ret.continue')}</Link>
           </div>
         )}
         {!orderNo && (
           <div style={{ display: 'flex', gap: 12, marginTop: 28, justifyContent: 'center', flexWrap: 'wrap' }}>
-            <Link className="btn" href="/collections/2026-27-season">Continue shopping</Link>
+            <Link className="btn" href="/collections/2026-27-season">{t('ret.continue')}</Link>
           </div>
         )}
       </div>
