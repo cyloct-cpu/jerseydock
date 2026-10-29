@@ -125,7 +125,7 @@ export default function ProductPage({ params }: Props) {
         </div>
       </div>
 
-      <ProductContentT9n handle={product.h} description={product.d} />
+      <ProductContentT9n handle={product.h} title={product.t} description={product.d} />
 
       <section className="section">
         <div className="section-head">

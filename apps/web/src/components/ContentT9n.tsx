@@ -3,17 +3,20 @@
 import { useEffect, useState } from 'react';
 import { useStore, useT } from '@/lib/store';
 
+// 含 CJK 字符（主站同步商品标题为中文，en 模式下也需机翻成英文）
+const HAS_CJK = /[一-鿿぀-ヿ가-힯]/;
+
 /**
  * 商品内容按语言翻译（客户端替换显示）
  * - locale = en 时原样；其他语言挂载后请求 /api/mt/content（服务端懒翻译 + 缓存）
  * - 替换目标：详情页 h1（#pdp-title）与描述段（#pdp-desc）
  */
-export function ProductContentT9n({ handle, description }: { handle: string; description: string }) {
+export function ProductContentT9n({ handle, title, description }: { handle: string; title: string; description: string }) {
   const { locale } = useStore();
   const [data, setData] = useState<{ title: string; description: string } | null>(null);
 
   useEffect(() => {
-    if (locale === 'en' || !handle) return;
+    if (!handle || (locale === 'en' && !HAS_CJK.test(title + description))) return;
     let alive = true;
     (async () => {
       try {
@@ -44,7 +47,7 @@ export function TextT9n({ text }: { text: string }) {
   const [out, setOut] = useState(text);
 
   useEffect(() => {
-    if (locale === 'en' || !text) { setOut(text); return; }
+    if (!text || (locale === 'en' && !HAS_CJK.test(text))) { setOut(text); return; }
     let alive = true;
     (async () => {
       try {

@@ -26,7 +26,7 @@ const MT_PROVIDERS: Provider[] = [
   {
     name: 'google-chrome-ex',
     url: (text, tl) =>
-      `https://clients5.google.com/translate_a/t?client=dict-chrome-ex&sl=en&tl=${tl}&q=${encodeURIComponent(text)}`,
+      `https://clients5.google.com/translate_a/t?client=dict-chrome-ex&sl=auto&tl=${tl}&q=${encodeURIComponent(text)}`,
     parse: json => {
       // 返回 ["译文"] 或 [["译文","en"]] 两种形态
       const arr = json as unknown[];
@@ -51,14 +51,14 @@ const MT_PROVIDERS: Provider[] = [
   },
   {
     name: 'lingva',
-    url: (text, tl) => `https://lingva.ml/api/v1/en/${tl}/${encodeURIComponent(text)}`,
+    url: (text, tl) => `https://lingva.ml/api/v1/auto/${tl}/${encodeURIComponent(text)}`,
     parse: json => (json as { translation?: string })?.translation || null,
     gap: 200,
   },
   {
     name: 'google-gtx',
     url: (text, tl) =>
-      `https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=${tl}&dt=t&q=${encodeURIComponent(text)}`,
+      `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${tl}&dt=t&q=${encodeURIComponent(text)}`,
     parse: json => {
       const arr = json as [Array<[string, string]>, ...unknown[]];
       if (!Array.isArray(arr?.[0])) return null;
@@ -122,7 +122,8 @@ export async function translateText(text: string, target: string): Promise<MTRes
     try {
       const json = await fetchJson(p.url(text, target));
       const out = p.parse(json);
-      if (out) return { text: out, source: p.name };
+      // 译文与原文相同 → 该源没翻出来（或原文即目标语），换下一源，避免把原文缓存成"译文"
+      if (out && out !== text.trim()) return { text: out, source: p.name };
       throw new Error('empty result');
     } catch {
       cooldownUntil[p.name] = Date.now() + COOLDOWN_MS; // 冷却后其他源也挂了还能回来重试
@@ -138,7 +139,11 @@ function contentCachePath(locale: string): string {
 
 function loadContentCache(locale: string): Record<string, string> {
   try {
-    return JSON.parse(fs.readFileSync(contentCachePath(locale), 'utf8'));
+    const raw = JSON.parse(fs.readFileSync(contentCachePath(locale), 'utf8')) as Record<string, string>;
+    // 过滤历史污染条目（原文===译文的假翻译）
+    const clean: Record<string, string> = {};
+    for (const [k, v] of Object.entries(raw)) if (k !== v) clean[k] = v;
+    return clean;
   } catch {
     return {};
   }
@@ -152,15 +157,17 @@ function saveContentCache(locale: string, cache: Record<string, string>): void {
 }
 
 /** 单条内容翻译（带缓存；locale=en 或原文为空直接原样返回） */
+const HAS_CJK = /[一-鿿぀-ヿ가-힯]/;
+
 export async function translateContent(text: string, locale: string): Promise<string> {
   const src = String(text || '').trim();
-  if (!src || !locale || locale === 'en') return src;
+  // en 模式：纯英文无需翻译；含 CJK（主站同步商品标题）仍翻成英文
+  if (!src || !locale || (locale === 'en' && !HAS_CJK.test(src))) return src;
   const cache = loadContentCache(locale);
   if (cache[src]) return cache[src];
   const r = await translateText(src, locale);
   const out = r?.text || src;
-  cache[src] = out;
-  saveContentCache(locale, cache);
+  if (out !== src) { cache[src] = out; saveContentCache(locale, cache); } // 原文===译文不入缓存
   return out;
 }
 
