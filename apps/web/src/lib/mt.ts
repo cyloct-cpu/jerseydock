@@ -202,6 +202,45 @@ export type FillResult = {
   source: string | null;
 };
 
+/* --- 占位符保护：{no} {n} {email} 等会被机翻当成英文单词（{no}→«нет»/{아니요}）---
+ * 翻译前替换为 [[序号]] 标记（数字组合各源都会原样保留），翻译后还原；
+ * 还原失败（标记丢失/被改写）则视为译文不可信，返回 null 换下一源。 */
+const PLACEHOLDER_RE = /\{[a-z_][a-z_0-9]*\}/gi;
+
+function protectPlaceholders(src: string): { text: string; tokens: string[] } {
+  const tokens: string[] = [];
+  const text = src.replace(PLACEHOLDER_RE, m => {
+    tokens.push(m);
+    return ` [[${tokens.length - 1}]] `;
+  });
+  return { text: text.trim(), tokens };
+}
+
+function restorePlaceholders(text: string, tokens: string[]): string | null {
+  let out = text;
+  for (let i = 0; i < tokens.length; i++) {
+    const re = new RegExp(`\\[\\[\\s*${i}\\s*\\]\\]`, 'i');
+    if (!re.test(out)) return null; // 标记被 MT 弄丢 → 不可信
+    out = out.replace(re, tokens[i]);
+  }
+  return out;
+}
+
+/** 单条翻译（含占位符保护）；返回 null 表示该条本次未翻出 */
+async function translateEntry(src: string, locale: string): Promise<MTResult | null> {
+  if (!PLACEHOLDER_RE.test(src)) return translateText(src, locale);
+  PLACEHOLDER_RE.lastIndex = 0;
+  const p = protectPlaceholders(src);
+  for (let attempt = 0; attempt < 2; attempt++) {
+    const res = await translateText(p.text, locale);
+    if (!res) return null;
+    const restored = restorePlaceholders(res.text, p.tokens);
+    if (restored) return { text: restored, source: res.source };
+    // 占位符被某源破坏 → 冷却该源后再试（translateText 内部已切源）
+  }
+  return null;
+}
+
 /**
  * 补全词典：把 en 中存在、locale 中缺失的 key 全部机翻（带磁盘缓存）。
  * 返回合并了机翻结果的完整词典（内置翻译优先，不被机翻覆盖）。
@@ -224,7 +263,7 @@ export async function fillDictionary(
     while (cursor < missing.length) {
       const key = missing[cursor++];
       const src = en[key];
-      const res = await translateText(src, locale);
+      const res = await translateEntry(src, locale);
       if (res) {
         cache[key] = { src, out: res.text };
         if (!firstSource) firstSource = res.source;

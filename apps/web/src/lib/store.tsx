@@ -84,7 +84,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     let alive = true;
     if (locale === 'en') { setDictVersion(v => v + 1); return; }
-    fetch(`/api/i18n?locale=${locale}`)
+    fetch(`/api/i18n?locale=${locale}`, { cache: 'no-store' })
       .then(r => (r.ok ? r.json() : null))
       .then((j: { dict?: Record<string, string> } | null) => {
         if (!alive || !j?.dict) return;

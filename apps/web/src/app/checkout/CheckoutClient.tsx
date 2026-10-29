@@ -161,7 +161,7 @@ export default function CheckoutClient({ saved, paymentMode = 'placeholder', sig
             {payMethod === 'cod'
               ? t('checkout.cod_note')
               : payMethod === 'transfer'
-                ? (transfer?.note || t('checkout.transfer_note'))
+                ? (transfer?.note ? <TextT9n text={transfer.note} /> : t('checkout.transfer_note'))
                 : t('checkout.paynote')}
           </p>
           {!signedIn && guestUrl && (
@@ -377,7 +377,7 @@ export default function CheckoutClient({ saved, paymentMode = 'placeholder', sig
                         {t('checkout.pay_transfer_name')}：<b className="mono" style={{ color: 'var(--text)' }}>{transfer.accountName}</b><br />
                         {t('checkout.pay_transfer_account')}：<b className="mono" style={{ color: 'var(--text)' }}>{transfer.accountNumber}</b><br />
                         {t('checkout.pay_transfer_bank')}：{transfer.bankName}{transfer.swiftCode ? <> · SWIFT: {transfer.swiftCode}</> : null}
-                        {transfer.note ? <><br />{transfer.note}</> : null}
+                        {transfer.note ? <><br /><TextT9n text={transfer.note} /></> : null}
                       </span>
                     )}
                   </span>
