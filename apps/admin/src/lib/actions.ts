@@ -1329,6 +1329,31 @@ export async function setCodCollectedBulk(formData: FormData) {
   revalidatePath('/shipping');
 }
 
+/** 人工标记签收（轨迹缺失/测试兜底，与 setCodRefused 对称）：履约转 delivered + 轨迹事件；
+ *  若收款已确认（paid）则同时满足「签收+收款」→ 统一成交确认服务自动回传 Meta Purchase（幂等） */
+export async function setCodDelivered(formData: FormData) {
+  await requirePerm('shipping.edit');
+  const orderNo = String(formData.get('orderNo') || '');
+  const now = new Date().toISOString();
+  mutateOrder(orderNo, o => {
+    o.fulfillmentStatus = 'delivered';
+    o.deliveredAt = o.deliveredAt || now;
+    const events = Array.isArray(o.shipment?.events) ? o.shipment.events : [];
+    o.shipment = {
+      ...(o.shipment || { carrier: '', trackingNo: '', status: 'delivered' }),
+      status: 'delivered',
+      events: [...events, { time: now, location: '后台', description: 'Manually marked as delivered by admin — awaiting/on with COD settlement' }],
+    };
+  });
+  audit(null, 'order:codDelivered', orderNo);
+  try {
+    const { maybeSendPurchase } = await import('./purchase');
+    maybeSendPurchase(orderNo);
+  } catch { /* 回传失败不阻塞标记，worker sweep 兜底 */ }
+  revalidatePath('/orders');
+  revalidatePath('/shipping');
+}
+
 /** 人工标记拒收（轨迹缺失时兜底）：履约转异常 + 轨迹事件 */
 export async function setCodRefused(formData: FormData) {
   await requirePerm('shipping.edit');

@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { paths, readJsonl } from '@/lib/store';
 import {
   batchShip, deleteOrders, setOrderPayment, shipOrder, requirePage,
-  setCodCollected, setCodRefused, retryOmsPush, pushOrdersToOms,
+  setCodCollected, setCodRefused, setCodDelivered, retryOmsPush, pushOrdersToOms,
 } from '@/lib/actions';
 import { OrdersBulkBar, ConfirmSubmit } from '@/components/OrdersBulkBar';
 import { moneyStateOf, payMethodLabel, MONEY_LABEL, MONEY_CHIPS, type MoneyKey } from '@/lib/money-state';
@@ -250,6 +250,14 @@ export default async function OrdersPage({
                       <form action={setCodRefused} style={{ marginTop: 4 }}>
                         <input type="hidden" name="orderNo" value={o.orderNo} />
                         <ConfirmSubmit className="btn btn-sm btn-ghost" label="标记拒收" message={`确认订单 ${o.orderNo} 被客户拒收？将转为异常并记入轨迹。`} />
+                      </form>
+                    )}
+                    {/* 人工标记签收：轨迹缺失/测试兜底（轨迹轮询未回传 delivered 时可用）。
+                        签收且已收款 → 统一成交确认服务自动回传 Meta Purchase（幂等） */}
+                    {o.fulfillmentStatus !== 'delivered' && o.paymentStatus !== 'refunded' && (
+                      <form action={setCodDelivered} style={{ marginTop: 4 }}>
+                        <input type="hidden" name="orderNo" value={o.orderNo} />
+                        <ConfirmSubmit className="btn btn-sm btn-ghost" label="标记签收" message={`确认订单 ${o.orderNo} 已签收？签收且已收款后将向 Meta 回传成交（Purchase）。`} />
                       </form>
                     )}
                     {!isCodRow(o) && o.paymentStatus !== 'paid' && o.paymentStatus !== 'refunded' && (
