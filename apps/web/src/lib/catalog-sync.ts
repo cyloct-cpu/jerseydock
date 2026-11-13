@@ -16,6 +16,7 @@
  */
 import fs from 'node:fs';
 import path from 'node:path';
+import { randomUUID } from 'node:crypto';
 import { CATEGORIES } from '@kitvault/shared';
 import {
   dbGetSyncCursor, dbSetSyncCursor, dbGetSyncHash,
@@ -72,8 +73,22 @@ export function loadSyncSettings(): SyncSettings {
 export function saveSyncSettings(patch: Partial<SyncSettings>): void {
   const doc = JSON.parse(fs.readFileSync(SETTINGS_PATH, 'utf8'));
   doc.sync = { ...loadSyncSettings(), ...patch, updatedAt: new Date().toISOString() };
+  const json = JSON.stringify(doc, null, 2);
   fs.mkdirSync(path.dirname(SETTINGS_PATH), { recursive: true });
-  fs.writeFileSync(SETTINGS_PATH, JSON.stringify(doc, null, 2), 'utf8');
+  const temp = `${SETTINGS_PATH}.${randomUUID()}.tmp`;
+  const fd = fs.openSync(temp, 'wx');
+  let closed = false;
+  try {
+    fs.writeFileSync(fd, json, 'utf8');
+    fs.fsyncSync(fd);
+    fs.closeSync(fd);
+    closed = true;
+    fs.renameSync(temp, SETTINGS_PATH);
+  } catch (error) {
+    if (!closed) { try { fs.closeSync(fd); } catch {} }
+    try { fs.unlinkSync(temp); } catch {}
+    throw error;
+  }
 }
 
 function sharedMediaDir(): string {

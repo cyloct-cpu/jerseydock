@@ -5,6 +5,7 @@
  */
 import fs from 'node:fs';
 import path from 'node:path';
+import { randomUUID } from 'node:crypto';
 import {
   dbReadOrders, dbWriteOrders, dbAppendOrder,
   dbReadUsers, dbWriteUsers,
@@ -102,8 +103,22 @@ export function writeJson(file: string, data: unknown): void {
     dbWriteKind(kind, ((data as { users?: unknown[] }).users ?? data) as unknown[]);
     return;
   }
+  const json = JSON.stringify(data, null, 2);
   fs.mkdirSync(path.dirname(file), { recursive: true });
-  fs.writeFileSync(file, JSON.stringify(data, null, 2), 'utf8');
+  const temp = `${file}.${randomUUID()}.tmp`;
+  const fd = fs.openSync(temp, 'wx');
+  let closed = false;
+  try {
+    fs.writeFileSync(fd, json, 'utf8');
+    fs.fsyncSync(fd);
+    fs.closeSync(fd);
+    closed = true;
+    fs.renameSync(temp, file);
+  } catch (error) {
+    if (!closed) { try { fs.closeSync(fd); } catch {} }
+    try { fs.unlinkSync(temp); } catch {}
+    throw error;
+  }
 }
 
 export function readJsonl<T = Record<string, unknown>>(file: string): T[] {
