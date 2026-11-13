@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { COUNTRIES, COUNTRY_CITIES, COUNTRY_CODES } from '@kitvault/shared';
 import { useStore, useT, cartItemKey } from '@/lib/store';
@@ -10,6 +10,7 @@ import { Breadcrumb } from '@/components/Breadcrumb';
 import { TextT9n } from '@/components/ContentT9n';
 import { priceOrder } from '@/lib/pricing';
 import { track } from '@/lib/track';
+import { fbInitiateCheckout, fbPurchase } from '@/lib/fbpixel';
 import { AutoComplete } from '@/components/AutoComplete';
 
 /** 登录用户的账户资料（结账预填来源；未登录为 null） */
@@ -76,6 +77,16 @@ export default function CheckoutClient({ saved, paymentMode = 'placeholder', sig
   const [orderNo, setOrderNo] = useState('');
   const [guestUrl, setGuestUrl] = useState('');
   const [copied, setCopied] = useState(false);
+  // Purchase 只发一次：done 态渲染 + 依赖变化可能重复触发 effect
+  const purchaseSent = useRef(false);
+
+  // InitiateCheckout：进入结账页（有购物车内容）时上报一次
+  useEffect(() => {
+    if (!cart.length) return;
+    track({ type: 'checkout_start', meta: { totalUsd: cartTotalUsd, items: cartCount } });
+    fbInitiateCheckout(cartTotalUsd, cartCount);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // 城市建议名机翻（服务端缓存）；提交仍是英文名
   const cityDisplay = useCityDisplay(COUNTRY_CITIES[form.country] || []);
@@ -142,6 +153,11 @@ export default function CheckoutClient({ saved, paymentMode = 'placeholder', sig
       setOrderNo(data.orderNo);
       setGuestUrl(data.guestUrl || '');
       setStatus('done');
+      // Meta Pixel Purchase：订单创建成功即上报（COD/转账模式以创建为准，与自建漏斗口径一致）
+      if (!purchaseSent.current) {
+        purchaseSent.current = true;
+        fbPurchase(data.totalUsd, data.orderNo, cartCount);
+      }
       clearCart();
     } catch (err) {
       setStatus('error');

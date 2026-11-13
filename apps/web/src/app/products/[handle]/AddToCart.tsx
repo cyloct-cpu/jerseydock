@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useStore, useT } from '@/lib/store';
 import { track } from '@/lib/track';
+import { fbAddToCart } from '@/lib/fbpixel';
 import { Price } from '@/components/Price';
 import type { SlimProduct } from '@kitvault/shared';
 import type { CustomizeConfig } from '@/lib/brand';
@@ -68,6 +69,7 @@ export function AddToCart({
       armband: c.armband,
     }, qty);
     track({ type: 'add_to_cart', handle: product.h, size });
+    fbAddToCart(total, qty);
     setAdded(true);
     setTimeout(() => setAdded(false), 1600);
   };

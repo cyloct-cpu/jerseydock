@@ -70,6 +70,7 @@ export type BrandSettings = {
   visitors: VisitorsConfig;
   customize: CustomizeConfig;
   hero: HeroConfig;
+  metaPixel: MetaPixelConfig;
 };
 
 /** Hero 轮播单张 slide（图片 + 文案 + 双 CTA，后台可配） */
@@ -95,6 +96,13 @@ export type HeroConfig = {
   /** 自动轮播间隔（毫秒），3000–15000 */
   intervalMs: number;
   slides: HeroSlide[];
+};
+
+/** Meta (Facebook) Pixel 配置：后台设置页可配，空 id 则前台完全不加载 */
+export type MetaPixelConfig = {
+  enabled: boolean;
+  /** Pixel / Dataset ID，如 1155903067121574 */
+  id: string;
 };
 
 const BAR_DEFAULTS: AnnouncementBar = {
@@ -208,6 +216,20 @@ const HERO_DEFAULTS: HeroConfig = {
     },
   ],
 };
+
+const META_PIXEL_DEFAULTS: MetaPixelConfig = {
+  enabled: false,
+  id: '',
+};
+
+function normalizeMetaPixel(raw: unknown): MetaPixelConfig {
+  const m = (raw ?? {}) as Partial<MetaPixelConfig>;
+  const id = String(m.id ?? '').trim().replace(/\D/g, '').slice(0, 30);
+  return {
+    enabled: typeof m.enabled === 'boolean' ? m.enabled : META_PIXEL_DEFAULTS.enabled,
+    id,
+  };
+}
 
 function normalizeHero(raw: unknown): HeroConfig {
   const h = (raw ?? {}) as Record<string, any>;
@@ -337,6 +359,7 @@ const DEFAULTS: BrandSettings = {
   visitors: VISITORS_DEFAULTS,
   customize: CUSTOMIZE_DEFAULTS,
   hero: HERO_DEFAULTS,
+  metaPixel: META_PIXEL_DEFAULTS,
 };
 
 function normalizeReviews(raw: unknown): ReviewsConfig {
@@ -402,6 +425,7 @@ export function loadBrand(): BrandSettings {
       visitors: normalizeVisitors(s?.visitors),
       customize: normalizeCustomize(s?.customize),
       hero: normalizeHero(s?.hero),
+      metaPixel: normalizeMetaPixel(s?.metaPixel),
     };
   } catch {
     return DEFAULTS;

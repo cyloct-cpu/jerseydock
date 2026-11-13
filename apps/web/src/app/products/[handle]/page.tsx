@@ -72,7 +72,7 @@ export default async function ProductPage({ params }: Props) {
 
   return (
     <div className="container">
-      <TrackView handle={product.h} />
+      <TrackView handle={product.h} title={product.t} priceUsd={product.p} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }} />
       <Breadcrumb
         items={[

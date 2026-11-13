@@ -7,6 +7,7 @@ import { translate } from '@/lib/i18n';
 import { guestOrderPath } from '@/lib/order-token';
 import { dbReadOrders } from '@/lib/db-store';
 import { PayPalProvider } from '@kitvault/shared';
+import { FbPurchaseOnce } from '@/components/FbPurchaseOnce';
 
 export const metadata: Metadata = { title: 'Payment' };
 export const dynamic = 'force-dynamic';
@@ -70,6 +71,16 @@ export default async function CheckoutReturnPage({
 
   return (
     <div className="container" style={{ paddingBlock: '100px 170px' }}>
+      {/* Stripe/PayPal 确认已支付 → 上报 Meta Purchase（订单金额从订单簿取） */}
+      {paid && orderNo && (() => {
+        let totalUsd: number | undefined; let items = 0;
+        try {
+          const o = dbReadOrders().find(x => x.orderNo.toUpperCase() === orderNo.toUpperCase());
+          if (o && typeof o.totalUsd === 'number') totalUsd = o.totalUsd;
+          items = Array.isArray(o?.items) ? o!.items.reduce((n: number, i: { qty?: number }) => n + (Number(i?.qty) || 1), 0) : 0;
+        } catch { /* 订单缺失时仅报订单号 */ }
+        return <FbPurchaseOnce orderNo={orderNo} totalUsd={totalUsd} items={items} />;
+      })()}
       <div className="panel panel-pad success-panel">
         <span className="eyebrow" style={{ color: paid ? 'var(--accent)' : undefined }}>
           {paid ? t('ret.paid_title') : orderNo ? t('ret.pending_title') : t('ret.payment_title')}

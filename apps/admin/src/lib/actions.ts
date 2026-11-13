@@ -1137,12 +1137,26 @@ export async function saveSettings(formData: FormData) {
             return typeof keep?.paymentPlaceholder === 'string' ? keep.paymentPlaceholder : 'Online payment — coming soon';
           } catch { return 'Online payment — coming soon'; }
         })(),
+    // Meta Pixel（Facebook 广告像素；字段缺席保留原值，避免其他卡片保存时被清空）
+    ...(formData.has('metaPixelEnabled') || formData.has('metaPixelId')
+      ? {
+          metaPixel: {
+            enabled: formData.get('metaPixelEnabled') === 'on',
+            id: String(formData.get('metaPixelId') || '').trim().replace(/\D/g, '').slice(0, 30),
+          },
+        }
+      : (() => {
+          try {
+            const keep = readJson<Record<string, any>>(paths.settings, {});
+            return keep?.metaPixel ? { metaPixel: keep.metaPixel } : {};
+          } catch { return {}; }
+        })()),
     updatedAt: new Date().toISOString(),
   };
   // 兜底合并：本表单不管理的节点（sync / oms / 未来新增）原样保留。
   // 曾发生：设置页整表单提交把 settings.json 里的 sync 节点整个吃掉
   // （sharedMediaDir 丢失 → /media 全站 404、同步 worker 停摆）。
-  const MANAGED = new Set(['brand', 'announcement', 'announcementBar', 'reviews', 'visitors', 'customize', 'hero', 'payment', 'visionApi', 'paymentPlaceholder', 'updatedAt']);
+  const MANAGED = new Set(['brand', 'announcement', 'announcementBar', 'reviews', 'visitors', 'customize', 'hero', 'payment', 'visionApi', 'paymentPlaceholder', 'metaPixel', 'updatedAt']);
   let prevSettings: Record<string, unknown> = {};
   try { prevSettings = readJson<Record<string, unknown>>(paths.settings, {}) || {}; } catch { /* 文件不存在则跳过 */ }
   for (const [k, v] of Object.entries(prevSettings)) {

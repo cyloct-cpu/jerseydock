@@ -3,8 +3,8 @@
     "name": "JERSEYDOCK",
     "domain": "",
     "adminDomain": "",
-    "supportEmail": "1376817078@qq.com",
-    "whatsapp": "+86 15602208149",
+    "supportEmail": "",
+    "whatsapp": "",
     "supportQr": ""
   },
   "announcement": "",
@@ -127,7 +127,11 @@
     "keys": ""
   },
   "paymentPlaceholder": "Online payment — coming soon",
-  "updatedAt": "2026-10-26T17:24:20.624Z",
+  "metaPixel": {
+    "enabled": true,
+    "id": "1542284121254778"
+  },
+  "updatedAt": "2026-11-12T14:32:25.501Z",
   "sync": {
     "enabled": true,
     "baseUrl": "http://127.0.0.1:3101",
@@ -150,9 +154,9 @@
       "errors": [
         "master 401 Unauthorized"
       ],
-      "at": "2026-10-29T21:51:40.055Z",
+      "at": "2026-11-13T13:48:34.348Z",
       "ok": false
     },
-    "updatedAt": "2026-10-29T21:51:40.056Z"
+    "updatedAt": "2026-11-13T13:48:34.348Z"
   }
 }

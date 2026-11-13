@@ -44,6 +44,7 @@ export default async function SettingsPage({
     visionApi?: { keys?: string };
     paymentPlaceholder: string;
     oms?: unknown;
+    metaPixel?: { enabled?: boolean; id?: string };
   }>(paths.settings, {
     brand: { name: 'JERSEYDOCK', domain: 'STORE_DOMAIN', adminDomain: 'ADMIN_DOMAIN', supportEmail: 'support@STORE_DOMAIN', whatsapp: '' },
     announcement: '',
@@ -63,6 +64,9 @@ export default async function SettingsPage({
   const supportQr = (settings.brand && (settings.brand as Record<string, any>).supportQr) || '';
 
   const omsCfg = normalizeOmsConfig(settings.oms);
+  const metaPixelCfg = settings.metaPixel ?? {};
+  const metaPixelEnabled = metaPixelCfg.enabled === true;
+  const metaPixelId = String(metaPixelCfg.id || '');
   const channelCache = readRefCache<{ service_id: number }>('channels');
   const warehouseCache = readRefCache<{ og_id: number }>('warehouses');
   const channelCount = channelCache?.items?.length ?? null;
@@ -316,6 +320,32 @@ export default async function SettingsPage({
           </form>
 
           <PaymentCard initial={normalizePayment(settings.payment)} placeholderText={settings.paymentPlaceholder} />
+
+          {/* Meta Pixel（Facebook 广告像素）：填 Pixel/数据集 ID + 启用开关，前台全站加载标准电商事件 */}
+          <form action={saveSettings} className="a-card a-card-pad">
+            <span className="eyebrow">Meta Pixel（Facebook 像素）</span>
+            <div style={{ display: 'grid', gap: 12, marginTop: 12 }}>
+              <label style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontSize: 'var(--fs-small)', color: 'var(--text-2)', cursor: 'pointer' }}>
+                <ToggleField name="metaPixelEnabled" defaultOn={metaPixelEnabled} label="启用 Meta Pixel（全站加载，上报 PageView/浏览商品/加购/发起结算/下单）" />
+              </label>
+              <div className="field">
+                <label>Pixel / 数据集 ID</label>
+                <input
+                  className="input"
+                  name="metaPixelId"
+                  defaultValue={metaPixelId}
+                  placeholder="例如 1155903067121574"
+                  inputMode="numeric"
+                />
+                <div className="sub" style={{ marginTop: 6, fontSize: 12, color: 'var(--text-3)' }}>
+                  Meta 事件管理器 → 数据集设置里复制（纯数字 ID）。保存后前台即时生效；留空或不启用则完全不加载。
+                </div>
+              </div>
+              <div style={{ marginTop: 2 }}>
+                <button className="btn" type="submit">保存 Meta Pixel 设置</button>
+              </div>
+            </div>
+          </form>
 
           <form action={saveOmsSettings} className="a-card a-card-pad">
             <span className="eyebrow">服务商代发绑定（物流）</span>
