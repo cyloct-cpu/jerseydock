@@ -66,5 +66,11 @@ export function markOrderPaid(orderNo: string, reference?: string): boolean {
     const { enqueueOmsPush } = require('./oms-queue') as typeof import('./oms-queue');
     enqueueOmsPush(orderNo);
   } catch { /* 入队失败不阻塞支付回调，后台可手动推送 */ }
+  // Meta CAPI：在线支付收款确认即成交 → 统一确认服务回传 Purchase（COD 订单要求签收，此处自动跳过；幂等见 lib/purchase.ts）
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const { maybeSendPurchase } = require('./purchase') as typeof import('./purchase');
+    maybeSendPurchase(orderNo);
+  } catch { /* 回传失败不阻塞支付回调，worker sweep 兜底 */ }
   return true;
 }

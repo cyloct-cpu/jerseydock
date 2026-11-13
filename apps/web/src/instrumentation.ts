@@ -27,5 +27,17 @@ export async function register() {
     } catch (e) {
       console.error('[instrumentation] sync timer start failed:', e instanceof Error ? e.message : e);
     }
+    // Meta CAPI：Purchase 对账 sweep（签收+收款 → 服务端回传，lib/purchase.ts）+ 队列 flush（lib/capi.ts）
+    try {
+      const { startCapiWorker } = await import('./lib/capi');
+      startCapiWorker();
+      const { sweepPurchaseEvents } = await import('./lib/purchase');
+      const timer = setInterval(() => {
+        try { sweepPurchaseEvents(); } catch { /* 单轮失败下轮重试 */ }
+      }, 60 * 1000);
+      timer.unref?.();
+    } catch (e) {
+      console.error('[instrumentation] meta capi worker start failed:', e instanceof Error ? e.message : e);
+    }
   }
 }

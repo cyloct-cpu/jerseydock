@@ -326,7 +326,7 @@ export default async function SettingsPage({
             <span className="eyebrow">Meta Pixel（Facebook 像素）</span>
             <div style={{ display: 'grid', gap: 12, marginTop: 12 }}>
               <label style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontSize: 'var(--fs-small)', color: 'var(--text-2)', cursor: 'pointer' }}>
-                <ToggleField name="metaPixelEnabled" defaultOn={metaPixelEnabled} label="启用 Meta Pixel（全站加载，上报 PageView/浏览商品/加购/发起结算/下单）" />
+                <ToggleField name="metaPixelEnabled" defaultOn={metaPixelEnabled} label="启用 Meta 追踪（浏览器像素 PageView/商品/加购/结算；COD 下单经 CAPI 记 CODOrderPlaced；签收+收款后服务端回传 Purchase）" />
               </label>
               <div className="field">
                 <label>Pixel / 数据集 ID</label>
@@ -339,6 +339,7 @@ export default async function SettingsPage({
                 />
                 <div className="sub" style={{ marginTop: 6, fontSize: 12, color: 'var(--text-3)' }}>
                   Meta 事件管理器 → 数据集设置里复制（纯数字 ID）。保存后前台即时生效；留空或不启用则完全不加载。
+                  服务端 CAPI 回传（CODOrderPlaced / Purchase）需在服务器环境变量配置 META_ACCESS_TOKEN；测试环境另配 META_TEST_EVENT_CODE。
                 </div>
               </div>
               <div style={{ marginTop: 2 }}>

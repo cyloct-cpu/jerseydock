@@ -1,15 +1,14 @@
 /**
  * Meta (Facebook) Pixel 事件接线
- * 基码由 layout.tsx 注入（afterInteractive）；本模块只在已配置 Pixel ID 时转发标准电商事件。
- * 事件与自建埋点（lib/track.ts）并列：view_product→ViewContent、add_to_cart→AddToCart、
- * checkout_start→InitiateCheckout；Purchase 在下单成功页上报（CheckoutClient）。
+ * 基码由 layout.tsx 注入（afterInteractive）；本模块只在已配置 Pixel ID 时转发浏览器侧行为事件。
+ * 浏览器事件：ViewContent / AddToCart / InitiateCheckout（漏斗上层信号）。
+ * Purchase 不在浏览器发（COD 下单≠成交）：服务端统一确认服务经 CAPI 回传，见 lib/purchase.ts / lib/capi.ts。
  */
 
 export type FbEvent =
   | 'ViewContent'
   | 'AddToCart'
-  | 'InitiateCheckout'
-  | 'Purchase';
+  | 'InitiateCheckout';
 
 type Fbq = ((...args: unknown[]) => void) & { queue?: unknown[]; callMethod?: unknown };
 
@@ -54,15 +53,5 @@ export function fbInitiateCheckout(valueUsd: number, items: number): void {
     value: Number(valueUsd.toFixed(2)),
     currency: 'USD',
     num_items: items,
-  });
-}
-
-export function fbPurchase(valueUsd: number, orderNo: string, items: number): void {
-  fb('Purchase', {
-    value: Number(valueUsd.toFixed(2)),
-    currency: 'USD',
-    content_type: 'product',
-    num_items: items,
-    order_id: orderNo,
   });
 }

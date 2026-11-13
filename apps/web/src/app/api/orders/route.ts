@@ -135,10 +135,36 @@ export async function POST(req: NextRequest) {
       paymentStatus: paymentMethod === 'cod' ? 'cod' : 'pending',
       fulfillmentStatus: 'unfulfilled',
       shipment: { carrier: '', trackingNo: '', status: 'pending', events: [] },
+      // Meta CAPI 归因链接：下单时的 _fbp/_fbc 存进订单（ext 往返），后续签收回款回传 Purchase 时带上
+      ...(req.cookies.get('_fbp')?.value ? { fbp: req.cookies.get('_fbp')!.value } : {}),
+      ...(req.cookies.get('_fbc')?.value ? { fbc: req.cookies.get('_fbc')!.value } : {}),
       createdAt: new Date().toISOString(),
     };
 
     dbAppendOrder(order as never);
+
+    // Meta CAPI：COD 下单记 CODOrderPlaced（自定义事件，仅表示已下单，不代表成交；
+    // Purchase 由统一成交确认服务在「签收+收款」后服务端回传，见 lib/purchase.ts）
+    if (paymentMethod === 'cod') {
+      try {
+        const { enqueueCapiEvent } = await import('@/lib/capi');
+        enqueueCapiEvent({
+          eventName: 'CODOrderPlaced',
+          eventId: `placed-${order.orderNo}`,
+          orderNo: order.orderNo,
+          value: pricing.totalUsd,
+          currency: 'USD',
+          numItems: itemCount,
+          contents: lines.map(l => ({ id: l.handle, quantity: l.qty, item_price: l.priceUsd })),
+          email,
+          phone,
+          clientIp: req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || undefined,
+          clientUa: req.headers.get('user-agent') || undefined,
+          fbp: req.cookies.get('_fbp')?.value,
+          fbc: req.cookies.get('_fbc')?.value,
+        });
+      } catch { /* 回传入队失败不阻塞下单 */ }
+    }
 
     // 货到付款：下单即入 OMS 推送队列（后台 worker 消费）；在线/转账：支付确认后入队（payment.ts / 后台标记已支付）
     if (paymentMethod === 'cod') {

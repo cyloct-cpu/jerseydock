@@ -10,7 +10,9 @@ import { Breadcrumb } from '@/components/Breadcrumb';
 import { TextT9n } from '@/components/ContentT9n';
 import { priceOrder } from '@/lib/pricing';
 import { track } from '@/lib/track';
-import { fbInitiateCheckout, fbPurchase } from '@/lib/fbpixel';
+// Purchase 不在浏览器发：COD 下单记 CODOrderPlaced（服务端 CAPI），
+// 成交 Purchase 由统一确认服务在「签收+收款」后回传（lib/purchase.ts）
+import { fbInitiateCheckout } from '@/lib/fbpixel';
 import { AutoComplete } from '@/components/AutoComplete';
 
 /** 登录用户的账户资料（结账预填来源；未登录为 null） */
@@ -77,8 +79,6 @@ export default function CheckoutClient({ saved, paymentMode = 'placeholder', sig
   const [orderNo, setOrderNo] = useState('');
   const [guestUrl, setGuestUrl] = useState('');
   const [copied, setCopied] = useState(false);
-  // Purchase 只发一次：done 态渲染 + 依赖变化可能重复触发 effect
-  const purchaseSent = useRef(false);
 
   // InitiateCheckout：进入结账页（有购物车内容）时上报一次
   useEffect(() => {
@@ -153,11 +153,6 @@ export default function CheckoutClient({ saved, paymentMode = 'placeholder', sig
       setOrderNo(data.orderNo);
       setGuestUrl(data.guestUrl || '');
       setStatus('done');
-      // Meta Pixel Purchase：订单创建成功即上报（COD/转账模式以创建为准，与自建漏斗口径一致）
-      if (!purchaseSent.current) {
-        purchaseSent.current = true;
-        fbPurchase(data.totalUsd, data.orderNo, cartCount);
-      }
       clearCart();
     } catch (err) {
       setStatus('error');

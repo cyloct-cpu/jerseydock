@@ -788,6 +788,11 @@ export async function setOrderPayment(formData: FormData) {
       const { enqueueOmsPush } = await import('./oms');
       enqueueOmsPush(orderNo);
     } catch { /* 入队失败不阻塞标记 */ }
+    // Meta CAPI：收款确认 → 统一成交确认服务回传 Purchase（COD 需已签收才发；幂等见 lib/purchase.ts）
+    try {
+      const { maybeSendPurchase } = await import('./purchase');
+      maybeSendPurchase(orderNo);
+    } catch { /* 回传失败不阻塞标记，worker sweep 兜底 */ }
   }
   revalidatePath('/orders');
   revalidatePath('/shipping');
@@ -1283,6 +1288,11 @@ export async function setCodCollected(formData: FormData) {
     };
   });
   audit(null, 'order:codCollected', orderNo);
+  // Meta CAPI：COD 回款确认 → 统一成交确认服务回传 Purchase（需已签收 delivered；幂等见 lib/purchase.ts）
+  try {
+    const { maybeSendPurchase } = await import('./purchase');
+    maybeSendPurchase(orderNo);
+  } catch { /* 回传失败不阻塞标记，worker sweep 兜底 */ }
   revalidatePath('/orders');
   revalidatePath('/shipping');
 }
@@ -1310,6 +1320,11 @@ export async function setCodCollectedBulk(formData: FormData) {
     } catch { /* 单条失败继续 */ }
   }
   audit(null, 'order:codCollectedBulk', `${done}/${nos.length}`);
+  // Meta CAPI：批量回款确认逐单触发统一成交确认服务（幂等；未签收/未满足条件的单自动跳过）
+  try {
+    const { maybeSendPurchase } = await import('./purchase');
+    for (const no of nos) { try { maybeSendPurchase(no); } catch { /* 单条失败继续 */ } }
+  } catch { /* 回传失败不阻塞标记，worker sweep 兜底 */ }
   revalidatePath('/orders');
   revalidatePath('/shipping');
 }

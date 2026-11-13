@@ -9,6 +9,9 @@
  */
 import fs from 'node:fs';
 import path from 'node:path';
+import { paths, readJsonl, writeJsonl } from './store';
+import { flushCapiQueue } from './capi';
+import { sweepPurchaseEvents } from './purchase';
 import {
   DEFAULT_OMS_CONFIG,
   normalizeOmsConfig,
@@ -111,18 +114,14 @@ export function enqueueOmsPush(orderNo: string): boolean {
 
 /* ---------------- 订单读写 ---------------- */
 
+// K-S0-3 起订单真源是 SQLite（store.readJsonl 对 orders.jsonl 路径拦截转 db-store）。
+// 曾直接 fs 读写 orders.jsonl —— 迁库后那是旧快照，轨迹同步写进去的字段后台界面永远看不到（双源分裂）。
 function readOrders(): AnyOrder[] {
-  try {
-    return fs.readFileSync(path.join(DATA, 'orders.jsonl'), 'utf8').split('\n').filter(Boolean)
-      .map(l => { try { return JSON.parse(l) as AnyOrder; } catch { return null; } })
-      .filter((x): x is AnyOrder => x !== null);
-  } catch {
-    return [];
-  }
+  return readJsonl<AnyOrder>(paths.orders);
 }
 
 function writeOrders(orders: AnyOrder[]): void {
-  fs.writeFileSync(path.join(DATA, 'orders.jsonl'), orders.map(o => JSON.stringify(o)).join('\n') + (orders.length ? '\n' : ''), 'utf8');
+  writeJsonl(paths.orders, orders);
 }
 
 /* ---------------- 面单下载 ---------------- */
@@ -452,5 +451,17 @@ export function ensureOmsWorker(): void {
       if (r.synced) console.log(`[oms-worker] track synced=${r.synced} changed=${r.changed}`);
     }).catch(e => console.error('[oms-worker] track cycle error:', e instanceof Error ? e.message : e));
   }, 30 * 60 * 1000).unref?.();
-  console.log('[oms-worker] started (push every 60s, track every 30min)');
+  // Meta CAPI：Purchase 对账 sweep（签收+收款 → 服务端回传）+ 队列 flush（见 lib/purchase.ts / lib/capi.ts）
+  setInterval(() => {
+    try {
+      const n = sweepPurchaseEvents();
+      if (n) console.log(`[oms-worker] meta purchase sweep enqueued=${n}`);
+    } catch (e) {
+      console.error('[oms-worker] purchase sweep error:', e instanceof Error ? e.message : e);
+    }
+    flushCapiQueue()
+      .then(r => { if (r.sent || r.failed) console.log(`[meta-capi] sent=${r.sent} failed=${r.failed} pending=${r.pending}`); })
+      .catch(e => console.error('[meta-capi] flush error:', e instanceof Error ? e.message : e));
+  }, 60 * 1000).unref?.();
+  console.log('[oms-worker] started (push every 60s, track every 30min, meta-capi every 60s)');
 }
